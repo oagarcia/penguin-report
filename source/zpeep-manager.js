@@ -11,6 +11,7 @@ import {KEYS} from './keys';
 
 const PERSON_ID = 'person-id';
 const PERSON_NAME = 'person-name';
+const ADMIN_USER_ID = '870268';
 
 var ZPeepManager = {
 
@@ -38,6 +39,7 @@ var ZPeepManager = {
   {[PERSON_NAME]: 'Orlando Donado', [PERSON_ID] : '11926495', hours: 0},
   {[PERSON_NAME]: 'Pedro Patron', [PERSON_ID] : '11915402', hours: 0},
   {[PERSON_NAME]: 'Daniel Camilo Daza', [PERSON_ID] : '11749582', hours: 0},
+  {[PERSON_NAME]: 'Andres Garcia', [PERSON_ID] : ADMIN_USER_ID, hours: 0},
   {[PERSON_NAME]: 'Luis Carlos Chivata', [PERSON_ID] : '10581568', hours: 0}],
 
   /**
@@ -136,7 +138,7 @@ var ZPeepManager = {
         timeEntries = lodash.forEach(timeEntries, entry => {
           entry[PERSON_ID] = entry[PERSON_ID][0]._;
           entry.hours = +entry.hours[0]._;
-          entry.description = entry.description[0];
+          entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '*Blocked' : entry.description[0];
           entry[PERSON_NAME] = entry[PERSON_NAME].toString();
         });
 
