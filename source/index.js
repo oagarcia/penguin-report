@@ -61,6 +61,7 @@ http.createServer((request, response) => {
           ${Utils.ogRenderer()}
           <link rel="stylesheet" href="styles/main.css">
           <link rel="manifest" href="manifest.json">
+          <link rel="icon" type="image/png" href="images/favicon.png">
         </head>
         <body>
           ${Utils.zPeepsSelectorRenderer(ZPeepManager.peopleIds)}
