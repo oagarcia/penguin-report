@@ -1,0 +1,8 @@
+node_modules
+dummy-data
+build
+*.sublime-workspace
+
+.DS_Store
+npm-debug.log
+server.js.swp

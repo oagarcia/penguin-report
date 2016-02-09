@@ -1,0 +1,1 @@
+curl https://android.googleapis.com/gcm/send -X POST -H "Content-Type: application/json" -H "Authorization: key=AIzaSyD8hqMrZzLVsc1MsiSRGv77BXN4S7SGJHA" -H "Cache-Control: no-cache" -d '{"registration_ids":["fCw12zaF_tA:APA91bGUjgamX8r9VvOBJErFEpTA_Q07w8EGBkywqaYxsYwm_n45ddWeqPm8Lh3zetVfc5a_0-ZCAnx_V_cgkYGcgkpDl2rBnN9op3f-re4j9V-c0h_56UO_OYteG4BSJ5zchkhCCook"]}'

@@ -1,0 +1,77 @@
+/**
+ * TODO: Rely on SASS or LESS and optimize this;
+ */
+
+body {
+  font-family: Arial;
+  margin: 0;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table,
+th,
+td {
+  border: 1px solid #000000;
+}
+
+td {
+  padding: 5px;
+}
+
+h1 {
+  margin: 0 0 10px 0;
+}
+
+.title-container {
+  text-align: center;
+  padding: 20px 0 0 0;
+}
+
+.user-name {
+  background-color: #99ccff;
+}
+
+.penguin-report {
+  margin: 20px auto 0;
+}
+
+.penguined {
+  background-color: #ff0000;
+}
+
+.tright {
+  text-align: right;
+}
+
+.text-penguined {
+  color: #ff0000;
+}
+
+.z-peeps-container {
+  background-color: rgba(0, 0, 0, 0.9);
+  display: none;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+}
+
+.z-peeps-body{
+  text-align: center;
+  position: absolute;
+  width: 350px;
+  height: 200px;
+  background-color: #fff;
+  border-radius: 3px;
+  top: calc((100vh - 200px) / 2);
+  left: calc((100vw - 350px) / 2);
+  box-sizing: border-box;
+  padding: 30px;
+  
+}
+
+.z-peeps-visible .z-peeps-container{
+  display: block;
+}

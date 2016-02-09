@@ -1,0 +1,11 @@
+{
+  // I want to use babel-eslint for parsing!
+  "parser": "babel-eslint",
+  "env": {
+    // I write for browser
+    "browser": false,
+    // in CommonJS
+    "node": true
+  },
+  "parser": "babel-eslint"
+}
