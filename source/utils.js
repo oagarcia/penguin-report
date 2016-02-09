@@ -77,7 +77,7 @@ var Utils = {
    */
   ogRenderer() {
     return `
-    <meta property="og:image" content="https://penguin-report.herokuapp.com/images/crazy_penguin.gif">
+    <meta property="og:image" content="https://penguin-report.herokuapp.com/images/penguin-icon.png">
     <meta property="og:title" content="Zemoga | Z-Penguin reports">
     <meta property="og:url" content="https://penguin-report.herokuapp.com">
     <meta property="og:description" content="Easily check your z-peeps reports">
