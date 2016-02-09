@@ -37,7 +37,6 @@ http.createServer((request, response) => {
   let currentDate = queryData.date;
   console.log(urlPath.pathname);
 
-  //if (isHome || urlPath.pathname === '/notify/') {
   if (urlPath.pathname === '/') {
 
     //Index is requested
@@ -55,7 +54,7 @@ http.createServer((request, response) => {
     //TODO: Rendering enhanced via templates i.e handlebars
     response.write(`
       <!DOCTYPE html>
-      <html lang="en">
+      <html lang="en" class="hide-notifier-button">
         <head>
           <meta charset="UTF-8">
           <title>Penguin Report</title>

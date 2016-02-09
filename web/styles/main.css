@@ -69,7 +69,10 @@ h1 {
   left: calc((100vw - 350px) / 2);
   box-sizing: border-box;
   padding: 30px;
-  
+}
+
+.hide-notifier-button .push-notifier{
+  display: none;
 }
 
 .z-peeps-visible .z-peeps-container{
