@@ -5,6 +5,8 @@
 body {
   font-family: Arial;
   margin: 0;
+  font-size: 0.8em;
+  color: #222;
 }
 
 table {
@@ -48,6 +50,10 @@ h1 {
 
 .text-penguined {
   color: #ff0000;
+}
+
+.description-hidden{
+  color: #999;
 }
 
 .z-peeps-container {

@@ -138,7 +138,7 @@ var ZPeepManager = {
         timeEntries = lodash.forEach(timeEntries, entry => {
           entry[PERSON_ID] = entry[PERSON_ID][0]._;
           entry.hours = +entry.hours[0]._;
-          entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '*Blocked' : entry.description[0];
+          entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '<span class="description-hidden">*hidden</span>' : entry.description[0];
           entry[PERSON_NAME] = entry[PERSON_NAME].toString();
         });
 
