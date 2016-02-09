@@ -71,7 +71,7 @@ h1 {
   padding: 30px;
 }
 
-.hide-notifier-button .push-notifier{
+.hide-notifier-button #push-notifier{
   display: none;
 }
 
