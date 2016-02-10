@@ -4,8 +4,14 @@
  * @copyright Zemoga Inc
  */
 
+/**
+ * Penguin report main App
+ * @namespace PenguinReport
+ */
 var PenguinReport = {
 
+  //TODO: Client side code should be switched to ES2015 by Adding a build with babel
+  // in the same way it was implemented for server side code
   STORAGE_IDENTIFIER : 'penguin-id',
   STORAGE_NAME : 'penguin-name',
 
@@ -129,4 +135,3 @@ var PenguinReport = {
 
 //Initialize
 PenguinReport.init();
-
