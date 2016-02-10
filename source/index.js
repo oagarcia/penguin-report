@@ -23,7 +23,7 @@ const PERSON_NAME = 'person-name';
 const MIN_HOURS = 7;
 
 //Will store querystrng Date
-var reportDate;
+let reportDate;
 
 //Set Heroku Time Zone
 process.env.TZ = 'America/Bogota';

@@ -13,7 +13,7 @@ const PERSON_ID = 'person-id';
 const PERSON_NAME = 'person-name';
 const ADMIN_USER_ID = '870268';
 
-var ZPeepManager = {
+let ZPeepManager = {
 
   Z_PEEPS_COLLECTION_NAME : 'zpeeps',
 

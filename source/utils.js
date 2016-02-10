@@ -4,14 +4,14 @@
  * @copyright Zemoga Inc
  */
 
-var Utils = {
+let Utils = {
   /**
    * Converts Date to YYYYMMDD format string
    * @param  {Date} localDate A given Date
    * @return {string}           YYYYMMDD format string
    */
   toDateInputValue(localDate, removeSlashes = false) {
-    var dateOutput;
+    let dateOutput;
     localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
     dateOutput = localDate.toJSON().slice(0,10);
 
