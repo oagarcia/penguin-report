@@ -93,7 +93,7 @@ http.createServer((request, response) => {
 
         //Pronts each row of data (TODOs)
         entryValue.report.forEach(entry => {
-          row += `<tr><td>${typeof entry.description !== 'undefined' ? entry.description !== '' ? entry.description : '????' : '🐧🐧🐧'}</td><td class="tright">${entry.hours}</td></tr>`;
+          row += `<tr><td>${typeof entry.description !== 'undefined' ? entry.description !== '' ? entry.description : '????' : '<span class="penguin-icon">🐧🐧🐧</span>'}</td><td class="tright">${entry.hours}</td></tr>`;
         });
 
         //Penguined!!!!!!!!!!!!!!!!!!

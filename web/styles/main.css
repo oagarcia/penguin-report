@@ -43,6 +43,9 @@ h1 {
 .penguined {
   background-color: #ff0000;
 }
+.penguin-icon {
+  font-size: 17px;
+}
 
 .tright {
   text-align: right;
