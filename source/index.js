@@ -37,6 +37,7 @@ http.createServer((request, response) => {
   let currentDate = queryData.date;
   console.log(urlPath.pathname);
 
+  //Default homepage
   if (urlPath.pathname === '/') {
 
     //Index is requested
@@ -76,8 +77,10 @@ http.createServer((request, response) => {
           <table class="penguin-report">
       `);
 
+    //Gets the basecamp data and prints html with info
     ZPeepManager.getZPeepsTimeReport(reportDate, timeEntries => {
-      //Print the layout of time entries by iterating the grouped object
+
+      //Prints the layout of time
       lodash.forEach(timeEntries, (entryValue) => {
         let flag = '';
         let header = 
@@ -88,8 +91,9 @@ http.createServer((request, response) => {
           </tr>`;
         let row = '';
 
+        //Pronts each row of data (TODOs)
         entryValue.report.forEach(entry => {
-          row += `<tr><td>${typeof entry.description !== 'undefined' ? entry.description !== '' ? entry.description : '????' : '😂😂😂'}</td><td class="tright">${entry.hours}</td></tr>`;
+          row += `<tr><td>${typeof entry.description !== 'undefined' ? entry.description !== '' ? entry.description : '????' : '🐧🐧🐧'}</td><td class="tright">${entry.hours}</td></tr>`;
         });
 
         //Penguined!!!!!!!!!!!!!!!!!!
@@ -111,7 +115,7 @@ http.createServer((request, response) => {
       `);
     });
   } else if (urlPath.pathname === '/notify/') {
-
+    // Notify paths allows to send push notifications to user. Date querystring with catch penguins for specific dates
     // If date is provided in querystring date report is that date
     // else will be today date
     if (currentDate) {
@@ -167,7 +171,8 @@ http.createServer((request, response) => {
       }
     });
   } else if (urlPath.pathname === '/sync-user/') {
-
+    //sync-user path allows to update the current service work (GCM) identifier by
+    //updating and adding a new one if new user
     response.writeHead(200, {'content-type' : Utils.CONTENT_TYPE['.json']});
 
     if (queryData && queryData.user && queryData.user.split('|')[1] && queryData.registry) {
@@ -176,18 +181,19 @@ http.createServer((request, response) => {
 
       console.log('we have an user!!!!!!!', queryData.user);
 
+      // Get current zpeeps from database
       //TODO: Move DB connection to zpeepManager or proper model
       MongoClient.connect(KEYS.MONGO_CONFIG.URL, (err, db) => {
 
         ZPeepManager.getZPeepCount(userData[0], db, (count) => {
 
-          //Count > 0 means that user is aready registered so we need update the registration ID
+          //Count > 0 means that user is aready registered so we need UPDATE the registration ID
           if (count) {
             ZPeepManager.syncZPeep(db, {personid: userData[0], registrationid : queryData.registry}, results => {
               response.end(`{"done": true, "results": ${results}}`);
             });
           } else {
-            //Count = 0 means that user is NOT registered so we need to add the registration ID
+            //Count = 0 means that user is NOT registered so we need to ADD the registration ID
             ZPeepManager.addZPeep(db, {personid: userData[0], registrationid : queryData.registry, personname : userData[1]}, results => {
               response.end(`{"done": true, "results": ${results}}`);
             });
@@ -198,9 +204,10 @@ http.createServer((request, response) => {
       response.end(`{"done": false, "results": ${null}`);
     }
   } else {
+
+    //Any other request will be pointed to web folder (basically assest as we are printing html here)
     let extname = path.extname(urlPath.pathname);
-    //let filename = path.basename(urlPath.pathname);
-    console.log('hello world', extname);
+
     //Alowed extensions will be loaded in web folder
     switch (extname) {
       case '.js':

@@ -45,8 +45,8 @@ let Utils = {
   },
 
   /**
-   * [zpeepsSelectorRenderer description]
-   * @return {[type]} [description]
+   * Renders identify selector dropdown
+   * @return {string} The template related to user identify selector dropdown
    */
   zPeepsSelectorRenderer(people) {
 
