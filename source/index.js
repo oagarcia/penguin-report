@@ -63,7 +63,6 @@ http.createServer((request, response) => {
           <link rel="stylesheet" href="styles/main.css">
           <link rel="manifest" href="manifest.json">
           <link rel="icon" type="image/png" href="images/favicon.png">
-          <meta name="viewport" content="width=device-width, initial-scale=1">
         </head>
         <body>
           ${Utils.zPeepsSelectorRenderer(ZPeepManager.peopleIds)}
@@ -79,30 +78,28 @@ http.createServer((request, response) => {
 
     ZPeepManager.getZPeepsTimeReport(reportDate, timeEntries => {
       //Print the layout of time entries by iterating the grouped object
-      lodash.forOwn(timeEntries, (entryValue) => {
-        let totalHours = 0;
+      lodash.forEach(timeEntries, (entryValue) => {
         let flag = '';
         let header = 
           `<tr>
             <td class="user-name {{flag}}" colspan="2">
-              <b>${entryValue[0][PERSON_NAME]}</b>
+              <b>${entryValue[PERSON_NAME]}</b>
             </td>
           </tr>`;
         let row = '';
 
-        entryValue.forEach(entry => {
-          totalHours += entry.hours;
+        entryValue.report.forEach(entry => {
           row += `<tr><td>${typeof entry.description !== 'undefined' ? entry.description !== '' ? entry.description : '????' : '😂😂😂'}</td><td class="tright">${entry.hours}</td></tr>`;
         });
 
         //Penguined!!!!!!!!!!!!!!!!!!
-        if (totalHours < MIN_HOURS) {
+        if (entryValue.totalHours < MIN_HOURS) {
           flag = 'penguined';
         }
 
         response.write(header.replace('{{flag}}', flag));
         response.write(row);
-        response.write(`<tr class="tright text-${flag}"><td colspan="2"><b>Total Hours: </b> ${totalHours} </td></tr>`);  
+        response.write(`<tr class="tright text-${flag}"><td colspan="2"><b>Total Hours: </b> ${entryValue.totalHours} </td></tr>`);  
         
       });
 
@@ -132,15 +129,11 @@ http.createServer((request, response) => {
     console.log('the report date: ', reportDate);
     ZPeepManager.getZPeepsTimeReport(reportDate, timeEntries => {
 
-      lodash.forOwn(timeEntries, (entryValue) => {
-        let totalHours = 0;
-        entryValue.forEach(entry => {
-          totalHours += entry.hours;
-        });
+      lodash.forEach(timeEntries, (entryValue) => {
 
         //Penguined!!!!!!!!!!!!!!!!!!
-        if (totalHours < MIN_HOURS) {
-          pinguinedIds.push({[PERSON_ID]: entryValue[0][PERSON_ID]});
+        if (entryValue.totalHours < MIN_HOURS) {
+          pinguinedIds.push({[PERSON_ID]: entryValue[PERSON_ID]});
         }
       });
 

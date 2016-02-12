@@ -130,6 +130,11 @@ let ZPeepManager = {
 
         let timeEntries = parseResult['time-entries']['time-entry'];
 
+
+        //TODO: Refactor > I want a final dataset in the way of:
+        // [{'person-id': xxxxx, 'person-name': 'xxxxx', 'total-hours': 'xx.xx', 'reports': [{'description': 'xx', ..}, ...]}];
+        // this can be acomplished with less lodash involvement, less code and vanilla js.
+
         // Basically I'm filtering reports.xml so discarding users non in peopleIds (UI team)
         //PD: Sorry for the long line
         timeEntries = lodash.filter(timeEntries, entry => ZPeepManager.peopleIds.map(el => el[PERSON_ID]).indexOf(entry[PERSON_ID][0]._) !== -1);
@@ -160,6 +165,20 @@ let ZPeepManager = {
             timeEntries[thisPersonId] = [person];
           }
         });
+
+        //Just to sort by total hours :( Thinking on refactoring 
+        lodash.forOwn(timeEntries, function(value, key) {
+          let totalHours = 0;
+          let personName = '';
+          lodash.forEach(value, function(value) {
+            personName = value[PERSON_NAME];
+            totalHours += value.hours;
+          });
+          timeEntries[key] = {[PERSON_ID]: key, [PERSON_NAME]: personName, totalHours, report : value};
+        });
+        timeEntries = lodash.sortBy(timeEntries, ['totalHours']);
+
+        //Returns array of formalized data
         callback(timeEntries);
       });
     });
