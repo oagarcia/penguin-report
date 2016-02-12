@@ -57,6 +57,7 @@ http.createServer((request, response) => {
       <html lang="en" class="hide-notifier-button">
         <head>
           <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
           <title>Penguin Report</title>
           ${Utils.ogRenderer()}
           <link rel="stylesheet" href="styles/main.css">
