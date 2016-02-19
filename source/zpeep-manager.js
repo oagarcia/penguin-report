@@ -7,7 +7,6 @@
 import requestURL from 'request';
 import {parseString} from 'xml2js';
 import lodash from 'lodash';
-import {KEYS} from './keys';
 
 const PERSON_ID = 'person-id';
 const PERSON_NAME = 'person-name';
@@ -120,9 +119,10 @@ let ZPeepManager = {
    * @param  {Function} callback   Triggers once data is retrieved
    */
   getZPeepsTimeReport(reportDate, callback) {
+    console.log('env vars: ', process.env.BASECAMP_PROTOCOL);
     //Call to Basecamp reports
     requestURL.get(
-      {url: KEYS.BASECAMP.PROTOCOL + KEYS.BASECAMP.TOKEN + '@' + KEYS.BASECAMP.DOMAIN + KEYS.BASECAMP.PATH,
+      {url: process.env.BASECAMP_PROTOCOL + process.env.BASECAMP_TOKEN + '@' + process.env.BASECAMP_DOMAIN + process.env.BASECAMP_PATH,
       form : {from : reportDate, to: reportDate},
       headers: {'User-Agent': 'Andres Garcia Reports (andres@zemoga.com)'}}, (error, resp, body) => {
       
