@@ -5,7 +5,7 @@
 1. Ask for proper keys (sensible data)
 2. `npm install`
 3. `npm run build` or `babel -w source/ -d build/ -s`
-4. `npm run start`
+4. `npm run start` in some envs, in order to run port 80 you need sudo in this command
 5. Check app in port 80 (port 80 is required for GCM to work)
 7. Be moderate with the notify button!!! - hidden in the UI to avoid improper use
 6. Happy pinguins ;)

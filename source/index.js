@@ -15,7 +15,6 @@ import lodash from 'lodash';
 import requestURL from 'request';
 import {Utils} from './utils';
 import {ZPeepManager} from './zpeep-manager';
-import {KEYS} from './keys';
 
 const PERSON_ID = 'person-id';
 const PERSON_NAME = 'person-name';
@@ -145,7 +144,7 @@ http.createServer((request, response) => {
       if (pinguinedIds.length) {
         //TODO: Move DB connection to zpeep manager
         //Connect to MongoDB and get current registries for oush notification
-        MongoClient.connect(KEYS.MONGO_CONFIG.URL, (err, db) => {
+        MongoClient.connect(process.env.MONGO_CONFIG_URL, (err, db) => {
           console.log('will be', pinguinedIds);
           ZPeepManager.getZPeepsRegistry(db, pinguinedIds, (peepsBody) => {
             console.log('I got pinguined zpeeps!!', peepsBody);
@@ -154,9 +153,9 @@ http.createServer((request, response) => {
             if (lodash.get(peepsBody, 'registration_ids') && peepsBody['registration_ids'].length) {
               requestURL.post(
                 {
-                  url: KEYS.GCM.URL,
+                  url: process.env.GCM_URL,
                   json: peepsBody,
-                  headers: {'Content-Type': 'application/json', 'Authorization': 'key=' + KEYS.GCM.AUTH}
+                  headers: {'Content-Type': 'application/json', 'Authorization': 'key=' + process.env.GCM_AUTH}
                 },
                 (err, httpResponse, body) => {
                   console.log('push sent!!!', body);
@@ -183,7 +182,7 @@ http.createServer((request, response) => {
 
       // Get current zpeeps from database
       //TODO: Move DB connection to zpeepManager or proper model
-      MongoClient.connect(KEYS.MONGO_CONFIG.URL, (err, db) => {
+      MongoClient.connect(process.env.MONGO_CONFIG_URL, (err, db) => {
 
         ZPeepManager.getZPeepCount(userData[0], db, (count) => {
 
