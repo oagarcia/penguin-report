@@ -65,6 +65,7 @@ http.createServer((request, response) => {
           <link rel="icon" type="image/png" href="images/favicon.png">
         </head>
         <body>
+          ${process.env.BASECAMP_PROTOCOL}<hr>
           ${Utils.zPeepsSelectorRenderer(ZPeepManager.peopleIds)}
           <div class="title-container">
             <h1>Penguin UI Report</h1>
