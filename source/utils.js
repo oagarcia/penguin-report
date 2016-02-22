@@ -25,7 +25,7 @@ let Utils = {
    * Enum for content types
    * @readonly
    * @enum {string}
-   * 
+   *
    */
   CONTENT_TYPE : {
     '.js' : 'text/javascript',
@@ -86,4 +86,18 @@ let Utils = {
   }
 };
 
-export {Utils};
+export { Utils };
+
+export function getCurrentDate (currentDate) {
+  let reportDate;
+  // If date is provided in querystring date report is that date
+  // else will be today date
+  if (currentDate) {
+    reportDate = currentDate.replace(/\-/g, '');
+  } else {
+    currentDate = Utils.toDateInputValue(new Date());
+    reportDate = Utils.toDateInputValue(new Date(), true);
+  }
+
+  return { currentDate, reportDate };
+}
