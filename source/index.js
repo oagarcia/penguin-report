@@ -124,7 +124,7 @@ app.get('/notify', function (req, res) {
         MongoClient.connect(process.env.MONGO_CONFIG_URL, (err, db) => {
           // Handle error
           if (err) {
-            return response.status(500).send({done: false, results: null});
+            return res.status(500).send({done: false, results: null});
           }
 
           console.log('will be', pinguinedIds);
@@ -141,7 +141,7 @@ app.get('/notify', function (req, res) {
                 },
                 (err, httpResponse, body) => {
                   console.log('push sent!!!', body);
-                  response.status(200).send(body);
+                  res.status(200).send(body);
                 }
               );
             }
