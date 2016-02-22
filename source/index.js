@@ -16,7 +16,6 @@ import lodash from 'lodash';
 import requestURL from 'request';
 import { Utils, getCurrentDate } from './utils';
 import { ZPeepManager } from './zpeep-manager';
-import { KEYS } from './keys';
 
 const PERSON_ID = 'person-id';
 const PERSON_NAME = 'person-name';
@@ -122,7 +121,7 @@ app.get('/notify', function (req, res) {
       if (pinguinedIds.length) {
         //  TODO: Move DB connection to zpeep manager
         //  Connect to MongoDB and get current registries for oush notification
-        MongoClient.connect(KEYS.MONGO_CONFIG.URL, (err, db) => {
+        MongoClient.connect(process.env.MONGO_CONFIG_URL, (err, db) => {
           // Handle error
           if (err) {
             return response.status(500).send({done: false, results: null});
@@ -136,9 +135,9 @@ app.get('/notify', function (req, res) {
             if (lodash.get(peepsBody, 'registration_ids') && peepsBody['registration_ids'].length) {
               requestURL.post(
                 {
-                  url: KEYS.GCM.URL,
+                  url: process.env.GCM_URL,
                   json: peepsBody,
-                  headers: {'Content-Type': 'application/json', 'Authorization': 'key=' + KEYS.GCM.AUTH}
+                  headers: {'Content-Type': 'application/json', 'Authorization': 'key=' + process.env.GCM_AUTH}
                 },
                 (err, httpResponse, body) => {
                   console.log('push sent!!!', body);
@@ -166,7 +165,7 @@ app.get('/sync-user', function (req, res) {
 
     // Get current zpeeps from database
     // TODO: Move DB connection to zpeepManager or proper model
-    MongoClient.connect(KEYS.MONGO_CONFIG.URL, (err, db) => {
+    MongoClient.connect(process.env.MONGO_CONFIG_URL, (err, db) => {
       // Handle error
       if (err) {
         return res.status(500).send({done: false, results: null});
