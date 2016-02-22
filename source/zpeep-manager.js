@@ -125,7 +125,7 @@ let ZPeepManager = {
       {url: KEYS.BASECAMP.PROTOCOL + KEYS.BASECAMP.TOKEN + '@' + KEYS.BASECAMP.DOMAIN + KEYS.BASECAMP.PATH,
       form : {from : reportDate, to: reportDate},
       headers: {'User-Agent': 'Andres Garcia Reports (andres@zemoga.com)'}}, (error, resp, body) => {
-        console.log(error, resp, body);
+
       parseString(body, (parseError, parseResult) => {
 
         let timeEntries = parseResult['time-entries']['time-entry'];
