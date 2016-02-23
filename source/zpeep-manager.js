@@ -89,7 +89,7 @@ let ZPeepManager = {
          requestBody['registration_ids'].push(doc['registration-id']);
       } else {
         db.close();
-        callback(requestBody);    
+        callback(requestBody);
       }
     });
   },
@@ -125,7 +125,7 @@ let ZPeepManager = {
       {url: process.env.BASECAMP_PROTOCOL + process.env.BASECAMP_TOKEN + '@' + process.env.BASECAMP_DOMAIN + process.env.BASECAMP_PATH,
       form : {from : reportDate, to: reportDate},
       headers: {'User-Agent': 'Andres Garcia Reports (andres@zemoga.com)'}}, (error, resp, body) => {
-      
+
       parseString(body, (parseError, parseResult) => {
 
         let timeEntries = parseResult['time-entries']['time-entry'];
@@ -166,7 +166,7 @@ let ZPeepManager = {
           }
         });
 
-        //Just to sort by total hours :( Thinking on refactoring 
+        //Just to sort by total hours :( Thinking on refactoring
         lodash.forOwn(timeEntries, function(value, key) {
           let totalHours = 0;
           let personName = '';
