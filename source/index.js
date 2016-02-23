@@ -110,47 +110,52 @@ app.get('/notify', function (req, res) {
   console.log('the report date:', reportDate);
 
   ZPeepManager.getZPeepsTimeReport(reportDate, timeEntries => {
-    lodash.forEach(timeEntries, (entryValue) => {
+    const mainPromise = new Promise(function (resolve, reject) {
+      let bodies = [];
+      for (let entryValue of timeEntries) {
 
-      // Penguined!!!!!!!!!!!!!!!!!!
-      if (entryValue.totalHours < MIN_HOURS) {
-        pinguinedIds.push({[PERSON_ID]: entryValue[PERSON_ID]});
-      }
+        // Penguined!!!!!!!!!!!!!!!!!!
+        if (entryValue.totalHours < MIN_HOURS) {
+          pinguinedIds.push({[PERSON_ID]: entryValue[PERSON_ID]});
+        }
 
-      //There are some penguined people to notify...
-      if (pinguinedIds.length) {
-        //  TODO: Move DB connection to zpeep manager
-        //  Connect to MongoDB and get current registries for oush notification
-        MongoClient.connect(process.env.MONGO_CONFIG_URL, (err, db) => {
-          // Handle error
-          if (err) {
-            return res.status(500).send({done: false, results: null});
-          }
-
-          console.log('will be', pinguinedIds);
-          ZPeepManager.getZPeepsRegistry(db, pinguinedIds, (peepsBody) => {
-            console.log('I got pinguined zpeeps!!', peepsBody);
-
-            //Send the push via Goole cloud message protocol
-            if (lodash.get(peepsBody, 'registration_ids') && peepsBody['registration_ids'].length) {
-              requestURL.post(
-                {
-                  url: process.env.GCM_URL,
-                  json: peepsBody,
-                  headers: {'Content-Type': 'application/json', 'Authorization': 'key=' + process.env.GCM_AUTH}
-                },
-                (err, httpResponse, body) => {
-                  console.log('push sent!!!', body);
-                  res.status(200).send(body);
-                }
-              );
+        //There are some penguined people to notify...
+        if (pinguinedIds.length) {
+          //  TODO: Move DB connection to zpeep manager
+          //  Connect to MongoDB and get current registries for oush notification
+          MongoClient.connect(process.env.MONGO_CONFIG_URL, (err, db) => {
+            // Handle error
+            if (err) {
+              return res.status(500).send({done: false, results: null});
             }
+
+            console.log('will be', pinguinedIds);
+            ZPeepManager.getZPeepsRegistry(db, pinguinedIds, (peepsBody) => {
+              console.log('I got pinguined zpeeps!!', peepsBody);
+
+              //Send the push via Goole cloud message protocol
+              if (lodash.get(peepsBody, 'registration_ids') && peepsBody['registration_ids'].length) {
+
+                  // Don't know why this is being sent a lot of times.
+                  requestURL.post({
+                      url: process.env.GCM_URL,
+                      json: peepsBody,
+                      headers: {'Content-Type': 'application/json', 'Authorization': 'key=' + process.env.GCM_AUTH}
+                    }, (err, httpResponse, body) => {
+                      console.log('push sent!!!', body);
+
+                      bodies.push(body);
+                      if (bodies.length === timeEntries.length) {
+                        return resolve(bodies);
+                      }
+                    });
+                  }
+              });
           });
-        });
-      } else {
-        res.status(200).send({ success: 1, nopinguins: 1 });
+        }
       }
     });
+    mainPromise.then(bodies => res.status(200).send(bodies));
   });
 });
 

@@ -6,3 +6,4 @@ build
 .DS_Store
 npm-debug.log
 server.js.swp
+run-project.sh
