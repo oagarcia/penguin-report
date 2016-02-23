@@ -6,10 +6,7 @@
  * @copyright Zemoga Inc
  * @version 0.0.1
  */
-import http from 'http';
-import url from 'url';
 import path from 'path';
-import fs from 'fs';
 import express from 'express';
 import { MongoClient }  from 'mongodb';
 import lodash from 'lodash';
@@ -22,9 +19,6 @@ const PERSON_NAME = 'person-name';
 
 const MIN_HOURS = 7;
 
-//Will store querystrng Date
-let reportDate;
-
 //Set Heroku Time Zone
 process.env.TZ = 'America/Bogota';
 
@@ -35,6 +29,7 @@ const app = express();
 app.use(express.static(path.resolve(__dirname, './../web')));
 
 app.get('/', function (req, res) {
+  //Will store querystrng Date
   const { currentDate, reportDate } = getCurrentDate(req.query.date);
 
   //Gets the basecamp data and prints html with info
@@ -43,7 +38,7 @@ app.get('/', function (req, res) {
 
     //Prints the layout of time
     const rows = lodash.map(timeEntries, entryValue => {
-      let flag = '', row = '', header;
+      let flag = '', row = '';
 
       //Pronts each row of data (TODOs)
       entryValue.report.forEach(entry => {
@@ -104,7 +99,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/notify', function (req, res) {
-  const { currentDate, reportDate } = getCurrentDate(req.query.date);
+  const { reportDate } = getCurrentDate(req.query.date);
   const pinguinedIds = [];
 
   console.log('the report date:', reportDate);
@@ -136,7 +131,7 @@ app.get('/notify', function (req, res) {
           //Send the push via Goole cloud message protocol
           if (lodash.get(peepsBody, 'registration_ids') && peepsBody['registration_ids'].length) {
 
-              // Don't know why this is being sent a lot of times.
+              //Send push to Google Cloud Manager (GCM) so it will handle push notifications
               requestURL.post({
                   url: process.env.GCM_URL,
                   json: peepsBody,
