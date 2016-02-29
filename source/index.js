@@ -75,6 +75,7 @@ app.get('/', function (req, res) {
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>Penguin Report</title>
             ${Utils.ogRenderer()}
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700">
             <link rel="stylesheet" href="styles/main.css">
             <link rel="manifest" href="manifest.json">
             <link rel="icon" type="image/png" href="images/favicon.png">

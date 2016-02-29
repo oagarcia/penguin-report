@@ -3,45 +3,72 @@
  */
 
 body {
-  font-family: Arial;
+  font-family: 'Montserrat Alternates', sans-serif;
   margin: 0;
   font-size: 0.8em;
   color: #222;
+  background-color: #FFB545;
+  margin: 50px;
+}
+
+input[type="date"]{
+  border: 10px solid #E89A25;
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: Arial;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+input::-webkit-calendar-picker-indicator{
+  color: #B60040;
+  background-color: #fff;
+}
+input::-webkit-clear-button{
+  color: #B60040;
 }
 
 table {
   border-collapse: collapse;
+  max-width: 500px;
+  min-width: 300px;
 }
 
 table,
 th,
 td {
-  border: 1px solid #000000;
+  /* border: 1px solid #000000; */
+  font-family: Arial, sans-serif;
 }
 
 td {
-  padding: 5px;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 h1 {
+  font-size: 2.8em;
   margin: 0 0 10px 0;
+  color: rgba(182, 0, 64, 0.66);
 }
 
 .title-container {
   text-align: center;
-  padding: 20px 0 0 0;
 }
 
 .user-name {
-  background-color: #99ccff;
+  background-color: #D1CA47;
+  color: #fff;
 }
 
 .penguin-report {
   margin: 20px auto 0;
+  background-color: #fff;
+  border: 10px solid #E89A25;
 }
 
 .penguined {
-  background-color: #ff0000;
+  background-color: #FF5A46;
 }
 .penguin-icon {
   font-size: 17px;
