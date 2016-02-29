@@ -28,6 +28,12 @@ input::-webkit-clear-button{
   color: #B60040;
 }
 
+select {
+  height: 28px;
+  font-size: 12px;
+  border: 1px solid #d1ca47;
+}
+
 table {
   border-collapse: collapse;
   max-width: 500px;
@@ -50,6 +56,19 @@ h1 {
   font-size: 2.8em;
   margin: 0 0 10px 0;
   color: rgba(182, 0, 64, 0.66);
+}
+
+.btn {
+  border: 1px solid transparent;
+  background-color: #d1ca47;
+  box-sizing: border-box;
+  padding: 5px 10px;
+  font-family: Arial;
+  font-weight: bold;
+  border-radius: 5px;
+  color: #fff;
+  font-family: 'Montserrat Alternates', sans-serif;
+  letter-spacing: 1px;  
 }
 
 .title-container {
@@ -87,11 +106,14 @@ h1 {
 }
 
 .z-peeps-container {
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(182,0,64,0.9);
   display: none;
   position: fixed;
   width: 100vw;
   height: 100vh;
+  top: 0;
+  left: 0;
+  color: #b60040;
 }
 
 .z-peeps-body{
@@ -105,6 +127,7 @@ h1 {
   left: calc((100vw - 350px) / 2);
   box-sizing: border-box;
   padding: 30px;
+  font-size: 16px;
 }
 
 .hide-notifier-button #push-notifier{

@@ -65,7 +65,7 @@ let Utils = {
     });
     return output + `
     <select>
-    <button id="z-peeps-identify" name="z-peeps-identify" class="z-peeps-identify" type="button">Identify</button>
+    <button id="z-peeps-identify" name="z-peeps-identify" class="btn z-peeps-identify" type="button">Identify</button>
     </form>
     </div>
     </div>`;
