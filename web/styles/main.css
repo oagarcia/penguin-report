@@ -50,6 +50,7 @@ td {
 td {
   padding: 10px;
   box-sizing: border-box;
+  background-color: #fff;
 }
 
 h1 {
@@ -82,7 +83,6 @@ h1 {
 
 .penguin-report {
   margin: 20px auto 0;
-  background-color: #fff;
   border: 10px solid #E89A25;
 }
 
