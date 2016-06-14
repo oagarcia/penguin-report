@@ -15,6 +15,10 @@
     "start": "nodemon build",
     "postinstall": "node_modules/babel-cli/bin/babel.js source/ -d build/ -s"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oagarcia/penguin-report"
+  },
   "keywords": [
     "Basecamp,zemoga"
   ],
