@@ -25,4 +25,4 @@ The cron job to notify users at specific times is located as an independent proj
 Such project is installed as a **now** application.
 [https://zeit.co/](https://zeit.co/)
 
-Check it trunning here!! [https://penguin-cronjob-hkuflgkrve.now.sh](https://penguin-cronjob-hkuflgkrve.now.sh)
+Check it running here!! [https://penguin-cronjob-uchazjmcpn.now.sh](https://penguin-cronjob-uchazjmcpn.now.sh)

@@ -27,7 +27,7 @@ let ruleToday = new schedule.RecurrenceRule();
 let ruleYesterday = new schedule.RecurrenceRule();
 
 ruleToday.dayOfWeek = [0, new schedule.Range(1, 5)];
-ruleToday.hour = 22;
+ruleToday.hour = 21;
 ruleToday.minute = 30;
 
 ruleYesterday.dayOfWeek = [0, new schedule.Range(1, 5)];
@@ -50,21 +50,21 @@ let sendPushNotification = function(dateStr) {
         .then(function(data) {
           console.log('the data', data);
           if (data.nopinguins) {
-            console.log('No people to notify!!!!');
+            console.log(new Date() + ' No people to notify!!!!');
           } else {
             if (data.failure) {
-              console.log('Notifications sent but with problems> fails: ' + data.failure + ', success: ' + data.success);
+              console.log(new Date() + ' Notifications sent but with problems > fails: ' + data.failure + ', success: ' + data.success);
             } else {
-              console.log(data.success + ' users notified!!!!');
+              console.log(new Date() + ' ' + data.success + ' users notified!!!!');
             }
           }
         })
         .catch(function(err) {
-          console.error('Unable to retrieve data', err);
+          console.error(new Date() + ' Unable to retrieve data: ' + err);
         });
     })
     .catch(function(error) {
-      console.log('There has been a problem: ' + error.message);
+      console.log(new Date() + ' There has been a problem: ' + error.message);
     });
 };
 
