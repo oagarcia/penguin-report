@@ -3,6 +3,22 @@
 const fetch = require('node-fetch');
 const schedule = require('node-schedule');
 
+/* ------------------------------------------
+Start - Now requires the app running any port
+------------------------------------------ */
+// const http = require('http');
+// const PORT = 9090;
+// const server = http.createServer((request, response) => response.end());
+
+// server.listen(PORT, () => {
+//   //Callback triggered when server is successfully listening.
+//   console.log('Server listening on: http://localhost:%s', PORT);
+// });
+
+/* -----------------------------------------
+End - Now requires the app running any port
+----------------------------------------- */
+
 /* global console */
 //Set the Time Zone
 process.env.TZ = 'America/Bogota';
