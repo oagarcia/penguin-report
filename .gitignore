@@ -1,4 +1,5 @@
 node_modules
+penguin-cronjob/node_modules
 dummy-data
 build
 *.sublime-workspace
