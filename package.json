@@ -6,7 +6,7 @@
     "Andres Garcia <andres@zemoga.com>"
   ],
   "engines": {
-    "node": "4.2.1"
+    "node": "6.2.1"
   },
   "main": "build/index.js",
   "scripts": {
