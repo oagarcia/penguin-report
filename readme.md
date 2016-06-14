@@ -1,4 +1,4 @@
-****# Penguin Basecamp Report
+# Penguin Basecamp Report
 
 ## Installation
 
