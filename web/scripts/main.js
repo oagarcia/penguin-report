@@ -23,15 +23,16 @@ var PenguinReport = {
     if ('serviceWorker' in navigator) {
       console.log('Service Worker is supported');
 
-      navigator.serviceWorker.register('scripts/sw.js').then(function(reg) {
-        console.log(':)', reg);
-        reg.pushManager.subscribe({
+      // We need the service worker registration to check for a subscription
+      navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+
+        serviceWorkerRegistration.pushManager.subscribe({
           userVisibleOnly: true
         }).then(function(sub) {
           var endpointParts = sub.endpoint.split('/');
           var pushRegistry = endpointParts[endpointParts.length - 1];
 
-          console.log('endpoint here:', sub.endpoint);
+          console.log('User authorized the notifications: ', sub.endpoint);
 
           if (localStorage.getItem(PenguinReport.STORAGE_IDENTIFIER)) {
             fetch('/sync-user/?user=' + localStorage.getItem(PenguinReport.STORAGE_IDENTIFIER) + '&registry=' + pushRegistry).then(function(response) {
@@ -49,13 +50,11 @@ var PenguinReport = {
               });
             });
           }
+        })
+        .catch(function(err) {
+          console.log('The user disabled the subscription');
         });
-      }).catch(function(err) {
-        console.log(':(', err);
-      });
 
-      // We need the service worker registration to check for a subscription
-      navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
         // Do we already have a push message subscription?
         serviceWorkerRegistration.pushManager.getSubscription()
           .then(function(subscription) {
@@ -70,6 +69,14 @@ var PenguinReport = {
           .catch(function(err) {
             console.warn('Error during getSubscription()', err);
           });
+      });
+
+      navigator.serviceWorker.register('sw.js')
+      .then(function(serviceWorkerRegistration) {
+
+        console.log('Authorization starting... ', serviceWorkerRegistration);
+      }).catch(function(err) {
+        console.log(':(', err);
       });
     }
   },
