@@ -52,7 +52,7 @@ var PenguinReport = {
           }
         })
         .catch(function(err) {
-          console.log('The user disabled the subscription');
+          console.log('The user disabled the subscription ' + err);
         });
 
         // Do we already have a push message subscription?
