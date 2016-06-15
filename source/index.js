@@ -25,12 +25,32 @@ process.env.TZ = 'America/Bogota';
 //Creates the server
 const app = express();
 
+//Push notification content.
+//TODO: Should be retrieved from DB
+const pushContent = {
+  TITLE: 'Time to report!!!!',
+  BODY: 'Avoid the Penguin',
+  ICON: '../images/penguin-icon.png',
+  TAG: 'penguin-tag',
+  RENOTIFY: false,
+  REQUIRE_INTERACTION: false,
+  VIBRATE: [300, 100, 400],
+  DATA: {url: 'http://www.google.com'}
+};
+
 // Static files
 app.use(express.static(path.resolve(__dirname, './../web')));
+
+app.use(function(req, res, next) {
+  res.setHeader('Service-Worker-Allowed', '/');
+  next();
+});
 
 app.get('/', function (req, res) {
   //Will store querystrng Date
   const { currentDate, reportDate } = getCurrentDate(req.query.date);
+
+
 
   //Gets the basecamp data and prints html with info
   // TODO: Handle errors!
@@ -129,8 +149,7 @@ app.get('/notify', function (req, res) {
         console.log('will be', pinguinedIds);
         ZPeepManager.getZPeepsRegistry(db, pinguinedIds, (peepsBody) => {
           console.log('I got pinguined zpeeps!!', peepsBody);
-
-          //Send the push via Goole cloud message protocol
+          //Send the push via Google cloud message protocol
           if (lodash.get(peepsBody, 'registration_ids') && peepsBody['registration_ids'].length) {
 
               //Send push to Google Cloud Manager (GCM) so it will handle push notifications
@@ -151,6 +170,25 @@ app.get('/notify', function (req, res) {
       });
     }
 
+  });
+});
+
+/**
+ * path URL used to retrieve the push message
+ */
+app.get('/getpushcontent', function (req, res) {
+  var now = new Date();
+  var timeStr = now.toLocaleTimeString();
+
+  res.status(200).send({
+    title : pushContent.TITLE,
+    body: timeStr + ' - ' + pushContent.BODY,
+    icon: pushContent.ICON,
+    tag: pushContent.TAG,
+    renotify: pushContent.RENOTIFY,
+    requireInteraction: pushContent.REQUIRE_INTERACTION,
+    vibrate: pushContent.VIBRATE,
+    data: pushContent.DATA
   });
 });
 
