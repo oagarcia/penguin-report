@@ -35,7 +35,7 @@ const pushContent = {
   RENOTIFY: false,
   REQUIRE_INTERACTION: false,
   VIBRATE: [300, 100, 400],
-  DATA: {url: 'http://www.google.com'}
+  DATA: {url: 'https://penguin-report.herokuapp.com'}
 };
 
 // Static files
