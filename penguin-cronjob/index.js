@@ -26,11 +26,11 @@ process.env.TZ = 'America/Bogota';
 let ruleToday = new schedule.RecurrenceRule();
 let ruleYesterday = new schedule.RecurrenceRule();
 
-ruleToday.dayOfWeek = [0, new schedule.Range(1, 5)];
+ruleToday.dayOfWeek = [new schedule.Range(1, 5)];
 ruleToday.hour = 21;
 ruleToday.minute = 30;
 
-ruleYesterday.dayOfWeek = [0, new schedule.Range(1, 5)];
+ruleYesterday.dayOfWeek = [new schedule.Range(1, 5)];
 ruleYesterday.hour = 14;
 ruleYesterday.minute = 15;
 
@@ -93,8 +93,18 @@ schedule.scheduleJob(ruleToday, function() {
 });
 
 schedule.scheduleJob(ruleYesterday, function() {
+  let today = new Date();
   let yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
+
+  let todayDayNumber = today.getDay();
+  let daysBefore = 1;
+
+  //If today is monday, check friday:
+  if (todayDayNumber === 1) {
+    daysBefore = 3;
+  }
+
+  yesterday.setDate(yesterday.getDate() - daysBefore);
 
   let dateStr = getFormatDate(yesterday);
   sendPushNotification(dateStr);
