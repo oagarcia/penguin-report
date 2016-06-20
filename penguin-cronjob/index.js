@@ -93,8 +93,18 @@ schedule.scheduleJob(ruleToday, function() {
 });
 
 schedule.scheduleJob(ruleYesterday, function() {
+  let today = new Date();
   let yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
+
+  let todayDayNumber = today.getDay();
+  let daysBefore = 1;
+
+  //If today is monday, check friday:
+  if (todayDayNumber === 1) {
+    daysBefore = 3;
+  }
+
+  yesterday.setDate(yesterday.getDate() - daysBefore);
 
   let dateStr = getFormatDate(yesterday);
   sendPushNotification(dateStr);
