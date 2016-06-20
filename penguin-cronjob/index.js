@@ -26,11 +26,11 @@ process.env.TZ = 'America/Bogota';
 let ruleToday = new schedule.RecurrenceRule();
 let ruleYesterday = new schedule.RecurrenceRule();
 
-ruleToday.dayOfWeek = [0, new schedule.Range(1, 5)];
+ruleToday.dayOfWeek = [new schedule.Range(1, 5)];
 ruleToday.hour = 21;
 ruleToday.minute = 30;
 
-ruleYesterday.dayOfWeek = [0, new schedule.Range(1, 5)];
+ruleYesterday.dayOfWeek = [new schedule.Range(1, 5)];
 ruleYesterday.hour = 14;
 ruleYesterday.minute = 15;
 
