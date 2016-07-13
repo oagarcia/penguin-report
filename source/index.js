@@ -19,6 +19,8 @@ const PERSON_NAME = 'person-name';
 
 const MIN_HOURS = 7;
 
+const _ = lodash;
+
 //Set Heroku Time Zone
 process.env.TZ = 'America/Bogota';
 
@@ -57,7 +59,7 @@ app.get('/', function (req, res) {
   ZPeepManager.getZPeepsTimeReport(reportDate, timeEntries => {
 
     //Prints the layout of time
-    const rows = lodash.map(timeEntries, entryValue => {
+    const rows = _.map(timeEntries, entryValue => {
       let flag = '', row = '';
 
       //Pronts each row of data (TODOs)
@@ -150,7 +152,7 @@ app.get('/notify', function (req, res) {
         ZPeepManager.getZPeepsRegistry(db, pinguinedIds, (peepsBody) => {
           console.log('I got pinguined zpeeps!!', peepsBody);
           //Send the push via Google cloud message protocol
-          if (lodash.get(peepsBody, 'registration_ids') && peepsBody['registration_ids'].length) {
+          if (_.get(peepsBody, 'registration_ids') && peepsBody['registration_ids'].length) {
 
               //Send push to Google Cloud Manager (GCM) so it will handle push notifications
               requestURL.post({
