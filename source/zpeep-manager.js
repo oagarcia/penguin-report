@@ -12,8 +12,6 @@ const PERSON_ID = 'person-id';
 const PERSON_NAME = 'person-name';
 const ADMIN_USER_ID = '870268';
 
-const _ = lodash;
-
 let ZPeepManager = {
 
   Z_PEEPS_COLLECTION_NAME : 'zpeeps',
@@ -44,8 +42,7 @@ let ZPeepManager = {
     {[PERSON_NAME]: 'Luis Carlos Chivata', [PERSON_ID] : '10581568', hours: 0},
     {[PERSON_NAME]: 'Maria Antonia Serna', [PERSON_ID] : '12108160', hours: 0},
     //{[PERSON_NAME]: 'Carlos Acero', [PERSON_ID] : '12109484', hours: 0},
-    {[PERSON_NAME]: 'Pablo Dorado', [PERSON_ID] : '12104247', hours: 0},
-    {[PERSON_NAME]: 'Mauricio Florez', [PERSON_ID] : '12131303', hours: 0}
+    {[PERSON_NAME]: 'Pablo Dorado', [PERSON_ID] : '12104247', hours: 0}
   ],
 
   /**
@@ -144,10 +141,10 @@ let ZPeepManager = {
 
         // Basically I'm filtering reports.xml so discarding users non in peopleIds (UI team)
         //PD: Sorry for the long line
-        timeEntries = _.filter(timeEntries, entry => ZPeepManager.peopleIds.map(el => el[PERSON_ID]).indexOf(entry[PERSON_ID][0]._) !== -1);
+        timeEntries = lodash.filter(timeEntries, entry => ZPeepManager.peopleIds.map(el => el[PERSON_ID]).indexOf(entry[PERSON_ID][0]._) !== -1);
 
         //Normalize some ugly data
-        timeEntries = _.forEach(timeEntries, entry => {
+        timeEntries = lodash.forEach(timeEntries, entry => {
           entry[PERSON_ID] = entry[PERSON_ID][0]._;
           entry.hours = +entry.hours[0]._;
           entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '<span class="description-hidden">*hidden</span>' : entry.description[0];
@@ -155,7 +152,7 @@ let ZPeepManager = {
         });
 
         //Grouping allows me to easily sumarize each report because reports are not sorted by each z-peep
-        timeEntries = _.groupBy(timeEntries, PERSON_ID);
+        timeEntries = lodash.groupBy(timeEntries, PERSON_ID);
 
         //If 0 reports, the user will not be present in the reports API
         //so as calling People.xml is pending, I'm completing the info
@@ -163,7 +160,7 @@ let ZPeepManager = {
         ZPeepManager.peopleIds.forEach(person => {
           let thisPersonId = person[PERSON_ID];
           let isAvailable = false;
-          _.forOwn(timeEntries, (entryValue, entryKey) => {
+          lodash.forOwn(timeEntries, (entryValue, entryKey) => {
             if (thisPersonId === entryKey) {
               isAvailable = true;
             }
@@ -174,16 +171,16 @@ let ZPeepManager = {
         });
 
         //Just to sort by total hours :( Thinking on refactoring
-        _.forOwn(timeEntries, function(value, key) {
+        lodash.forOwn(timeEntries, function(value, key) {
           let totalHours = 0;
           let personName = '';
-          _.forEach(value, function(value) {
+          lodash.forEach(value, function(value) {
             personName = value[PERSON_NAME];
             totalHours += value.hours;
           });
           timeEntries[key] = {[PERSON_ID]: key, [PERSON_NAME]: personName, totalHours, report : value};
         });
-        timeEntries = _.sortBy(timeEntries, ['totalHours']);
+        timeEntries = lodash.sortBy(timeEntries, ['totalHours']);
 
         //Returns array of formalized data
         callback(timeEntries);
