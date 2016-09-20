@@ -36,7 +36,7 @@ let ZPeepManager = {
     {[PERSON_NAME]: 'Mauricio Cubillos', [PERSON_ID] : '11360590', hours: 0},
     //{[PERSON_NAME]: 'Nicolas Lopez', [PERSON_ID] : '11522300', hours: 0},
     {[PERSON_NAME]: 'Orlando Donado', [PERSON_ID] : '11926495', hours: 0},
-    {[PERSON_NAME]: 'Pedro Patron', [PERSON_ID] : '11915402', hours: 0},
+    //{[PERSON_NAME]: 'Pedro Patron', [PERSON_ID] : '11915402', hours: 0},
     {[PERSON_NAME]: 'Daniel Camilo Daza', [PERSON_ID] : '11749582', hours: 0},
     {[PERSON_NAME]: 'Andres Garcia', [PERSON_ID] : ADMIN_USER_ID, hours: 0},
     {[PERSON_NAME]: 'Luis Carlos Chivata', [PERSON_ID] : '10581568', hours: 0},
