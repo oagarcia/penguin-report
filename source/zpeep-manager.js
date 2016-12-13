@@ -127,15 +127,17 @@ let ZPeepManager = {
   getZPeepsTimeReport(reportDate, callback) {
     console.log('env vars: ', process.env.BASECAMP_PROTOCOL);
     //Call to Basecamp reports
-    requestURL.get(
-      {url: process.env.BASECAMP_PROTOCOL + process.env.BASECAMP_TOKEN + '@' + process.env.BASECAMP_DOMAIN + process.env.BASECAMP_PATH,
+    let requestData = {url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}${process.env.BASECAMP_PATH}`,
       form : {from : reportDate, to: reportDate},
-      headers: {'User-Agent': 'Andres Garcia Reports (andres@zemoga.com)'}}, (error, resp, body) => {
+      headers: {'User-Agent': 'Andres Garcia Reports (andres@zemoga.com)'}};
 
+    console.log(requestData.url + '?from=' + reportDate + '&to=' + reportDate);
+
+    requestURL.get(
+      requestData, (error, resp, body) => {
       parseString(body, (parseError, parseResult) => {
 
         let timeEntries = parseResult['time-entries']['time-entry'];
-
 
         //TODO: Refactor > I want a final dataset in the way of:
         // [{'person-id': xxxxx, 'person-name': 'xxxxx', 'total-hours': 'xx.xx', 'reports': [{'description': 'xx', ..}, ...]}];
@@ -149,6 +151,13 @@ let ZPeepManager = {
         timeEntries = lodash.forEach(timeEntries, entry => {
           entry[PERSON_ID] = entry[PERSON_ID][0]._;
           entry.hours = +entry.hours[0]._;
+
+          //Sometimes, empty descriptions are parsed by xml2js coms as weird { '$': { nil: 'true' } } objects.
+          //So normalizing to empty string
+          if (typeof(entry.description[0]) === 'object') {
+            entry.description[0] = '';
+          }
+
           entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '<span class="description-hidden">*hidden</span>' : entry.description[0];
           entry[PERSON_NAME] = entry[PERSON_NAME].toString();
         });
