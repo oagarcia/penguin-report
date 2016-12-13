@@ -154,7 +154,7 @@ let ZPeepManager = {
 
           //Sometimes, empty descriptions are parsed by xml2js coms as weird { '$': { nil: 'true' } } objects.
           //So normalizing to empty string
-          if (typeof(entry.description[0]) === 'object') {
+          if (typeof entry.description[0] === 'object') {
             entry.description[0] = '';
           }
 
