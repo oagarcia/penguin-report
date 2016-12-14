@@ -4,9 +4,12 @@
  * @copyright Zemoga Inc
  */
 
-import requestURL from 'request';
+import requestURL from 'request-promise';
 import {parseString} from 'xml2js';
 import lodash from 'lodash';
+//import util from 'util';
+import cheerio from 'cheerio';
+import Promise from 'bluebird';
 
 const PERSON_ID = 'person-id';
 const PERSON_NAME = 'person-name';
@@ -125,78 +128,134 @@ let ZPeepManager = {
    * @param  {Function} callback   Triggers once data is retrieved
    */
   getZPeepsTimeReport(reportDate, callback) {
+
+    //Initialize Object with time report data
+    let timeEntries = null;
+    let timeEntriesCount = 0;
+
     console.log('env vars: ', process.env.BASECAMP_PROTOCOL);
+
     //Call to Basecamp reports
-    let requestData = {url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}${process.env.BASECAMP_PATH}`,
-      form : {from : reportDate, to: reportDate},
+    let requestTimeReport = {uri: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}${process.env.BASECAMP_PATH}`,
+      qs : {from : reportDate, to: reportDate},
       headers: {'User-Agent': 'Andres Garcia Reports (andres@zemoga.com)'}};
 
-    console.log(requestData.url + '?from=' + reportDate + '&to=' + reportDate);
+    console.log('report URL: ' + requestTimeReport.uri + '?from=' + reportDate + '&to=' + reportDate);
 
-    requestURL.get(
-      requestData, (error, resp, body) => {
-      parseString(body, (parseError, parseResult) => {
+    requestURL(requestTimeReport)
+      .then(function(body) {
 
-        let timeEntries = parseResult['time-entries']['time-entry'];
+        parseString(body, (parseError, parseResult) => {
+          timeEntries = parseResult['time-entries']['time-entry'];
 
-        //TODO: Refactor > I want a final dataset in the way of:
-        // [{'person-id': xxxxx, 'person-name': 'xxxxx', 'total-hours': 'xx.xx', 'reports': [{'description': 'xx', ..}, ...]}];
-        // this can be acomplished with less lodash involvement, less code and vanilla js.
+          //TODO: Refactor > I want a final dataset in the way of:
+          // [{'person-id': xxxxx, 'person-name': 'xxxxx', 'total-hours': 'xx.xx', 'reports': [{'description': 'xx', ..}, ...]}];
+          // this can be acomplished with less lodash involvement, less code and vanilla js.
 
-        // Basically I'm filtering reports.xml so discarding users non in peopleIds (UI team)
-        //PD: Sorry for the long line
-        timeEntries = lodash.filter(timeEntries, entry => ZPeepManager.peopleIds.map(el => el[PERSON_ID]).indexOf(entry[PERSON_ID][0]._) !== -1);
+          // Basically I'm filtering reports.xml so discarding users non in peopleIds (UI team)
+          //PD: Sorry for the long line
+          timeEntries = lodash.filter(timeEntries, entry => ZPeepManager.peopleIds.map(el => el[PERSON_ID]).indexOf(entry[PERSON_ID][0]._) !== -1);
+          timeEntriesCount = timeEntries.length;
 
-        //Normalize some ugly data
-        timeEntries = lodash.forEach(timeEntries, entry => {
-          entry[PERSON_ID] = entry[PERSON_ID][0]._;
-          entry.hours = +entry.hours[0]._;
+          //Normalize some ugly data
+          lodash.forEach(timeEntries, entry => {
+            //console.log(util.inspect(entry, false, null));
+            //console.log('todo: ' + entry['todo-item-id'][0]._);
+            entry[PERSON_ID] = entry[PERSON_ID][0]._;
+            entry.hours = +entry.hours[0]._;
+            entry.projectName = '';
+            entry.todoName = '';
 
-          //Sometimes, empty descriptions are parsed by xml2js coms as weird { '$': { nil: 'true' } } objects.
-          //So normalizing to empty string
-          if (typeof entry.description[0] === 'object') {
-            entry.description[0] = '';
-          }
+            //Sometimes, empty descriptions are parsed by xml2js coms as weird { '$': { nil: 'true' } } objects.
+            //So normalizing to empty string
+            if (typeof entry.description[0] === 'object') {
+              entry.description[0] = '';
+            }
 
-          entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '<span class="description-hidden">*hidden</span>' : entry.description[0];
-          entry[PERSON_NAME] = entry[PERSON_NAME].toString();
-        });
+            entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '<span class="description-hidden">*hidden</span>' : entry.description[0];
+            entry[PERSON_NAME] = entry[PERSON_NAME].toString();
+          });
 
-        //Grouping allows me to easily sumarize each report because reports are not sorted by each z-peep
-        timeEntries = lodash.groupBy(timeEntries, PERSON_ID);
+          //Grouping allows me to easily sumarize each report because reports are not sorted by each z-peep
+          timeEntries = lodash.groupBy(timeEntries, PERSON_ID);
 
-        //If 0 reports, the user will not be present in the reports API
-        //so as calling People.xml is pending, I'm completing the info
-        //from harcoding users in peopleIds
-        ZPeepManager.peopleIds.forEach(person => {
-          let thisPersonId = person[PERSON_ID];
-          let isAvailable = false;
-          lodash.forOwn(timeEntries, (entryValue, entryKey) => {
-            if (thisPersonId === entryKey) {
-              isAvailable = true;
+          //If 0 reports, the user will not be present in the reports API
+          //so as calling People.xml is pending, I'm completing the info
+          //from harcoding users in peopleIds
+          ZPeepManager.peopleIds.forEach(person => {
+            let thisPersonId = person[PERSON_ID];
+            let isAvailable = false;
+            lodash.forOwn(timeEntries, (entryValue, entryKey) => {
+              if (thisPersonId === entryKey) {
+                isAvailable = true;
+              }
+            });
+            if (!isAvailable) {
+              timeEntries[thisPersonId] = [person];
             }
           });
-          if (!isAvailable) {
-            timeEntries[thisPersonId] = [person];
-          }
-        });
 
-        //Just to sort by total hours :( Thinking on refactoring
-        lodash.forOwn(timeEntries, function(value, key) {
-          let totalHours = 0;
-          let personName = '';
-          lodash.forEach(value, function(value) {
-            personName = value[PERSON_NAME];
-            totalHours += value.hours;
+          //Just to sort by total hours :( Thinking on refactoring
+          lodash.forOwn(timeEntries, function(value, key) {
+            let totalHours = 0;
+            let personName = '';
+            lodash.forEach(value, function(value) {
+              personName = value[PERSON_NAME];
+              totalHours += value.hours;
+            });
+            timeEntries[key] = {[PERSON_ID]: key, [PERSON_NAME]: personName, totalHours, report : value};
           });
-          timeEntries[key] = {[PERSON_ID]: key, [PERSON_NAME]: personName, totalHours, report : value};
-        });
-        timeEntries = lodash.sortBy(timeEntries, ['totalHours']);
+          timeEntries = lodash.sortBy(timeEntries, ['totalHours']);
 
-        //Returns array of formalized data
-        callback(timeEntries);
+          let currentTimeEntry = 0;
+
+          //Additional report data (Project name and todo name)
+          //@TODO: Making requests x each entry is not cool. We need mem Cache for project info.
+          lodash.forEach(timeEntries, entry => {
+
+            lodash.forEach(entry.report, report => {
+              
+              //Gets the project info:
+              let requestProjectInfo = 
+              {
+                url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}/projects/${report['project-id'][0]._}.xml`,
+                headers: {'User-Agent': 'Andres Garcia Reports (andres@zemoga.com)'}
+              };
+
+              //Gets the todo item name
+              let requestTodoInfo = 
+              {
+                url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}/todo_items/${report['todo-item-id'][0]._}.xml`,
+                headers: {'User-Agent': 'Andres Garcia Reports (andres@zemoga.com)'}
+              };
+
+              Promise.all([requestURL(requestProjectInfo), requestURL(requestTodoInfo)])
+                .spread(function(responseProjectInfo, responseTodoInfo) {
+                  currentTimeEntry++;
+                  report.projectName = cheerio.load(responseProjectInfo).root().find('project > name').text();
+
+                  let todoName = cheerio.load(responseTodoInfo).root().find('todo-item > content').text();
+
+                  if (typeof todoName !== 'undefined') {
+                    report.todoName = cheerio.load(responseTodoInfo).root().find('todo-item > content').text() + ': ';
+                  }
+
+                  //All requests made, so calling callback to continue the rendering process
+                  if (currentTimeEntry === timeEntriesCount) {
+                    //Returns array of formalized data
+                    callback(timeEntries);
+                  }
+                })
+                .catch(function(err) {
+                  console.log('Error occured when requesting additional entry information:' + err);
+                });
+            });
+          });
+        });
+      })
+      .catch(function(err) {
+        console.log('error!!!!!!' + err);
       });
-    });
   }
 };
 
