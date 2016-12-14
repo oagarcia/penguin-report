@@ -34,6 +34,7 @@
     "mongodb": "^2.1.6",
     "nodemon": "^1.8.1",
     "request": "^2.69.0",
+    "request-promise": "^4.1.1",
     "xml2js": "^0.4.16"
   }
 }
