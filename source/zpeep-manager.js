@@ -7,7 +7,7 @@
 import requestURL from 'request-promise';
 import {parseString} from 'xml2js';
 import lodash from 'lodash';
-import util from 'util';
+//import util from 'util';
 import cheerio from 'cheerio';
 import Promise from 'bluebird';
 
@@ -250,7 +250,6 @@ let ZPeepManager = {
                   console.log('Error occured when requesting additional entry information:' + err);
                 });
             });
-
           });
         });
       })
