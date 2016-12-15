@@ -7,6 +7,8 @@
 import requestURL from 'request-promise';
 import {parseString} from 'xml2js';
 import lodash from 'lodash';
+import map from 'lodash/fp/map';
+import flatten from 'lodash/fp/flatten';
 //import util from 'util';
 import cheerio from 'cheerio';
 import Promise from 'bluebird';
@@ -131,14 +133,14 @@ let ZPeepManager = {
 
     //Initialize Object with time report data
     let timeEntries = null;
-    let timeEntriesCount = 0;
+    const REQUEST_USER_AGENT_HEADER = 'Andres Garcia Reports (andres@zemoga.com)';
 
     console.log('env vars: ', process.env.BASECAMP_PROTOCOL);
 
     //Call to Basecamp reports
     let requestTimeReport = {uri: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}${process.env.BASECAMP_PATH}`,
       qs : {from : reportDate, to: reportDate},
-      headers: {'User-Agent': 'Andres Garcia Reports (andres@zemoga.com)'}};
+      headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}};
 
     console.log('report URL: ' + requestTimeReport.uri + '?from=' + reportDate + '&to=' + reportDate);
 
@@ -155,7 +157,6 @@ let ZPeepManager = {
           // Basically I'm filtering reports.xml so discarding users non in peopleIds (UI team)
           //PD: Sorry for the long line
           timeEntries = lodash.filter(timeEntries, entry => ZPeepManager.peopleIds.map(el => el[PERSON_ID]).indexOf(entry[PERSON_ID][0]._) !== -1);
-          timeEntriesCount = timeEntries.length;
 
           //Normalize some ugly data
           lodash.forEach(timeEntries, entry => {
@@ -172,7 +173,7 @@ let ZPeepManager = {
               entry.description[0] = '';
             }
 
-            entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '<span class="description-hidden">*hidden</span>' : entry.description[0];
+            //entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '<span class="description-hidden">*hidden</span>' : entry.description[0];
             entry[PERSON_NAME] = entry[PERSON_NAME].toString();
           });
 
@@ -192,6 +193,9 @@ let ZPeepManager = {
             });
             if (!isAvailable) {
               timeEntries[thisPersonId] = [person];
+
+              person.projectName = '';
+              person.todoName = '';
             }
           });
 
@@ -208,6 +212,8 @@ let ZPeepManager = {
           timeEntries = lodash.sortBy(timeEntries, ['totalHours']);
 
           let currentTimeEntry = 0;
+          //Get the total number of time entry records
+          let timeEntriesCount = lodash.flow(map('report'), flatten)(timeEntries).length;
 
           //Additional report data (Project name and todo name)
           //@TODO: Making requests x each entry is not cool. We need mem Cache for project info.
@@ -215,46 +221,70 @@ let ZPeepManager = {
 
             lodash.forEach(entry.report, report => {
               
-              //Gets the project info:
-              let requestProjectInfo = 
-              {
-                url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}/projects/${report['project-id'][0]._}.xml`,
-                headers: {'User-Agent': 'Andres Garcia Reports (andres@zemoga.com)'}
-              };
+              const projectId = report['project-id'];
+              const todoItemId = report['todo-item-id'];
+              let requests = [];
 
-              //Gets the todo item name
-              let requestTodoInfo = 
-              {
-                url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}/todo_items/${report['todo-item-id'][0]._}.xml`,
-                headers: {'User-Agent': 'Andres Garcia Reports (andres@zemoga.com)'}
-              };
+              if (projectId) {
+                //Gets the project info:
+                let requestProjectInfo = {
+                  url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}/projects/${projectId[0]._}.xml`,
+                  headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
+                };
 
-              Promise.all([requestURL(requestProjectInfo), requestURL(requestTodoInfo)])
-                .spread(function(responseProjectInfo, responseTodoInfo) {
-                  currentTimeEntry++;
-                  report.projectName = cheerio.load(responseProjectInfo).root().find('project > name').text();
+                requests.push(requestURL(requestProjectInfo));
+              }
 
-                  let todoName = cheerio.load(responseTodoInfo).root().find('todo-item > content').text();
+              if (todoItemId) {
+                //Gets the todo item name
+                let requestTodoInfo = {
+                  url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}/todo_items/${todoItemId[0]._}.xml`,
+                  headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
+                };
+                requests.push(requestURL(requestTodoInfo));
+              }
 
-                  if (typeof todoName !== 'undefined') {
-                    report.todoName = cheerio.load(responseTodoInfo).root().find('todo-item > content').text() + ': ';
-                  }
+              if (requests.length) {
+                Promise.all(requests)
+                  .spread((responseProjectInfo, responseTodoInfo) => {
+                    
+                    let todoName = cheerio.load(responseTodoInfo).root().find('todo-item > content').text();
+                    let projectName = cheerio.load(responseProjectInfo).root().find('project > name').text();
 
-                  //All requests made, so calling callback to continue the rendering process
-                  if (currentTimeEntry === timeEntriesCount) {
-                    //Returns array of formalized data
-                    callback(timeEntries);
-                  }
-                })
-                .catch(function(err) {
-                  console.log('Error occured when requesting additional entry information:' + err);
-                });
+                    report.projectName = projectName;
+
+                    if (typeof todoName !== 'undefined') {
+                      report.todoName = todoName + ': ';
+                    }
+                  })
+                  .catch(function(err) {
+                    console.log('Error occured when requesting additional entry information:' + err);
+                  })
+                  .finally(() => {
+                    currentTimeEntry++;
+                    //All requests made, so calling callback to continue the rendering process
+                    if (currentTimeEntry === timeEntriesCount) {
+                      //Returns array of formalized data
+                      //console.log(currentTimeEntry);
+                      //console.log(timeEntries[20].report[0]);
+                      callback(timeEntries);
+                    }
+                  });
+              } else {
+                currentTimeEntry++;
+                //All requests made, so calling callback to continue the rendering process
+                if (currentTimeEntry === timeEntriesCount) {
+                  //Returns array of formalized data
+                  //console.log(timeEntries);
+                  callback(timeEntries);
+                }
+              }
             });
           });
         });
       })
       .catch(function(err) {
-        console.log('error!!!!!!' + err);
+        console.log('error >>>>> ' + err);
       });
   }
 };

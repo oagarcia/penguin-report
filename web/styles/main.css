@@ -101,6 +101,10 @@ h1 {
   color: #ff0000;
 }
 
+.text-description {
+  color: #ca3786;
+}
+
 .description-hidden{
   color: #999;
 }

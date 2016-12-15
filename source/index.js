@@ -50,8 +50,6 @@ app.get('/', function (req, res) {
   //Will store querystrng Date
   const { currentDate, reportDate } = getCurrentDate(req.query.date);
 
-
-
   //Gets the basecamp data and prints html with info
   // TODO: Handle errors!
   ZPeepManager.getZPeepsTimeReport(reportDate, timeEntries => {
@@ -62,10 +60,12 @@ app.get('/', function (req, res) {
 
       //Pronts each row of data (TODOs)
       entryValue.report.forEach(entry => {
-        row += `<tr><td><strong>
-        ${entry.projectName}</strong><br />
+        //console.log(entry);
+
+        row += `<tr><td>
+        ${entry.projectName !== '' ? '<strong>' + entry.projectName  + '</strong><br />': ''}
         ${entry.todoName}
-        ${typeof entry.description !== 'undefined' ? entry.description !== '' ? entry.description : '????' : '<span class="penguin-icon">🐧🐧🐧</span>'}</td><td class="tright">${entry.hours}</td></tr>`;
+        ${typeof entry.description !== 'undefined' ?  entry.description !== '' ? '<span class="text-description">' + entry.description + '</span>' : '<span class="text-penguined">????</span>' : '<span class="penguin-icon">🐧🐧🐧</span>'}</td><td class="tright">${entry.hours}</td></tr>`;
       });
 
       //Penguined!!!!!!!!!!!!!!!!!!
