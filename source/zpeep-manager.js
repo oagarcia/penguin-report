@@ -169,12 +169,12 @@ let ZPeepManager = {
 
             //Sometimes, empty descriptions are parsed by xml2js coms as weird { '$': { nil: 'true' } } objects.
             //So normalizing to empty string
-            entry.description = entry.description[0];
+            entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '<span class="description-hidden">*hidden</span>' : entry.description[0];
             if (typeof entry.description === 'object') {
               entry.description = '';
             }
 
-            //entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '<span class="description-hidden">*hidden</span>' : entry.description[0];
+            
             entry[PERSON_NAME] = entry[PERSON_NAME].toString();
           });
 
