@@ -18,6 +18,8 @@ const PERSON_ID = 'person-id';
 const PERSON_NAME = 'person-name';
 
 const MIN_HOURS = 7;
+const JIRA_DOMAIN = 'https://zemoga.jira.com/browse/';
+const JIRA_PATTERN = /([a-z|A-Z]+-[0-9]+)/ig;
 
 //Set Heroku Time Zone
 process.env.TZ = 'America/Bogota';
@@ -60,10 +62,23 @@ app.get('/', function (req, res) {
 
       //Pronts each row of data (TODOs)
       entryValue.report.forEach(entry => {
+
+        let description = entry.description;
+
+        if (typeof description !== 'undefined') {
+          if (description === '') {
+            description = '<strong class="text-penguined">????????????</strong>';
+          } else {
+            description = `<span class="text-description">${description.replace(JIRA_PATTERN, '<a target="_blank" href="' + JIRA_DOMAIN + '$1">$1</a>')}</span>`;
+          }
+        } else {
+          description = '<span class="penguin-icon">🐧🐧🐧</span>';
+        }
+
         row += `<tr><td>
         ${entry.projectName !== '' ? '<strong>' + entry.projectName  + '</strong><br />': ''}
         ${entry.todoName}
-        ${typeof entry.description !== 'undefined' ?  entry.description !== '' ? '<span class="text-description">' + entry.description + '</span>' : '<strong class="text-penguined">????????????</strong>' : '<span class="penguin-icon">🐧🐧🐧</span>'}</td><td class="tright">${entry.hours}</td></tr>`;
+        ${description}</td><td class="tright">${entry.hours}</td></tr>`;
       });
 
       //Penguined!!!!!!!!!!!!!!!!!!
