@@ -16,10 +16,19 @@ import Promise from 'bluebird';
 const PERSON_ID = 'person-id';
 const PERSON_NAME = 'person-name';
 const ADMIN_USER_ID = '870268';
+const HIDDEN_PROJECT_NAME = 'Zemoga-Directors Team';
 
 let ZPeepManager = {
 
   Z_PEEPS_COLLECTION_NAME : 'zpeeps',
+
+  getAdminId: function() {
+    return ADMIN_USER_ID;
+  },
+
+  getAdminHiddenProject: function() {
+    return HIDDEN_PROJECT_NAME;
+  },
 
   //TODO: IDs should be retrieved from people.xml
   //take into account that it will retrieve every z-peep from given company and
@@ -169,7 +178,7 @@ let ZPeepManager = {
 
             //Sometimes, empty descriptions are parsed by xml2js coms as weird { '$': { nil: 'true' } } objects.
             //So normalizing to empty string
-            entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '<span class="description-hidden">*hidden</span>' : entry.description[0];
+            entry.description = entry.description[0];
             if (typeof entry.description === 'object') {
               entry.description = '';
             }

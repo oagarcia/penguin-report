@@ -63,13 +63,19 @@ app.get('/', function (req, res) {
       //Pronts each row of data (TODOs)
       entryValue.report.forEach(entry => {
 
-        let description = entry.description;
+        const entryDescription = entry.description;
+        let description = '';
 
-        if (typeof description !== 'undefined') {
-          if (description === '') {
+
+        if (typeof entryDescription !== 'undefined') {
+          if (entryDescription === '') {
             description = '<strong class="text-penguined">????????????</strong>';
           } else {
-            description = `<span class="text-description">${description.replace(JIRA_PATTERN, '<a target="_blank" href="' + JIRA_DOMAIN + '$1">$1</a>')}</span>`;
+            if (entry['person-id'] === ZPeepManager.getAdminId() && entry.projectName === ZPeepManager.getAdminHiddenProject()) {
+              description = '<span class="description-hidden">*hidden</span>';
+            } else {
+              description = `<span class="text-description">${entryDescription.replace(JIRA_PATTERN, '<a target="_blank" href="' + JIRA_DOMAIN + '$1">$1</a>')}</span>`;  
+            }
           }
         } else {
           description = '<span class="penguin-icon">🐧🐧🐧</span>';
