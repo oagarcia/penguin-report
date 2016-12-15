@@ -169,8 +169,9 @@ let ZPeepManager = {
 
             //Sometimes, empty descriptions are parsed by xml2js coms as weird { '$': { nil: 'true' } } objects.
             //So normalizing to empty string
-            if (typeof entry.description[0] === 'object') {
-              entry.description[0] = '';
+            entry.description = entry.description[0];
+            if (typeof entry.description === 'object') {
+              entry.description = '';
             }
 
             //entry.description = entry[PERSON_ID] ===  ADMIN_USER_ID ? '<span class="description-hidden">*hidden</span>' : entry.description[0];
@@ -213,7 +214,9 @@ let ZPeepManager = {
 
           let currentTimeEntry = 0;
           //Get the total number of time entry records
-          let timeEntriesCount = lodash.flow(map('report'), flatten)(timeEntries).length;
+          let timeEntriesCount = lodash.flow(
+            map('report'), 
+            flatten)(timeEntries).length;
 
           //Additional report data (Project name and todo name)
           //@TODO: Making requests x each entry is not cool. We need mem Cache for project info.
@@ -231,16 +234,17 @@ let ZPeepManager = {
                   url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}/projects/${projectId[0]._}.xml`,
                   headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
                 };
-
+                //console.log(requestProjectInfo.url);
                 requests.push(requestURL(requestProjectInfo));
               }
-
-              if (todoItemId) {
+              
+              if (todoItemId && todoItemId[0] && todoItemId[0]._) {
                 //Gets the todo item name
                 let requestTodoInfo = {
                   url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}/todo_items/${todoItemId[0]._}.xml`,
                   headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
                 };
+                //console.log(requestTodoInfo.url);
                 requests.push(requestURL(requestTodoInfo));
               }
 
@@ -248,12 +252,12 @@ let ZPeepManager = {
                 Promise.all(requests)
                   .spread((responseProjectInfo, responseTodoInfo) => {
                     
-                    let todoName = cheerio.load(responseTodoInfo).root().find('todo-item > content').text();
                     let projectName = cheerio.load(responseProjectInfo).root().find('project > name').text();
 
                     report.projectName = projectName;
 
-                    if (typeof todoName !== 'undefined') {
+                    if (typeof responseTodoInfo !== 'undefined') {
+                      let todoName = cheerio.load(responseTodoInfo).root().find('todo-item > content').text();
                       report.todoName = todoName + ': ';
                     }
                   })

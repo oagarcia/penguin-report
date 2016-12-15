@@ -60,12 +60,10 @@ app.get('/', function (req, res) {
 
       //Pronts each row of data (TODOs)
       entryValue.report.forEach(entry => {
-        //console.log(entry);
-
         row += `<tr><td>
         ${entry.projectName !== '' ? '<strong>' + entry.projectName  + '</strong><br />': ''}
         ${entry.todoName}
-        ${typeof entry.description !== 'undefined' ?  entry.description !== '' ? '<span class="text-description">' + entry.description + '</span>' : '<span class="text-penguined">????</span>' : '<span class="penguin-icon">🐧🐧🐧</span>'}</td><td class="tright">${entry.hours}</td></tr>`;
+        ${typeof entry.description !== 'undefined' ?  entry.description !== '' ? '<span class="text-description">' + entry.description + '</span>' : '<strong class="text-penguined">????????????</strong>' : '<span class="penguin-icon">🐧🐧🐧</span>'}</td><td class="tright">${entry.hours}</td></tr>`;
       });
 
       //Penguined!!!!!!!!!!!!!!!!!!
