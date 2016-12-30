@@ -14,6 +14,9 @@ import requestURL from 'request';
 import { Utils, getCurrentDate } from './utils';
 import { ZPeepManager } from './zpeep-manager';
 
+const PROTOCOL = 'https://';
+const DOMAIN = 'penguin-report.herokuapp.com';
+
 const PERSON_ID = 'person-id';
 const PERSON_NAME = 'person-name';
 
@@ -37,12 +40,24 @@ const pushContent = {
   RENOTIFY: false,
   REQUIRE_INTERACTION: false,
   VIBRATE: [300, 100, 400],
-  DATA: {url: 'https://penguin-report.herokuapp.com'}
+  DATA: {url: PROTOCOL + DOMAIN}
 };
+
+//Redirects to only use https
+app.get('*', function(req, res, next) {
+  const fwdProtocolHeader = req.headers['x-forwarded-proto'];
+
+  if (fwdProtocolHeader && fwdProtocolHeader !== 'https') {
+    res.redirect(PROTOCOL + DOMAIN + req.url);
+  } else {
+    next(); /* Continue to other routes if we're not redirecting */
+  }
+});
 
 // Static files
 app.use(express.static(path.resolve(__dirname, './../web')));
 
+//allows service worker to run
 app.use(function(req, res, next) {
   res.setHeader('Service-Worker-Allowed', '/');
   next();
@@ -255,3 +270,5 @@ app.use('*', (req, res) => res.status(404).send(`<h1>404 Not Found</h1>`));
 
 app.listen(process.env.PORT || 80, () =>
   console.log('Server started in port', process.env.PORT || 80));
+
+
