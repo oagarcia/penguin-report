@@ -36,7 +36,7 @@ let ZPeepManager = {
   peopleIds : [
     {[PERSON_NAME]: 'Aiman Samad', [PERSON_ID] : '10739872', hours: 0},
     {[PERSON_NAME]: 'Alejandro Sanmartin', [PERSON_ID] : '1243347', hours: 0},
-    //{[PERSON_NAME]: 'Andres Acevedo', [PERSON_ID] : '11890705', hours: 0},
+    {[PERSON_NAME]: 'Andres Acevedo', [PERSON_ID] : '11890705', hours: 0},
     {[PERSON_NAME]: 'Andres Zorro', [PERSON_ID] : '10997106', hours: 0},
     {[PERSON_NAME]: 'Camilo Soto', [PERSON_ID] : '11527725', hours: 0},
     {[PERSON_NAME]: 'Cesar Leonardo Guerrero', [PERSON_ID] : '11842419', hours: 0},
