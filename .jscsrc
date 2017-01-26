@@ -11,15 +11,14 @@
     ],
 
     "jsDoc": {
+        "requireParamDescription": true,
         "checkAnnotations": "jsdoc3",
         "checkParamNames": true,
         "checkRedundantParams": true,
-        "checkReturnTypes": true,
         "checkRedundantReturns": true,
         "checkTypes": "strictNativeCase",
         "checkRedundantAccess": "enforceLeadingUnderscore",
         "leadingUnderscoreAccess": true,
-        "enforceExistence": "exceptExports",
         "requireParamTypes": true
     }
 }

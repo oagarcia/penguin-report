@@ -20,7 +20,7 @@ const HIDDEN_PROJECT_NAME = 'Zemoga-Directors Team';
 
 let ZPeepManager = {
 
-  Z_PEEPS_COLLECTION_NAME : 'zpeeps',
+  Z_PEEPS_COLLECTION_NAME: 'zpeeps',
 
   getAdminId: function() {
     return ADMIN_USER_ID;
@@ -33,44 +33,45 @@ let ZPeepManager = {
   //TODO: IDs should be retrieved from people.xml
   //take into account that it will retrieve every z-peep from given company and
   //there is not such thing like filter by UI dept
-  peopleIds : [
-    {[PERSON_NAME]: 'Aiman Samad', [PERSON_ID] : '10739872', hours: 0},
-    {[PERSON_NAME]: 'Alejandro Sanmartin', [PERSON_ID] : '1243347', hours: 0},
-    {[PERSON_NAME]: 'Andres Acevedo', [PERSON_ID] : '11890705', hours: 0},
-    {[PERSON_NAME]: 'Andres Zorro', [PERSON_ID] : '10997106', hours: 0},
-    {[PERSON_NAME]: 'Camilo Soto', [PERSON_ID] : '11527725', hours: 0},
-    {[PERSON_NAME]: 'Cesar Leonardo Guerrero', [PERSON_ID] : '11842419', hours: 0},
-    {[PERSON_NAME]: 'Edin Rivera', [PERSON_ID] : '11657876', hours: 0},
-    {[PERSON_NAME]: 'Fredy Urrego', [PERSON_ID] : '11915855', hours: 0},
-    {[PERSON_NAME]: 'German Galvis', [PERSON_ID] : '1645970', hours: 0},
-    {[PERSON_NAME]: 'Gustavo Morales', [PERSON_ID] : '11934744', hours: 0},
-    {[PERSON_NAME]: 'Javier Jaimes', [PERSON_ID] : '11926506', hours: 0},
-    {[PERSON_NAME]: 'Jose Conde', [PERSON_ID] : '11925814', hours: 0},
-    {[PERSON_NAME]: 'Juan Pablo Vallejo', [PERSON_ID] : '11943154', hours: 0},
-    {[PERSON_NAME]: 'Mauricio Cubillos', [PERSON_ID] : '11360590', hours: 0},
-    {[PERSON_NAME]: 'Nicolas Lopez', [PERSON_ID] : '12213547', hours: 0},
-    {[PERSON_NAME]: 'Nicolas Muñoz', [PERSON_ID] : '12224662', hours: 0},
-    {[PERSON_NAME]: 'Orlando Donado', [PERSON_ID] : '11926495', hours: 0},
+  peopleIds: [
+    {[PERSON_NAME]: 'Aiman Samad', [PERSON_ID]: '10739872', hours: 0},
+    {[PERSON_NAME]: 'Alejandro Sanmartin', [PERSON_ID]: '1243347', hours: 0},
+    //{[PERSON_NAME]: 'Andres Acevedo', [PERSON_ID]: '11890705', hours: 0},
+    {[PERSON_NAME]: 'Andres Zorro', [PERSON_ID]: '10997106', hours: 0},
+    {[PERSON_NAME]: 'Camilo Soto', [PERSON_ID]: '11527725', hours: 0},
+    {[PERSON_NAME]: 'Cesar Guerrero', [PERSON_ID]: '11842419', hours: 0},
+    {[PERSON_NAME]: 'Edin Rivera', [PERSON_ID]: '11657876', hours: 0},
+    {[PERSON_NAME]: 'Fredy Urrego', [PERSON_ID]: '11915855', hours: 0},
+    {[PERSON_NAME]: 'German Galvis', [PERSON_ID]: '1645970', hours: 0},
+    {[PERSON_NAME]: 'Gustavo Morales', [PERSON_ID]: '11934744', hours: 0},
+    {[PERSON_NAME]: 'Javier Jaimes', [PERSON_ID]: '11926506', hours: 0},
+    {[PERSON_NAME]: 'Jose Conde', [PERSON_ID]: '11925814', hours: 0},
+    {[PERSON_NAME]: 'Juan Pablo Vallejo', [PERSON_ID]: '11943154', hours: 0},
+    {[PERSON_NAME]: 'Mauricio Cubillos', [PERSON_ID]: '11360590', hours: 0},
+    {[PERSON_NAME]: 'Nicolas Lopez', [PERSON_ID]: '12213547', hours: 0},
+    {[PERSON_NAME]: 'Nicolas Muñoz', [PERSON_ID]: '12224662', hours: 0},
+    {[PERSON_NAME]: 'Orlando Donado', [PERSON_ID]: '11926495', hours: 0},
     //{[PERSON_NAME]: 'Pedro Patron', [PERSON_ID] : '11915402', hours: 0},
-    {[PERSON_NAME]: 'Daniel Camilo Daza', [PERSON_ID] : '11749582', hours: 0},
-    {[PERSON_NAME]: 'Andres Garcia', [PERSON_ID] : ADMIN_USER_ID, hours: 0},
-    {[PERSON_NAME]: 'Luis Carlos Chivata', [PERSON_ID] : '10581568', hours: 0},
-    {[PERSON_NAME]: 'Maria Antonia Serna', [PERSON_ID] : '12108160', hours: 0},
+    {[PERSON_NAME]: 'Daniel Camilo Daza', [PERSON_ID]: '11749582', hours: 0},
+    {[PERSON_NAME]: 'Andres Garcia', [PERSON_ID]: ADMIN_USER_ID, hours: 0},
+    {[PERSON_NAME]: 'Luis Carlos Chivata', [PERSON_ID]: '10581568', hours: 0},
+    {[PERSON_NAME]: 'Maria Antonia Serna', [PERSON_ID]: '12108160', hours: 0},
     //{[PERSON_NAME]: 'Carlos Acero', [PERSON_ID] : '12109484', hours: 0},
     //{[PERSON_NAME]: 'Pablo Dorado', [PERSON_ID] : '12104247', hours: 0},
-    {[PERSON_NAME]: 'Mauricio Florez', [PERSON_ID] : '12131303', hours: 0}
+    {[PERSON_NAME]: 'Mauricio Florez', [PERSON_ID]: '12131303', hours: 0}
   ],
 
   /**
    * Add a new z-peep for push notification registry
    * @param {Object}   db       Mongo DB Object
    * @param {Function} callback A function object that will be fired once command is completed
+   * @returns {void}
    */
-  addZPeep(db, {personid, registrationid, personname}, callback){
+  addZPeep(db, {personid, registrationid, personname}, callback) {
     db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).insertOne({
-      'person-id' : personid,
-      'person-name' : personname,
-      'registration-id' : registrationid
+      'person-id': personid,
+      'person-name': personname,
+      'registration-id': registrationid
     }, (err, results) => {
       console.log('Inserted a zpeep!!', personid, personname, registrationid);
       db.close();
@@ -80,11 +81,15 @@ let ZPeepManager = {
 
   /**
    * [findZPeep description]
-   * @param  {[type]} personid [description]
+   * @param  {string} personid Person ID identifier
+   * @param  {Object} db Database object
+   * @param  {Function} callback Function to call once DB returned data
    * @return {number}          Number of zpeeps
    */
   getZPeepCount(personid, db, callback) {
-    let cursor = db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).find( { 'person-id' : personid } );
+    let cursor = db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).find(
+        {'person-id': personid}
+      );
 
     cursor.count((err, count) => {
       callback(count || 0);
@@ -96,12 +101,13 @@ let ZPeepManager = {
    * @param  {Object}   db           Reference to the Mongo DB
    * @param  {Array}   pinguinedIds Array containing person-ids to search for
    * @param  {Function} callback     Fires once data is retrieved
+   * @returns {void}
    */
   getZPeepsRegistry(db, pinguinedIds, callback) {
     console.log('pinguinedIds', pinguinedIds);
     let requestBody = {'registration_ids': []};
     let cursor = db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).find(
-      { $or: pinguinedIds }
+      {$or: pinguinedIds}
     );
 
     cursor.each((err, doc) => {
@@ -120,12 +126,13 @@ let ZPeepManager = {
    * @param  {string}   options.personid       The zpeep id
    * @param  {string}   options.registrationid The new registration id
    * @param  {Function} callback               Fires once update is achieved
+   * @returns {void}
    */
   syncZPeep(db, {personid, registrationid}, callback) {
     console.log('time to sync');
     db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).updateOne(
-    {'person-id' : personid},
-    {$set: { 'registration-id': registrationid } },
+    {'person-id': personid},
+    {$set: {'registration-id': registrationid}},
     (err, results) => {
       console.log('Updated a zpeep!!', personid, registrationid);
       db.close();
@@ -137,6 +144,7 @@ let ZPeepManager = {
    * Get timesheet reports and format data for proper rendering
    * @param  {string}   reportDate A string representing a date 'YYYYMMDD'
    * @param  {Function} callback   Triggers once data is retrieved
+   * @returns {void}
    */
   getZPeepsTimeReport(reportDate, callback) {
 
@@ -147,9 +155,11 @@ let ZPeepManager = {
     console.log('env vars: ', process.env.BASECAMP_PROTOCOL);
 
     //Call to Basecamp reports
-    let requestTimeReport = {uri: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}${process.env.BASECAMP_PATH}`,
-      qs : {from : reportDate, to: reportDate},
-      headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}};
+    let requestTimeReport = 
+      {uri: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}${process.env.BASECAMP_PATH}`,
+        qs: {from : reportDate, to: reportDate},
+        headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
+      };
 
     console.log('report URL: ' + requestTimeReport.uri + '?from=' + reportDate + '&to=' + reportDate);
 
@@ -183,7 +193,6 @@ let ZPeepManager = {
               entry.description = '';
             }
 
-            
             entry[PERSON_NAME] = entry[PERSON_NAME].toString();
           });
 
@@ -217,7 +226,7 @@ let ZPeepManager = {
               personName = value[PERSON_NAME];
               totalHours += value.hours;
             });
-            timeEntries[key] = {[PERSON_ID]: key, [PERSON_NAME]: personName, totalHours, report : value};
+            timeEntries[key] = {[PERSON_ID]: key, [PERSON_NAME]: personName, totalHours, report: value};
           });
           timeEntries = lodash.sortBy(timeEntries, ['totalHours']);
 

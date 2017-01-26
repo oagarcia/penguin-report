@@ -1,11 +1,24 @@
 {
+  "extends": ["defaults/configurations/google"],
   // I want to use babel-eslint for parsing!
   "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "modules": true
+    }
+  },
   "env": {
     // I write for browser
     "browser": false,
     // in CommonJS
     "node": true
   },
-  "parser": "babel-eslint"
+  "rules": {
+    // Variables //
+    "no-unused-vars": 1,
+    "no-use-before-define": 0,
+    "no-shadow": 2
+  }
 }
