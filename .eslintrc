@@ -19,6 +19,7 @@
     // Variables //
     "no-unused-vars": 1,
     "no-use-before-define": 0,
-    "no-shadow": 2
+    "no-shadow": 2,
+    "max-len": [1, {"code": 120, "ignoreStrings": true, "ignoreTemplateLiterals": true}]
   }
 }
