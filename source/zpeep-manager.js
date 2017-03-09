@@ -112,7 +112,7 @@ let ZPeepManager = {
 
     cursor.each((err, doc) => {
       if (doc !== null) {
-         requestBody['registration_ids'].push(doc['registration-id']);
+        requestBody['registration_ids'].push(doc['registration-id']);
       } else {
         db.close();
         callback(requestBody);
@@ -155,27 +155,35 @@ let ZPeepManager = {
     console.log('env vars: ', process.env.BASECAMP_PROTOCOL);
 
     //Call to Basecamp reports
-    let requestTimeReport = 
+    let requestTimeReport =
       {uri: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}${process.env.BASECAMP_PATH}`,
-        qs: {from : reportDate, to: reportDate},
+        qs: {from: reportDate, to: reportDate},
         headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
       };
 
     console.log('report URL: ' + requestTimeReport.uri + '?from=' + reportDate + '&to=' + reportDate);
 
-    requestURL(requestTimeReport)
-      .then(function(body) {
+    requestURL(requestTimeReport).
+      then(function(body) {
 
         parseString(body, (parseError, parseResult) => {
           timeEntries = parseResult['time-entries']['time-entry'];
 
           //TODO: Refactor > I want a final dataset in the way of:
-          // [{'person-id': xxxxx, 'person-name': 'xxxxx', 'total-hours': 'xx.xx', 'reports': [{'description': 'xx', ..}, ...]}];
+          // [{'person-id': xxxxx,
+          // 'person-name': 'xxxxx',
+          // 'total-hours': 'xx.xx',
+          // 'reports': [{'description': 'xx', ..}, ...]}];
           // this can be acomplished with less lodash involvement, less code and vanilla js.
 
           // Basically I'm filtering reports.xml so discarding users non in peopleIds (UI team)
           //PD: Sorry for the long line
-          timeEntries = lodash.filter(timeEntries, entry => ZPeepManager.peopleIds.map(el => el[PERSON_ID]).indexOf(entry[PERSON_ID][0]._) !== -1);
+          timeEntries =
+          lodash.filter(
+            timeEntries, entry =>
+              ZPeepManager.peopleIds.map(el =>
+                el[PERSON_ID]).indexOf(entry[PERSON_ID][0]._) !== -1
+          );
 
           //Normalize some ugly data
           lodash.forEach(timeEntries, entry => {
@@ -205,6 +213,7 @@ let ZPeepManager = {
           ZPeepManager.peopleIds.forEach(person => {
             let thisPersonId = person[PERSON_ID];
             let isAvailable = false;
+
             lodash.forOwn(timeEntries, (entryValue, entryKey) => {
               if (thisPersonId === entryKey) {
                 isAvailable = true;
@@ -222,9 +231,10 @@ let ZPeepManager = {
           lodash.forOwn(timeEntries, function(value, key) {
             let totalHours = 0;
             let personName = '';
-            lodash.forEach(value, function(value) {
-              personName = value[PERSON_NAME];
-              totalHours += value.hours;
+
+            lodash.forEach(value, function(timeEntryValue) {
+              personName = timeEntryValue[PERSON_NAME];
+              totalHours += timeEntryValue.hours;
             });
             timeEntries[key] = {[PERSON_ID]: key, [PERSON_NAME]: personName, totalHours, report: value};
           });
@@ -233,7 +243,7 @@ let ZPeepManager = {
           let currentTimeEntry = 0;
           //Get the total number of time entry records
           let timeEntriesCount = lodash.flow(
-            map('report'), 
+            map('report'),
             flatten)(timeEntries).length;
 
           //Additional report data (Project name and todo name)
@@ -241,7 +251,7 @@ let ZPeepManager = {
           lodash.forEach(timeEntries, entry => {
 
             lodash.forEach(entry.report, report => {
-              
+
               const projectId = report['project-id'];
               const todoItemId = report['todo-item-id'];
               let requests = [];
@@ -253,9 +263,10 @@ let ZPeepManager = {
                   headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
                 };
                 //console.log(requestProjectInfo.url);
+
                 requests.push(requestURL(requestProjectInfo));
               }
-              
+
               if (todoItemId && todoItemId[0] && todoItemId[0]._) {
                 //Gets the todo item name
                 let requestTodoInfo = {
@@ -263,35 +274,35 @@ let ZPeepManager = {
                   headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
                 };
                 //console.log(requestTodoInfo.url);
+
                 requests.push(requestURL(requestTodoInfo));
               }
 
               if (requests.length) {
-                Promise.all(requests)
-                  .spread((responseProjectInfo, responseTodoInfo) => {
-                    
-                    let projectName = cheerio.load(responseProjectInfo).root().find('project > name').text();
+                Promise.all(requests).
+                    spread((responseProjectInfo, responseTodoInfo) => {
 
-                    report.projectName = projectName;
+                      let projectName = cheerio.load(responseProjectInfo).root().find('project > name').text();
 
-                    if (typeof responseTodoInfo !== 'undefined') {
-                      let todoName = cheerio.load(responseTodoInfo).root().find('todo-item > content').text();
-                      report.todoName = todoName + ': ';
-                    }
-                  })
-                  .catch(function(err) {
-                    console.log('Error occured when requesting additional entry information:' + err);
-                  })
-                  .finally(() => {
-                    currentTimeEntry++;
-                    //All requests made, so calling callback to continue the rendering process
-                    if (currentTimeEntry === timeEntriesCount) {
-                      //Returns array of formalized data
-                      //console.log(currentTimeEntry);
-                      //console.log(timeEntries[20].report[0]);
-                      callback(timeEntries);
-                    }
-                  });
+                      report.projectName = projectName;
+
+                      if (typeof responseTodoInfo !== 'undefined') {
+                        let todoName = cheerio.load(responseTodoInfo).root().find('todo-item > content').text();
+
+                        report.todoName = todoName + ': ';
+                      }
+                    }).catch(function(err) {
+                      console.log('Error occured when requesting additional entry information:' + err);
+                    }).finally(() => {
+                      currentTimeEntry++;
+                      //All requests made, so calling callback to continue the rendering process
+                      if (currentTimeEntry === timeEntriesCount) {
+                        //Returns array of formalized data
+                        //console.log(currentTimeEntry);
+                        //console.log(timeEntries[20].report[0]);
+                        callback(timeEntries);
+                      }
+                    });
               } else {
                 currentTimeEntry++;
                 //All requests made, so calling callback to continue the rendering process
@@ -304,8 +315,7 @@ let ZPeepManager = {
             });
           });
         });
-      })
-      .catch(function(err) {
+      }).catch(function(err) {
         console.log('error >>>>> ' + err);
       });
   }

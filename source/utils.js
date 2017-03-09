@@ -8,14 +8,16 @@ let Utils = {
   /**
    * Converts Date to YYYYMMDD format string
    * @param  {Date} localDate A given Date
-   * @return {string}           YYYYMMDD format string
+   * @param {Date} removeDash Removes - sign form the output string
+   * @return {string}         YYYYMMDD format string
    */
-  toDateInputValue(localDate, removeSlashes = false) {
+  toDateInputValue(localDate, removeDash = false) {
     let dateOutput;
+
     localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
     dateOutput = localDate.toJSON().slice(0,10);
 
-    if (removeSlashes) {
+    if (removeDash) {
       dateOutput = dateOutput.replace(/\-/g, '');
     }
     return dateOutput;
@@ -27,8 +29,8 @@ let Utils = {
    * @enum {string}
    *
    */
-  CONTENT_TYPE : {
-    '.js' : 'text/javascript',
+  CONTENT_TYPE: {
+    '.js': 'text/javascript',
     '.json': 'text/json',
     '.css': 'text/css',
     '.html': 'text/html',
@@ -38,14 +40,16 @@ let Utils = {
   /**
    * Renders Not found page
    * @param  {ServerResponse} response A ServerResponse stream
+   * @return {void}
    */
   notFoundRenderer(response) {
-    response.writeHead(404, {'content-type' : Utils.CONTENT_TYPE['.html']});
-    response.end(`<h1>404 Not Found</h1>`);
+    response.writeHead(404, {'content-type': Utils.CONTENT_TYPE['.html']});
+    response.end('<h1>404 Not Found</h1>');
   },
 
   /**
    * Renders identify selector dropdown
+   * @param  {Object} people Collection of people
    * @return {string} The template related to user identify selector dropdown
    */
   zPeepsSelectorRenderer(people) {
@@ -86,12 +90,13 @@ let Utils = {
   }
 };
 
-export { Utils };
+export {Utils};
 
-export function getCurrentDate (currentDate) {
+export function getCurrentDate(currentDate) {
   let reportDate;
   // If date is provided in querystring date report is that date
   // else will be today date
+
   if (currentDate) {
     reportDate = currentDate.replace(/\-/g, '');
   } else {
@@ -99,5 +104,5 @@ export function getCurrentDate (currentDate) {
     reportDate = Utils.toDateInputValue(new Date(), true);
   }
 
-  return { currentDate, reportDate };
+  return {currentDate, reportDate};
 }
