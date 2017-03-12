@@ -89,7 +89,7 @@ app.get('/', function (req, res) {
             if (entry['person-id'] === ZPeepManager.getAdminId() && entry.projectName === ZPeepManager.getAdminHiddenProject()) {
               description = '<span class="description-hidden">*hidden</span>';
             } else {
-              description = `<span class="text-description">${entryDescription.replace(JIRA_PATTERN, '<a target="_blank" href="' + JIRA_DOMAIN + '$1">$1</a>')}</span>`;  
+              description = `<span class="text-description">${entryDescription.replace(JIRA_PATTERN, '<a target="_blank" href="' + JIRA_DOMAIN + '$1">$1</a>')}</span>`;
             }
           }
         } else {
@@ -97,7 +97,7 @@ app.get('/', function (req, res) {
         }
 
         row += `<tr><td>
-        ${entry.projectName !== '' ? '<strong>' + entry.projectName  + '</strong><br />': ''}
+        ${entry.projectName !== '' ? '<strong>' + entry.projectName  + '</strong><br />' : ''}
         ${entry.todoName}
         ${description}</td><td class="tright">${entry.hours}</td></tr>`;
       });
@@ -157,6 +157,17 @@ app.get('/', function (req, res) {
   });
 });
 
+/**
+ * Retrieve users as JSON
+ */
+app.get('/api', function (req, res) {
+  const { reportDate } = getCurrentDate(req.query.date);
+
+  ZPeepManager.getZPeepsTimeReport(reportDate, timeEntries => {
+    res.send(timeEntries);
+  });
+});
+
 app.get('/notify', function (req, res) {
   const { reportDate } = getCurrentDate(req.query.date);
   const pinguinedIds = [];
@@ -189,20 +200,20 @@ app.get('/notify', function (req, res) {
           //Send the push via Google cloud message protocol
           if (lodash.get(peepsBody, 'registration_ids') && peepsBody['registration_ids'].length) {
 
-              //Send push to Google Cloud Manager (GCM) so it will handle push notifications
-              requestURL.post({
-                  url: process.env.GCM_URL,
-                  json: peepsBody,
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'key=' + process.env.GCM_AUTH
-                  }
-                }, (err, httpResponse, body) => {
-                  console.log('push sent!!!', body);
+            //Send push to Google Cloud Manager (GCM) so it will handle push notifications
+            requestURL.post({
+              url: process.env.GCM_URL,
+              json: peepsBody,
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'key=' + process.env.GCM_AUTH
+              }
+            }, (requestErr, httpResponse, body) => {
+              console.log('push sent!!!', body);
 
-                  res.status(200).send(body);
-              });
-            }
+              res.status(200).send(body);
+            });
+          }
         });
       });
     }
@@ -218,7 +229,7 @@ app.get('/getpushcontent', function (req, res) {
   var timeStr = now.toLocaleTimeString();
 
   res.status(200).send({
-    title : pushContent.TITLE,
+    title: pushContent.TITLE,
     body: timeStr + ' - ' + pushContent.BODY,
     icon: pushContent.ICON,
     tag: pushContent.TAG,
@@ -249,12 +260,16 @@ app.get('/sync-user', function (req, res) {
       ZPeepManager.getZPeepCount(userData[0], db, (count) => {
         //Count > 0 means that user is aready registered so we need UPDATE the registration ID
         if (count) {
-          ZPeepManager.syncZPeep(db, {personid: userData[0], registrationid : registry}, results => {
+          ZPeepManager.syncZPeep(db, {personid: userData[0], registrationid: registry}, results => {
             res.status(200).send({ done: true, results });
           });
         } else {
           //Count = 0 means that user is NOT registered so we need to ADD the registration ID
-          ZPeepManager.addZPeep(db, {personid: userData[0], registrationid : registry, personname : userData[1]}, results => {
+          ZPeepManager.addZPeep(db, {
+            personid: userData[0],
+            registrationid: registry,
+            personname: userData[1]
+          }, results => {
             res.status(200).send({ done: true, results });
           });
         }
@@ -266,9 +281,7 @@ app.get('/sync-user', function (req, res) {
 });
 
 // Catch all not found
-app.use('*', (req, res) => res.status(404).send(`<h1>404 Not Found</h1>`));
+app.use('*', (req, res) => res.status(404).send('<h1>404 Not Found</h1>'));
 
 app.listen(process.env.PORT || 80, () =>
   console.log('Server started in port', process.env.PORT || 80));
-
-
