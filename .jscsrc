@@ -1,24 +1,32 @@
 {
-    "preset": "google",
-    "disallowMultipleVarDecl": null,
+  "preset": "google",
+  "disallowMultipleVarDecl": null,
 
-    "excludeFiles": [
-        "**/node_modules/**"
-    ],
+  "excludeFiles": [
+      "**/node_modules/**"
+  ],
 
-    "plugins": [
-        "jscs-jsdoc"
-    ],
+  "plugins": [
+      "jscs-jsdoc"
+  ],
 
-    "jsDoc": {
-        "requireParamDescription": true,
-        "checkAnnotations": "jsdoc3",
-        "checkParamNames": true,
-        "checkRedundantParams": true,
-        "checkRedundantReturns": true,
-        "checkTypes": "strictNativeCase",
-        "checkRedundantAccess": "enforceLeadingUnderscore",
-        "leadingUnderscoreAccess": true,
-        "requireParamTypes": true
-    }
+
+  "jsDoc": {
+    "requireParamDescription": true,
+    "checkAnnotations": "jsdoc3",
+    "checkParamNames": true,
+    "checkRedundantParams": true,
+    "checkRedundantReturns": true,
+    "checkTypes": "strictNativeCase",
+    "checkRedundantAccess": "enforceLeadingUnderscore",
+    "leadingUnderscoreAccess": true,
+    "requireParamTypes": true
+  },
+
+  "maximumLineLength": { "value": 120, "allExcept": [ "comments" ] },
+  "disallowSpacesInsideObjectBrackets": false,
+  "disallowSpacesInAnonymousFunctionExpression": false,
+  "disallowSpacesInFunctionExpression": false,
+  "disallowMultipleLineBreaks": false,
+  "requireDotNotation": false
 }
