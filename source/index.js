@@ -15,7 +15,8 @@ import { Utils, getCurrentDate } from './utils';
 import { ZPeepManager } from './zpeep-manager';
 
 const PROTOCOL = 'https://';
-const DOMAIN = 'penguin-report.herokuapp.com';
+const DOMAIN = 'uitraining.zemoga.com';
+const ROOT_URI = '/penguin-report';
 
 const PERSON_ID = 'person-id';
 const PERSON_NAME = 'person-name';
@@ -40,7 +41,7 @@ const pushContent = {
   RENOTIFY: false,
   REQUIRE_INTERACTION: false,
   VIBRATE: [300, 100, 400],
-  DATA: {url: PROTOCOL + DOMAIN}
+  DATA: {url: PROTOCOL + DOMAIN + ROOT_URI}
 };
 
 //Redirects to only use https
@@ -55,7 +56,7 @@ app.get('*', function(req, res, next) {
 });
 
 // Static files
-app.use(express.static(path.resolve(__dirname, './../web')));
+app.use(ROOT_URI, express.static(path.resolve(__dirname, './../web')));
 
 //allows service worker to run
 app.use(function(req, res, next) {
@@ -134,9 +135,9 @@ app.get('/', function (req, res) {
             <title>Penguin Report</title>
             ${Utils.ogRenderer()}
             <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700">
-            <link rel="stylesheet" href="styles/main.css">
-            <link rel="manifest" href="manifest.json">
-            <link rel="icon" type="image/png" href="images/favicon.png">
+            <link rel="stylesheet" href="${ROOT_URI}/styles/main.css">
+            <link rel="manifest" href="${ROOT_URI}/manifest.json">
+            <link rel="icon" type="image/png" href="${ROOT_URI}/images/favicon.png">
           </head>
           <body>
             ${Utils.zPeepsSelectorRenderer(ZPeepManager.peopleIds)}
@@ -150,7 +151,7 @@ app.get('/', function (req, res) {
             <table class="penguin-report">
               ${rows.join('')}
             </table>
-            <script src="scripts/main.js"></script>
+            <script src="${ROOT_URI}/scripts/main.js"></script>
           </body>
         </html>
     `);
@@ -283,5 +284,5 @@ app.get('/sync-user', function (req, res) {
 // Catch all not found
 app.use('*', (req, res) => res.status(404).send('<h1>404 Not Found</h1>'));
 
-app.listen(process.env.PORT || 80, () =>
-  console.log('Server started in port', process.env.PORT || 80));
+app.listen(process.env.PORT || 3000, () =>
+  console.log('Server started in port', process.env.PORT || 3000));

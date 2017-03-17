@@ -8,9 +8,11 @@
 /* global clients */
 /* global registration */
 /* global console */
+/* global fetch */
 
 //Will store clicked push URL (filled out when content data retrieved)
 var url = '';
+var ROOT_URI = '/penguin-report';
 
 console.log('Started', self);
 
@@ -27,27 +29,27 @@ self.addEventListener('activate', function(event) {
 
 //Sends the push
 self.addEventListener('push', function(event) {
-  var apiPath = '/getpushcontent/';
+  var apiPath = ROOT_URI + '/getpushcontent/';
 
   event.waitUntil(
-    registration.pushManager.getSubscription()
-    .then(function(subscription) {
+    registration.pushManager.getSubscription().
+    then(function(subscription) {
 
       //Adds the suscription token in case it is needed for custom notification messages per user
       if (subscription && subscription.endpoint) {
-        apiPath = apiPath + '?regId=' + subscription.endpoint.split('/').slice(-1);  
+        apiPath = apiPath + '?regId=' + subscription.endpoint.split('/').slice(-1);
       }
-      
-      return fetch(apiPath)
-        .then(function(response) {
-          if (response.status !== 200){
+
+      return fetch(apiPath).
+        then(function(response) {
+          if (response.status !== 200) {
             console.log('Problem Occurred: ' + response.status);
             throw new Error();
           }
 
           return response.json();
-        })
-        .then(function(data) {
+        }).
+        then(function(data) {
 
           //Reassign URL as needed
           url = data.data.url;
@@ -58,8 +60,8 @@ self.addEventListener('push', function(event) {
             tag: data.tag,
             data: data.data
           });
-        })
-        .catch(function(err) {
+        }).
+        catch(function(err) {
           console.log('Error retrieving data: ' + err);
         });
     })
@@ -73,10 +75,11 @@ self.addEventListener('notificationclick', function(event) {
   event.waitUntil(
     clients.matchAll({
       type: 'window'
-    })
-    .then(function(windowClients) {
+    }).
+    then(function(windowClients) {
       for (var i = 0; i < windowClients.length; i++) {
         var client = windowClients[i];
+
         if (client.url.indexOf(url) !== -1 && 'focus' in client) {
           return client.focus();
         }
