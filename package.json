@@ -54,7 +54,7 @@
     "eslint": "^3.17.1",
     "eslint-config-defaults": "^9.0.0",
     "jscs": "^3.0.7",
-    "nodemon": "^1.8.1",
-    "jscs-jsdoc": "^2.0.0"
+    "jscs-jsdoc": "^2.0.0",
+    "nodemon": "^1.8.1"
   }
 }
