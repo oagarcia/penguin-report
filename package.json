@@ -16,7 +16,7 @@
     "start:development": "babel -w source/ -d build/ -s & env $(cat .env | xargs) nodemon build",
 
     "package": "npm run package:prepare && npm run package:node && npm run package:web && npm run package:combine",
-    "package:prepare": "rm -rf node_modules && npm install --only=prod",
+    "package:prepare": "npm prune --production",
     "package:combine": "zip -r ./penguin-report_`date +%y.%m.%d`.zip node.zip web.zip && rm -rf ./node.zip ./web.zip",
     "package:node": "zip -r ./node.zip node_modules .env package.json build",
     "package:web": "zip -r ./web.zip web",
