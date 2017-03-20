@@ -1,5 +1,7 @@
 # Penguin Basecamp Report
 
+[![Known Vulnerabilities](https://snyk.io/test/github/oagarcia/penguin-report/bcdb4c41b33da70b23081828b52a2ab77ec4db44/badge.svg)](https://snyk.io/test/github/oagarcia/penguin-report/bcdb4c41b33da70b23081828b52a2ab77ec4db44)
+
 ## Installation
 
 1. Ask for env vars you need to set (sensible data)
