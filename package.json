@@ -14,13 +14,11 @@
     "debug": "npm run build && node --inspect --debug-brk build",
     "start": "per-env",
     "start:development": "babel -w source/ -d build/ -s & env $(cat .env | xargs) nodemon build",
-
     "package": "npm run package:prepare && npm run package:node && npm run package:web && npm run package:combine",
     "package:prepare": "npm prune --production",
     "package:combine": "zip -r ./penguin-report_`date +%y.%m.%d`.zip node.zip web.zip && rm -rf ./node.zip ./web.zip",
     "package:node": "zip -r ./node.zip node_modules .env package.json build",
     "package:web": "zip -r ./web.zip web",
-
     "postinstall": "per-env",
     "postinstall:development": "npm run build",
     "postinstall:production": "echo 'Prod!'"
@@ -46,15 +44,14 @@
     "xml2js": "^0.4.16"
   },
   "devDependencies": {
-    "babel-eslint": "^7.1.1",
     "babel-cli": "^6.4.5",
+    "babel-eslint": "^7.1.1",
     "babel-plugin-lodash": "^2.0.1",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
+    "csslint": "^1.0.5",
     "eslint": "^3.17.1",
     "eslint-config-defaults": "^9.0.0",
-    "jscs": "^3.0.7",
-    "jscs-jsdoc": "^2.0.0",
     "nodemon": "^1.8.1"
   }
 }
