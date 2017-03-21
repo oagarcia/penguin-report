@@ -13,19 +13,9 @@ import lodash from 'lodash';
 import requestURL from 'request';
 import { Utils, getCurrentDate } from './utils';
 import { ZPeepManager } from './zpeep-manager';
+import CONFIG from './config';
 
-const PROTOCOL = 'https://';
-const DOMAIN = 'penguin-report.herokuapp.com';
-
-const PERSON_ID = 'person-id';
-const PERSON_NAME = 'person-name';
-
-const MIN_HOURS = 7;
-const JIRA_DOMAIN = 'https://zemoga.jira.com/browse/';
-const JIRA_PATTERN = /([a-z|A-Z]+-[0-9]+)/ig;
-
-//Set Heroku Time Zone
-process.env.TZ = 'America/Bogota';
+process.env.TZ = CONFIG.TZ;
 
 //Creates the server
 const app = express();
@@ -40,7 +30,7 @@ const pushContent = {
   RENOTIFY: false,
   REQUIRE_INTERACTION: false,
   VIBRATE: [300, 100, 400],
-  DATA: {url: PROTOCOL + DOMAIN}
+  DATA: {url: CONFIG.PROTOCOL + CONFIG.DOMAIN + CONFIG.ROOT_URI}
 };
 
 //Redirects to only use https
@@ -48,14 +38,14 @@ app.get('*', function(req, res, next) {
   const fwdProtocolHeader = req.headers['x-forwarded-proto'];
 
   if (fwdProtocolHeader && fwdProtocolHeader !== 'https') {
-    res.redirect(PROTOCOL + DOMAIN + req.url);
+    res.redirect(CONFIG.PROTOCOL + CONFIG.DOMAIN + req.url);
   } else {
     next(); /* Continue to other routes if we're not redirecting */
   }
 });
 
 // Static files
-app.use(express.static(path.resolve(__dirname, './../web')));
+app.use(CONFIG.ROOT_URI, express.static(path.resolve(__dirname, './../web')));
 
 //allows service worker to run
 app.use(function(req, res, next) {
@@ -89,7 +79,7 @@ app.get('/', function (req, res) {
             if (entry['person-id'] === ZPeepManager.getAdminId() && entry.projectName === ZPeepManager.getAdminHiddenProject()) {
               description = '<span class="description-hidden">*hidden</span>';
             } else {
-              description = `<span class="text-description">${entryDescription.replace(JIRA_PATTERN, '<a target="_blank" href="' + JIRA_DOMAIN + '$1">$1</a>')}</span>`;
+              description = `<span class="text-description">${entryDescription.replace(CONFIG.JIRA_PATTERN, '<a target="_blank" href="' + CONFIG.JIRA_DOMAIN + '$1">$1</a>')}</span>`;
             }
           }
         } else {
@@ -103,14 +93,14 @@ app.get('/', function (req, res) {
       });
 
       //Penguined!!!!!!!!!!!!!!!!!!
-      if (entryValue.totalHours < MIN_HOURS) {
+      if (entryValue.totalHours < CONFIG.MIN_HOURS) {
         flag = 'penguined';
       }
 
       return `
         <tr>
           <td class="user-name ${flag}" colspan="2">
-            <b>${entryValue[PERSON_NAME]}</b>
+            <b>${entryValue[CONFIG.PERSON_NAME]}</b>
           </td>
         </tr>
         ${row}
@@ -134,9 +124,9 @@ app.get('/', function (req, res) {
             <title>Penguin Report</title>
             ${Utils.ogRenderer()}
             <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700">
-            <link rel="stylesheet" href="styles/main.css">
-            <link rel="manifest" href="manifest.json">
-            <link rel="icon" type="image/png" href="images/favicon.png">
+            <link rel="stylesheet" href="${CONFIG.ROOT_URI}/styles/main.css">
+            <link rel="manifest" href="${CONFIG.ROOT_URI}/manifest.json">
+            <link rel="icon" type="image/png" href="${CONFIG.ROOT_URI}/images/favicon.png">
           </head>
           <body>
             ${Utils.zPeepsSelectorRenderer(ZPeepManager.peopleIds)}
@@ -150,7 +140,7 @@ app.get('/', function (req, res) {
             <table class="penguin-report">
               ${rows.join('')}
             </table>
-            <script src="scripts/main.js"></script>
+            <script src="${CONFIG.ROOT_URI}/scripts/main.js"></script>
           </body>
         </html>
     `);
@@ -179,8 +169,8 @@ app.get('/notify', function (req, res) {
     for (let entryValue of timeEntries) {
 
       // Penguined!!!!!!!!!!!!!!!!!!
-      if (entryValue.totalHours < MIN_HOURS) {
-        pinguinedIds.push({[PERSON_ID]: entryValue[PERSON_ID]});
+      if (entryValue.totalHours < CONFIG.MIN_HOURS) {
+        pinguinedIds.push({[CONFIG.PERSON_ID]: entryValue[CONFIG.PERSON_ID]});
       }
     }
 
@@ -188,7 +178,7 @@ app.get('/notify', function (req, res) {
     if (pinguinedIds.length) {
       //  TODO: Move DB connection to zpeep manager
       //  Connect to MongoDB and get current registries for oush notification
-      MongoClient.connect(process.env.MONGO_CONFIG_URL, (err, db) => {
+      MongoClient.connect(CONFIG.MONGO_CONFIG_URL, (err, db) => {
         // Handle error
         if (err) {
           return res.status(500).send({done: false, results: null});
@@ -202,11 +192,11 @@ app.get('/notify', function (req, res) {
 
             //Send push to Google Cloud Manager (GCM) so it will handle push notifications
             requestURL.post({
-              url: process.env.GCM_URL,
+              url: CONFIG.GCM_URL,
               json: peepsBody,
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'key=' + process.env.GCM_AUTH
+                'Authorization': 'key=' + CONFIG.GCM_AUTH
               }
             }, (requestErr, httpResponse, body) => {
               console.log('push sent!!!', body);
@@ -251,7 +241,7 @@ app.get('/sync-user', function (req, res) {
 
     // Get current zpeeps from database
     // TODO: Move DB connection to zpeepManager or proper model
-    MongoClient.connect(process.env.MONGO_CONFIG_URL, (err, db) => {
+    MongoClient.connect(CONFIG.MONGO_CONFIG_URL, (err, db) => {
       // Handle error
       if (err) {
         return res.status(500).send({done: false, results: null});
@@ -283,5 +273,5 @@ app.get('/sync-user', function (req, res) {
 // Catch all not found
 app.use('*', (req, res) => res.status(404).send('<h1>404 Not Found</h1>'));
 
-app.listen(process.env.PORT || 80, () =>
-  console.log('Server started in port', process.env.PORT || 80));
+app.listen(CONFIG.PORT || 3000, () =>
+  console.log('Server started in port', CONFIG.PORT || 3000));

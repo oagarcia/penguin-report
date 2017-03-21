@@ -12,9 +12,9 @@ import flatten from 'lodash/fp/flatten';
 //import util from 'util';
 import cheerio from 'cheerio';
 import Promise from 'bluebird';
+import CONFIG from './config';
 
-const PERSON_ID = 'person-id';
-const PERSON_NAME = 'person-name';
+const { PERSON_NAME, PERSON_ID } = CONFIG;
 const ADMIN_USER_ID = '870268';
 const HIDDEN_PROJECT_NAME = 'Zemoga-Directors Team';
 
@@ -152,19 +152,19 @@ let ZPeepManager = {
     let timeEntries = null;
     const REQUEST_USER_AGENT_HEADER = 'Andres Garcia Reports (andres@zemoga.com)';
 
-    console.log('env vars: ', process.env.BASECAMP_PROTOCOL);
+    console.log('env vars: ', CONFIG.BASECAMP_PROTOCOL);
 
     //Call to Basecamp reports
     let requestTimeReport =
-      {uri: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}${process.env.BASECAMP_PATH}`,
+      {uri: `${CONFIG.BASECAMP_PROTOCOL}${CONFIG.BASECAMP_TOKEN}@${CONFIG.BASECAMP_DOMAIN}${CONFIG.BASECAMP_PATH}`,
         qs: {from: reportDate, to: reportDate},
         headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
       };
 
     console.log('report URL: ' + requestTimeReport.uri + '?from=' + reportDate + '&to=' + reportDate);
 
-    requestURL(requestTimeReport).
-      then(function(body) {
+    requestURL(requestTimeReport)
+      .then(function(body) {
 
         parseString(body, (parseError, parseResult) => {
           timeEntries = parseResult['time-entries']['time-entry'];
@@ -259,7 +259,7 @@ let ZPeepManager = {
               if (projectId) {
                 //Gets the project info:
                 let requestProjectInfo = {
-                  url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}/projects/${projectId[0]._}.xml`,
+                  url: `${CONFIG.BASECAMP_PROTOCOL}${CONFIG.BASECAMP_TOKEN}@${CONFIG.BASECAMP_DOMAIN}/projects/${projectId[0]._}.xml`,
                   headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
                 };
                 //console.log(requestProjectInfo.url);
@@ -270,7 +270,7 @@ let ZPeepManager = {
               if (todoItemId && todoItemId[0] && todoItemId[0]._) {
                 //Gets the todo item name
                 let requestTodoInfo = {
-                  url: `${process.env.BASECAMP_PROTOCOL}${process.env.BASECAMP_TOKEN}@${process.env.BASECAMP_DOMAIN}/todo_items/${todoItemId[0]._}.xml`,
+                  url: `${CONFIG.BASECAMP_PROTOCOL}${CONFIG.BASECAMP_TOKEN}@${CONFIG.BASECAMP_DOMAIN}/todo_items/${todoItemId[0]._}.xml`,
                   headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
                 };
                 //console.log(requestTodoInfo.url);
@@ -279,8 +279,8 @@ let ZPeepManager = {
               }
 
               if (requests.length) {
-                Promise.all(requests).
-                    spread((responseProjectInfo, responseTodoInfo) => {
+                Promise.all(requests)
+                    .spread((responseProjectInfo, responseTodoInfo) => {
 
                       let projectName = cheerio.load(responseProjectInfo).root().find('project > name').text();
 

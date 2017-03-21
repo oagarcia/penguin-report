@@ -8,9 +8,11 @@
 /* global clients */
 /* global registration */
 /* global console */
+/* global fetch */
 
 //Will store clicked push URL (filled out when content data retrieved)
 var url = '';
+var ROOT_URI = '/penguin-report';
 
 console.log('Started', self);
 
@@ -27,7 +29,7 @@ self.addEventListener('activate', function(event) {
 
 //Sends the push
 self.addEventListener('push', function(event) {
-  var apiPath = '/getpushcontent/';
+  var apiPath = ROOT_URI + '/getpushcontent/';
 
   event.waitUntil(
     registration.pushManager.getSubscription()
@@ -35,12 +37,12 @@ self.addEventListener('push', function(event) {
 
       //Adds the suscription token in case it is needed for custom notification messages per user
       if (subscription && subscription.endpoint) {
-        apiPath = apiPath + '?regId=' + subscription.endpoint.split('/').slice(-1);  
+        apiPath = apiPath + '?regId=' + subscription.endpoint.split('/').slice(-1);
       }
-      
+
       return fetch(apiPath)
         .then(function(response) {
-          if (response.status !== 200){
+          if (response.status !== 200) {
             console.log('Problem Occurred: ' + response.status);
             throw new Error();
           }
@@ -77,6 +79,7 @@ self.addEventListener('notificationclick', function(event) {
     .then(function(windowClients) {
       for (var i = 0; i < windowClients.length; i++) {
         var client = windowClients[i];
+
         if (client.url.indexOf(url) !== -1 && 'focus' in client) {
           return client.focus();
         }

@@ -22,6 +22,7 @@
     "no-shadow": 2,
     "max-len": [1, {"code": 120, "ignoreStrings": true, "ignoreTemplateLiterals": true}],
     "object-curly-spacing": 0,
-    "space-before-function-paren": 0
+    "space-before-function-paren": 0,
+    "dot-location": [2, "property"]
   }
 }

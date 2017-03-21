@@ -4,6 +4,10 @@
  * @copyright Zemoga Inc
  */
 
+import CONFIG from './config';
+
+const FULL_URL = CONFIG.PROTOCOL + CONFIG.DOMAIN + CONFIG.ROOT_URI;
+
 let Utils = {
   /**
    * Converts Date to YYYYMMDD format string
@@ -81,16 +85,16 @@ let Utils = {
    */
   ogRenderer() {
     return `
-    <meta property="og:image" content="https://penguin-report.herokuapp.com/images/penguin-icon.png">
+    <meta property="og:image" content="${FULL_URL}/images/penguin-icon.png">
     <meta property="og:title" content="Zemoga | Z-Penguin reports">
-    <meta property="og:url" content="https://penguin-report.herokuapp.com">
+    <meta property="og:url" content="${FULL_URL}">
     <meta property="og:description" content="Easily check your z-peeps reports">
     <meta property="og:site_name" content="Z-Penguin reports">
     `;
   }
 };
 
-export {Utils};
+export { Utils };
 
 export function getCurrentDate(currentDate) {
   let reportDate;
@@ -104,5 +108,5 @@ export function getCurrentDate(currentDate) {
     reportDate = Utils.toDateInputValue(new Date(), true);
   }
 
-  return {currentDate, reportDate};
+  return { currentDate, reportDate };
 }
