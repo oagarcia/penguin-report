@@ -206,6 +206,8 @@ app.get('/notify', function (req, res) {
           }
         });
       });
+    } else {
+      res.status(200).send('{"nopinguins": true}');
     }
 
   });
