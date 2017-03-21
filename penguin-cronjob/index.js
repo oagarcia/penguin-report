@@ -23,8 +23,8 @@ End - Now requires the app running any port
 //Set the Time Zone
 process.env.TZ = 'America/Bogota';
 
-let ruleToday = new schedule.RecurrenceRule();
-let ruleYesterday = new schedule.RecurrenceRule();
+const ruleToday = new schedule.RecurrenceRule();
+const ruleYesterday = new schedule.RecurrenceRule();
 
 ruleToday.dayOfWeek = [new schedule.Range(1, 5)];
 ruleToday.hour = 21;
@@ -38,16 +38,16 @@ ruleYesterday.minute = 15;
  * Communicates with the API (Heroku) and sends the push
  * @param  {string} dateStr The formated string with the date
  */
-let sendPushNotification = function(dateStr) {
+const sendPushNotification = function (dateStr) {
 
-  let url = 'https://penguin-report.herokuapp.com/notify/?date=';
+  const url = 'https://penguin-report.herokuapp.com/notify/?date=';
   console.log('sending push: ' + url + dateStr);
 
   fetch(url + dateStr)
-    .then(function(response) {
+    .then((response) => {
       
       return response.json()
-        .then(function(data) {
+        .then((data) => {
           console.log('the data', data);
           if (data.nopinguins) {
             console.log(new Date() + ' No people to notify!!!!');
@@ -59,11 +59,11 @@ let sendPushNotification = function(dateStr) {
             }
           }
         })
-        .catch(function(err) {
+        .catch((err) => {
           console.error(new Date() + ' Unable to retrieve data: ' + err);
         });
     })
-    .catch(function(error) {
+    .catch((error) => {
       console.log(new Date() + ' There has been a problem: ' + error.message);
     });
 };
@@ -73,7 +73,7 @@ let sendPushNotification = function(dateStr) {
  * @param  {number} x A given number
  * @return {string}   The string putput
  */
-let leadingZero = function(x) {
+const leadingZero = function (x) {
   return x < 10 ? '0' + x : x;
 };
 
@@ -82,21 +82,21 @@ let leadingZero = function(x) {
  * @param  {Object} theDate A given Date object
  * @return {string}         The string date format
  */
-let getFormatDate = function(theDate) {
+const getFormatDate = function (theDate) {
   return theDate.getFullYear() + '-' + leadingZero(theDate.getMonth() + 1) + '-' + leadingZero(theDate.getDate());
 };
  
-schedule.scheduleJob(ruleToday, function() {
-  let today = new Date();
-  let dateStr = getFormatDate(today);
+schedule.scheduleJob(ruleToday, () => {
+  const today = new Date();
+  const dateStr = getFormatDate(today);
   sendPushNotification(dateStr);
 });
 
-schedule.scheduleJob(ruleYesterday, function() {
-  let today = new Date();
-  let yesterday = new Date();
+schedule.scheduleJob(ruleYesterday, () => {
+  const today = new Date();
+  const yesterday = new Date();
 
-  let todayDayNumber = today.getDay();
+  const todayDayNumber = today.getDay();
   let daysBefore = 1;
 
   //If today is monday, check friday:
@@ -106,7 +106,7 @@ schedule.scheduleJob(ruleYesterday, function() {
 
   yesterday.setDate(yesterday.getDate() - daysBefore);
 
-  let dateStr = getFormatDate(yesterday);
+  const dateStr = getFormatDate(yesterday);
   sendPushNotification(dateStr);
 });
 
