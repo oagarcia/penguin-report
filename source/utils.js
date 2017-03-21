@@ -8,14 +8,14 @@ import CONFIG from './config';
 
 const FULL_URL = CONFIG.PROTOCOL + CONFIG.DOMAIN + CONFIG.ROOT_URI;
 
-let Utils = {
+const Utils = {
   /**
    * Converts Date to YYYYMMDD format string
    * @param  {Date} localDate A given Date
    * @param {Date} removeDash Removes - sign form the output string
    * @return {string}         YYYYMMDD format string
    */
-  toDateInputValue(localDate, removeDash = false) {
+  toDateInputValue (localDate, removeDash = false) {
     let dateOutput;
 
     localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
@@ -46,7 +46,7 @@ let Utils = {
    * @param  {ServerResponse} response A ServerResponse stream
    * @return {void}
    */
-  notFoundRenderer(response) {
+  notFoundRenderer (response) {
     response.writeHead(404, {'content-type': Utils.CONTENT_TYPE['.html']});
     response.end('<h1>404 Not Found</h1>');
   },
@@ -56,7 +56,7 @@ let Utils = {
    * @param  {Object} people Collection of people
    * @return {string} The template related to user identify selector dropdown
    */
-  zPeepsSelectorRenderer(people) {
+  zPeepsSelectorRenderer (people) {
 
     let output = `
     <div class="z-peeps-container">
@@ -68,7 +68,7 @@ let Utils = {
       <select name="z-peeps" id="z-peeps">
         <option required value="">Please select your name</option>`;
 
-    people.forEach(person => {
+    people.forEach((person) => {
       output += `<option value="${person['person-id']}">${person['person-name']}</option>`;
     });
     return output + `
@@ -83,7 +83,7 @@ let Utils = {
    * Renders OG Tags
    * @return {string} OG Tags meta tags
    */
-  ogRenderer() {
+  ogRenderer () {
     return `
     <meta property="og:image" content="${FULL_URL}/images/penguin-icon.png">
     <meta property="og:title" content="Zemoga | Z-Penguin reports">
@@ -96,7 +96,7 @@ let Utils = {
 
 export { Utils };
 
-export function getCurrentDate(currentDate) {
+export function getCurrentDate (currentDate) {
   let reportDate;
   // If date is provided in querystring date report is that date
   // else will be today date
