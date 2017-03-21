@@ -25,7 +25,7 @@ const app = express();
 const pushContent = {
   TITLE: 'Time to report!!!!',
   BODY: 'Avoid the Penguin',
-  ICON: '../images/penguin-icon.png',
+  ICON: `${CONFIG.PROTOCOL}${CONFIG.DOMAIN}${CONFIG.ROOT_URI}/images/penguin-icon.png`,
   TAG: 'penguin-tag',
   RENOTIFY: false,
   REQUIRE_INTERACTION: false,
@@ -34,7 +34,7 @@ const pushContent = {
 };
 
 //Redirects to only use https
-app.get('*', function(req, res, next) {
+app.get('*', (req, res, next) => {
   const fwdProtocolHeader = req.headers['x-forwarded-proto'];
 
   if (fwdProtocolHeader && fwdProtocolHeader !== 'https') {
@@ -48,25 +48,25 @@ app.get('*', function(req, res, next) {
 app.use(CONFIG.ROOT_URI, express.static(path.resolve(__dirname, './../web')));
 
 //allows service worker to run
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.setHeader('Service-Worker-Allowed', '/');
   next();
 });
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   //Will store querystrng Date
   const { currentDate, reportDate } = getCurrentDate(req.query.date);
 
   //Gets the basecamp data and prints html with info
   // TODO: Handle errors!
-  ZPeepManager.getZPeepsTimeReport(reportDate, timeEntries => {
+  ZPeepManager.getZPeepsTimeReport(reportDate, (timeEntries) => {
 
     //Prints the layout of time
-    const rows = lodash.map(timeEntries, entryValue => {
+    const rows = lodash.map(timeEntries, (entryValue) => {
       let flag = '', row = '';
 
       //Pronts each row of data (TODOs)
-      entryValue.report.forEach(entry => {
+      entryValue.report.forEach((entry) => {
 
         const entryDescription = entry.description;
         let description = '';
@@ -150,23 +150,23 @@ app.get('/', function (req, res) {
 /**
  * Retrieve users as JSON
  */
-app.get('/api', function (req, res) {
+app.get('/api', (req, res) => {
   const { reportDate } = getCurrentDate(req.query.date);
 
-  ZPeepManager.getZPeepsTimeReport(reportDate, timeEntries => {
+  ZPeepManager.getZPeepsTimeReport(reportDate, (timeEntries) => {
     res.send(timeEntries);
   });
 });
 
-app.get('/notify', function (req, res) {
+app.get('/notify', (req, res) => {
   const { reportDate } = getCurrentDate(req.query.date);
   const pinguinedIds = [];
 
   console.log('the report date:', reportDate);
 
-  ZPeepManager.getZPeepsTimeReport(reportDate, timeEntries => {
+  ZPeepManager.getZPeepsTimeReport(reportDate, (timeEntries) => {
 
-    for (let entryValue of timeEntries) {
+    for (const entryValue of timeEntries) {
 
       // Penguined!!!!!!!!!!!!!!!!!!
       if (entryValue.totalHours < CONFIG.MIN_HOURS) {
@@ -214,9 +214,9 @@ app.get('/notify', function (req, res) {
 /**
  * path URL used to retrieve the push message
  */
-app.get('/getpushcontent', function (req, res) {
-  var now = new Date();
-  var timeStr = now.toLocaleTimeString();
+app.get('/getpushcontent', (req, res) => {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString();
 
   res.status(200).send({
     title: pushContent.TITLE,
@@ -230,7 +230,7 @@ app.get('/getpushcontent', function (req, res) {
   });
 });
 
-app.get('/sync-user', function (req, res) {
+app.get('/sync-user', (req, res) => {
   // sync-user path allows to update the current service work (GCM) identifier by
   // updating and adding a new one if new user
   const { user, registry } = req.query,
@@ -250,7 +250,7 @@ app.get('/sync-user', function (req, res) {
       ZPeepManager.getZPeepCount(userData[0], db, (count) => {
         //Count > 0 means that user is aready registered so we need UPDATE the registration ID
         if (count) {
-          ZPeepManager.syncZPeep(db, {personid: userData[0], registrationid: registry}, results => {
+          ZPeepManager.syncZPeep(db, {personid: userData[0], registrationid: registry}, (results) => {
             res.status(200).send({ done: true, results });
           });
         } else {
@@ -259,14 +259,14 @@ app.get('/sync-user', function (req, res) {
             personid: userData[0],
             registrationid: registry,
             personname: userData[1]
-          }, results => {
+          }, (results) => {
             res.status(200).send({ done: true, results });
           });
         }
       });
     });
   } else {
-    return res.status(404).send({ done: false, results: null });
+    res.status(404).send({ done: false, results: null });
   }
 });
 

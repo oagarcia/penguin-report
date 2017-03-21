@@ -18,15 +18,15 @@ const { PERSON_NAME, PERSON_ID } = CONFIG;
 const ADMIN_USER_ID = '870268';
 const HIDDEN_PROJECT_NAME = 'Zemoga-Directors Team';
 
-let ZPeepManager = {
+const ZPeepManager = {
 
   Z_PEEPS_COLLECTION_NAME: 'zpeeps',
 
-  getAdminId: function() {
+  getAdminId: function () {
     return ADMIN_USER_ID;
   },
 
-  getAdminHiddenProject: function() {
+  getAdminHiddenProject: function () {
     return HIDDEN_PROJECT_NAME;
   },
 
@@ -67,7 +67,7 @@ let ZPeepManager = {
    * @param {Function} callback A function object that will be fired once command is completed
    * @returns {void}
    */
-  addZPeep(db, {personid, registrationid, personname}, callback) {
+  addZPeep (db, {personid, registrationid, personname}, callback) {
     db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).insertOne({
       'person-id': personid,
       'person-name': personname,
@@ -84,10 +84,10 @@ let ZPeepManager = {
    * @param  {string} personid Person ID identifier
    * @param  {Object} db Database object
    * @param  {Function} callback Function to call once DB returned data
-   * @return {number}          Number of zpeeps
+   * @return {void}          Number of zpeeps
    */
-  getZPeepCount(personid, db, callback) {
-    let cursor = db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).find(
+  getZPeepCount (personid, db, callback) {
+    const cursor = db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).find(
         {'person-id': personid}
       );
 
@@ -103,10 +103,10 @@ let ZPeepManager = {
    * @param  {Function} callback     Fires once data is retrieved
    * @returns {void}
    */
-  getZPeepsRegistry(db, pinguinedIds, callback) {
+  getZPeepsRegistry (db, pinguinedIds, callback) {
     console.log('pinguinedIds', pinguinedIds);
-    let requestBody = {'registration_ids': []};
-    let cursor = db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).find(
+    const requestBody = {'registration_ids': []};
+    const cursor = db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).find(
       {$or: pinguinedIds}
     );
 
@@ -128,7 +128,7 @@ let ZPeepManager = {
    * @param  {Function} callback               Fires once update is achieved
    * @returns {void}
    */
-  syncZPeep(db, {personid, registrationid}, callback) {
+  syncZPeep (db, {personid, registrationid}, callback) {
     console.log('time to sync');
     db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).updateOne(
     {'person-id': personid},
@@ -146,7 +146,7 @@ let ZPeepManager = {
    * @param  {Function} callback   Triggers once data is retrieved
    * @returns {void}
    */
-  getZPeepsTimeReport(reportDate, callback) {
+  getZPeepsTimeReport (reportDate, callback) {
 
     //Initialize Object with time report data
     let timeEntries = null;
@@ -155,7 +155,7 @@ let ZPeepManager = {
     console.log('env vars: ', CONFIG.BASECAMP_PROTOCOL);
 
     //Call to Basecamp reports
-    let requestTimeReport =
+    const requestTimeReport =
       {uri: `${CONFIG.BASECAMP_PROTOCOL}${CONFIG.BASECAMP_TOKEN}@${CONFIG.BASECAMP_DOMAIN}${CONFIG.BASECAMP_PATH}`,
         qs: {from: reportDate, to: reportDate},
         headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
@@ -164,7 +164,7 @@ let ZPeepManager = {
     console.log('report URL: ' + requestTimeReport.uri + '?from=' + reportDate + '&to=' + reportDate);
 
     requestURL(requestTimeReport)
-      .then(function(body) {
+      .then((body) => {
 
         parseString(body, (parseError, parseResult) => {
           timeEntries = parseResult['time-entries']['time-entry'];
@@ -180,13 +180,13 @@ let ZPeepManager = {
           //PD: Sorry for the long line
           timeEntries =
           lodash.filter(
-            timeEntries, entry =>
-              ZPeepManager.peopleIds.map(el =>
+            timeEntries, (entry) =>
+              ZPeepManager.peopleIds.map((el) =>
                 el[PERSON_ID]).indexOf(entry[PERSON_ID][0]._) !== -1
           );
 
           //Normalize some ugly data
-          lodash.forEach(timeEntries, entry => {
+          lodash.forEach(timeEntries, (entry) => {
             //console.log(util.inspect(entry, false, null));
             //console.log('todo: ' + entry['todo-item-id'][0]._);
             entry[PERSON_ID] = entry[PERSON_ID][0]._;
@@ -210,8 +210,8 @@ let ZPeepManager = {
           //If 0 reports, the user will not be present in the reports API
           //so as calling People.xml is pending, I'm completing the info
           //from harcoding users in peopleIds
-          ZPeepManager.peopleIds.forEach(person => {
-            let thisPersonId = person[PERSON_ID];
+          ZPeepManager.peopleIds.forEach((person) => {
+            const thisPersonId = person[PERSON_ID];
             let isAvailable = false;
 
             lodash.forOwn(timeEntries, (entryValue, entryKey) => {
@@ -228,11 +228,11 @@ let ZPeepManager = {
           });
 
           //Just to sort by total hours :( Thinking on refactoring
-          lodash.forOwn(timeEntries, function(value, key) {
+          lodash.forOwn(timeEntries, (value, key) => {
             let totalHours = 0;
             let personName = '';
 
-            lodash.forEach(value, function(timeEntryValue) {
+            lodash.forEach(value, (timeEntryValue) => {
               personName = timeEntryValue[PERSON_NAME];
               totalHours += timeEntryValue.hours;
             });
@@ -242,23 +242,23 @@ let ZPeepManager = {
 
           let currentTimeEntry = 0;
           //Get the total number of time entry records
-          let timeEntriesCount = lodash.flow(
+          const timeEntriesCount = lodash.flow(
             map('report'),
             flatten)(timeEntries).length;
 
           //Additional report data (Project name and todo name)
           //@TODO: Making requests x each entry is not cool. We need mem Cache for project info.
-          lodash.forEach(timeEntries, entry => {
+          lodash.forEach(timeEntries, (entry) => {
 
-            lodash.forEach(entry.report, report => {
+            lodash.forEach(entry.report, (report) => {
 
               const projectId = report['project-id'];
               const todoItemId = report['todo-item-id'];
-              let requests = [];
+              const requests = [];
 
               if (projectId) {
                 //Gets the project info:
-                let requestProjectInfo = {
+                const requestProjectInfo = {
                   url: `${CONFIG.BASECAMP_PROTOCOL}${CONFIG.BASECAMP_TOKEN}@${CONFIG.BASECAMP_DOMAIN}/projects/${projectId[0]._}.xml`,
                   headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
                 };
@@ -269,7 +269,7 @@ let ZPeepManager = {
 
               if (todoItemId && todoItemId[0] && todoItemId[0]._) {
                 //Gets the todo item name
-                let requestTodoInfo = {
+                const requestTodoInfo = {
                   url: `${CONFIG.BASECAMP_PROTOCOL}${CONFIG.BASECAMP_TOKEN}@${CONFIG.BASECAMP_DOMAIN}/todo_items/${todoItemId[0]._}.xml`,
                   headers: {'User-Agent': REQUEST_USER_AGENT_HEADER}
                 };
@@ -282,16 +282,16 @@ let ZPeepManager = {
                 Promise.all(requests)
                     .spread((responseProjectInfo, responseTodoInfo) => {
 
-                      let projectName = cheerio.load(responseProjectInfo).root().find('project > name').text();
+                      const projectName = cheerio.load(responseProjectInfo).root().find('project > name').text();
 
                       report.projectName = projectName;
 
                       if (typeof responseTodoInfo !== 'undefined') {
-                        let todoName = cheerio.load(responseTodoInfo).root().find('todo-item > content').text();
+                        const todoName = cheerio.load(responseTodoInfo).root().find('todo-item > content').text();
 
                         report.todoName = todoName + ': ';
                       }
-                    }).catch(function(err) {
+                    }).catch((err) => {
                       console.log('Error occured when requesting additional entry information:' + err);
                     }).finally(() => {
                       currentTimeEntry++;
@@ -315,7 +315,7 @@ let ZPeepManager = {
             });
           });
         });
-      }).catch(function(err) {
+      }).catch((err) => {
         console.log('error >>>>> ' + err);
       });
   }

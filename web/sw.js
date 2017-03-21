@@ -11,29 +11,29 @@
 /* global fetch */
 
 //Will store clicked push URL (filled out when content data retrieved)
-var url = '';
-var ROOT_URI = '/penguin-report';
+let url = '';
+const ROOT_URI = '/penguin-report';
 
 console.log('Started', self);
 
 //Install the push
-self.addEventListener('install', function(event) {
+self.addEventListener('install', (event) => {
   self.skipWaiting();
   console.log('Installed', event);
 });
 
 //Activates the push
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', (event) => {
   console.log('Activated', event);
 });
 
 //Sends the push
-self.addEventListener('push', function(event) {
-  var apiPath = ROOT_URI + '/getpushcontent/';
+self.addEventListener('push', (event) => {
+  let apiPath = ROOT_URI + '/getpushcontent/';
 
   event.waitUntil(
     registration.pushManager.getSubscription()
-    .then(function(subscription) {
+    .then((subscription) => {
 
       //Adds the suscription token in case it is needed for custom notification messages per user
       if (subscription && subscription.endpoint) {
@@ -41,7 +41,7 @@ self.addEventListener('push', function(event) {
       }
 
       return fetch(apiPath)
-        .then(function(response) {
+        .then((response) => {
           if (response.status !== 200) {
             console.log('Problem Occurred: ' + response.status);
             throw new Error();
@@ -49,7 +49,7 @@ self.addEventListener('push', function(event) {
 
           return response.json();
         })
-        .then(function(data) {
+        .then((data) => {
 
           //Reassign URL as needed
           url = data.data.url;
@@ -61,7 +61,7 @@ self.addEventListener('push', function(event) {
             data: data.data
           });
         })
-        .catch(function(err) {
+        .catch((err) => {
           console.log('Error retrieving data: ' + err);
         });
     })
@@ -69,16 +69,16 @@ self.addEventListener('push', function(event) {
 });
 
 //Opens basecamphq if needed
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener('notificationclick', (event) => {
   console.log('Notification click: tag ', event.notification.tag);
   event.notification.close();
   event.waitUntil(
     clients.matchAll({
       type: 'window'
     })
-    .then(function(windowClients) {
-      for (var i = 0; i < windowClients.length; i++) {
-        var client = windowClients[i];
+    .then((windowClients) => {
+      for (let i = 0; i < windowClients.length; i++) {
+        const client = windowClients[i];
 
         if (client.url.indexOf(url) !== -1 && 'focus' in client) {
           return client.focus();
