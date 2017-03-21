@@ -4,10 +4,9 @@
  * @copyright Zemoga Inc
  */
 
-const PROTOCOL = 'https://';
-const DOMAIN = 'uitraining.zemoga.com';
-const ROOT_URI = '/penguin-report';
-const FULL_URL = PROTOCOL + DOMAIN + ROOT_URI;
+import CONFIG from './config';
+
+const FULL_URL = CONFIG.PROTOCOL + CONFIG.DOMAIN + CONFIG.ROOT_URI;
 
 let Utils = {
   /**
@@ -95,7 +94,7 @@ let Utils = {
   }
 };
 
-export {Utils};
+export { Utils };
 
 export function getCurrentDate(currentDate) {
   let reportDate;
@@ -109,5 +108,5 @@ export function getCurrentDate(currentDate) {
     reportDate = Utils.toDateInputValue(new Date(), true);
   }
 
-  return {currentDate, reportDate};
+  return { currentDate, reportDate };
 }

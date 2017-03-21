@@ -57,14 +57,14 @@ var PenguinReport = {
               });
             });
           }
-        }).
-        catch(function(err) {
+        })
+        .catch(function(err) {
           console.log('The user disabled the subscription ' + err);
         });
 
         // Do we already have a push message subscription?
-        serviceWorkerRegistration.pushManager.getSubscription().
-          then(function(subscription) {
+        serviceWorkerRegistration.pushManager.getSubscription()
+          .then(function(subscription) {
             // Enable any UI which subscribes / unsubscribes from
             // push messages.
             console.log('the suscription', subscription);
@@ -72,14 +72,14 @@ var PenguinReport = {
             if (subscription && subscription.endpoint) {
               console.log('and the suscription is ', subscription.endpoint);
             }
-          }).
-          catch(function(err) {
+          })
+          .catch(function(err) {
             console.warn('Error during getSubscription()', err);
           });
       });
 
-      navigator.serviceWorker.register(PenguinReport.ROOT_URI + '/sw.js').
-      then(function(serviceWorkerRegistration) {
+      navigator.serviceWorker.register(PenguinReport.ROOT_URI + '/sw.js')
+      .then(function(serviceWorkerRegistration) {
 
         console.log('Authorization starting... ', serviceWorkerRegistration);
       }).catch(function(err) {
