@@ -25,7 +25,7 @@ const app = express();
 const pushContent = {
   TITLE: 'Time to report!!!!',
   BODY: 'Avoid the Penguin',
-  ICON: '../images/penguin-icon.png',
+  ICON: `${CONFIG.PROTOCOL}${CONFIG.DOMAIN}${CONFIG.ROOT_URI}/images/penguin-icon.png`,
   TAG: 'penguin-tag',
   RENOTIFY: false,
   REQUIRE_INTERACTION: false,
