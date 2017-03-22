@@ -44,7 +44,7 @@ const ZPeepManager = {
     {[PERSON_NAME]: 'Fredy Urrego', [PERSON_ID]: '11915855', hours: 0},
     {[PERSON_NAME]: 'German Galvis', [PERSON_ID]: '1645970', hours: 0},
     {[PERSON_NAME]: 'Gustavo Morales', [PERSON_ID]: '11934744', hours: 0},
-    {[PERSON_NAME]: 'Javier Jaimes', [PERSON_ID]: '11926506', hours: 0},
+    // {[PERSON_NAME]: 'Javier Jaimes', [PERSON_ID]: '11926506', hours: 0},
     {[PERSON_NAME]: 'Jose Conde', [PERSON_ID]: '11925814', hours: 0},
     {[PERSON_NAME]: 'Juan Pablo Vallejo', [PERSON_ID]: '11943154', hours: 0},
     {[PERSON_NAME]: 'Mauricio Cubillos', [PERSON_ID]: '11360590', hours: 0},
