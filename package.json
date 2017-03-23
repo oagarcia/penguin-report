@@ -18,7 +18,7 @@
     "package:prepare": "npm prune --production",
     "package:combine": "zip -r ./penguin-report_`date +%y.%m.%d`.zip node.zip web.zip && rm -rf ./node.zip ./web.zip",
     "package:node": "zip -r ./node.zip node_modules .env package.json build",
-    "package:web": "zip -r ./web.zip web",
+    "package:web": "cd web; zip -r ../web.zip .; cd ..",
     "postinstall": "per-env",
     "postinstall:development": "npm run build",
     "postinstall:production": "echo 'Prod!'"
