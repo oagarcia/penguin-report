@@ -13,7 +13,7 @@
     "build": "babel source/ -d build/ -s",
     "debug": "npm run build && node --inspect --debug-brk build",
     "start": "per-env",
-    "start:development": "babel -w source/ -d build/ -s & env $(cat .env | xargs) nodemon build",
+    "start:development": "babel -w source/ -d build/ -s & env $(cat .env-local | xargs) nodemon build",
     "package": "npm run package:prepare && npm run package:node && npm run package:web && npm run package:combine",
     "package:prepare": "npm prune --production",
     "package:combine": "zip -r ./penguin-report_`date +%y.%m.%d`.zip node.zip web.zip && rm -rf ./node.zip ./web.zip",
