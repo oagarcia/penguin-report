@@ -40,30 +40,30 @@ self.addEventListener('push', (event) => {
         apiPath = apiPath + '?regId=' + subscription.endpoint.split('/').slice(-1);
       }
 
-      return fetch(apiPath)
-        .then((response) => {
-          if (response.status !== 200) {
-            console.log('Problem Occurred: ' + response.status);
-            throw new Error();
-          }
+      return fetch(apiPath);
+    })
+    .then((response) => {
+      if (response.status !== 200) {
+        console.log('Problem Occurred: ' + response.status);
+        throw new Error();
+      }
 
-          return response.json();
-        })
-        .then((data) => {
+      return response.json();
+    })
+    .then((data) => {
 
-          //Reassign URL as needed
-          url = data.data.url;
+      //Reassign URL as needed
+      url = data.data.url;
 
-          return self.registration.showNotification(data.title, {
-            body: data.body,
-            icon: data.icon,
-            tag: data.tag,
-            data: data.data
-          });
-        })
-        .catch((err) => {
-          console.log('Error retrieving data: ' + err);
-        });
+      return self.registration.showNotification(data.title, {
+        body: data.body,
+        icon: data.icon,
+        tag: data.tag,
+        data: data.data
+      });
+    })
+    .catch((err) => {
+      console.log('Error retrieving data: ' + err);
     })
   );
 });

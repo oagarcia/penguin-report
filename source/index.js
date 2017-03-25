@@ -11,6 +11,7 @@ import express from 'express';
 import { MongoClient }  from 'mongodb';
 import lodash from 'lodash';
 import requestURL from 'request';
+import { stringify } from 'querystring';
 import { Utils, getCurrentDate } from './utils';
 import { ZPeepManager } from './zpeep-manager';
 import CONFIG from './config';
@@ -42,15 +43,6 @@ app.get('*', (req, res, next) => {
   } else {
     next(); /* Continue to other routes if we're not redirecting */
   }
-});
-
-// Static files
-app.use(CONFIG.ROOT_URI, express.static(path.resolve(__dirname, './../web')));
-
-//allows service worker to run
-app.use((req, res, next) => {
-  res.setHeader('Service-Worker-Allowed', '/');
-  next();
 });
 
 app.get('/', (req, res) => {
@@ -111,6 +103,8 @@ app.get('/', (req, res) => {
         </tr>`;
     });
 
+    const { STORAGE_IDENTIFIER, STORAGE_NAME, ROOT_URI } = CONFIG;
+
     // TODO: Rendering enhanced via templates i.e handlebars
     // Zorro: Can be done, but need a few more advanced tasks,
     // such as copy files to build/ folder
@@ -140,6 +134,9 @@ app.get('/', (req, res) => {
             <table class="penguin-report">
               ${rows.join('')}
             </table>
+            <script type="application/json" id="data-env">
+            ${JSON.stringify({ STORAGE_IDENTIFIER, STORAGE_NAME, ROOT_URI })}
+            </script>
             <script src="${CONFIG.ROOT_URI}/scripts/main.js"></script>
           </body>
         </html>
@@ -272,8 +269,25 @@ app.get('/sync-user', (req, res) => {
   }
 });
 
+if (CONFIG.NODE_ENV === 'development') {
+  // allows service worker to run
+  // In prod, this is handled by nginx
+  app.use((req, res, next) => {
+    res.setHeader('Service-Worker-Allowed', CONFIG.ROOT_URI || '/');
+    next();
+  });
+
+  // Static files
+  app.use(CONFIG.ROOT_URI, express.static(path.resolve(__dirname, './../web')));
+
+  app.all(`/penguin-report/*`, (req, res) => {
+    console.log('Attempt to redirect call', req.path);
+    res.redirect(`/${req.params[0]}?${stringify(req.query)}`);
+  });
+}
+
 // Catch all not found
 app.use('*', (req, res) => res.status(404).send('<h1>404 Not Found</h1>'));
 
 app.listen(CONFIG.PORT || 3000, () =>
-  console.log('Server started in port', CONFIG.PORT || 3000));
+  console.log('Server started in port', CONFIG.PORT || 3000, 'Node env:', CONFIG.NODE_ENV));
