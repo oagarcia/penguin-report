@@ -5,6 +5,7 @@
 [![devDependencies Status](https://david-dm.org/oagarcia/penguin-report/dev-status.svg)](https://david-dm.org/oagarcia/penguin-report?type=dev)
 [![Code Climate](https://codeclimate.com/github/oagarcia/penguin-report/badges/gpa.svg)](https://codeclimate.com/github/oagarcia/penguin-report)
 [![Issue Count](https://codeclimate.com/github/oagarcia/penguin-report/badges/issue_count.svg)](https://codeclimate.com/github/oagarcia/penguin-report)
+![Build Status](http://jenkins.zemoga.com/jenkins/buildStatus/icon?job=zemoga-training/penguin/penguin-report-ci)
 
 ## Installation
 
