@@ -6,6 +6,9 @@ export default Object.assign({
   PERSON_ID: 'person-id',
   PERSON_NAME: 'person-name',
 
+  STORAGE_IDENTIFIER: 'penguin-id',
+  STORAGE_NAME: 'penguin-name',
+
   MIN_HOURS: 7,
   JIRA_DOMAIN: 'https://zemoga.jira.com/browse/',
   JIRA_PATTERN: /([a-z|A-Z]+-[0-9]+)/ig,
@@ -19,5 +22,7 @@ export default Object.assign({
   BASECAMP_TOKEN: '?????????',
   GCM_AUTH: '?????????',
   GCM_URL: '?????????',
-  MONGO_CONFIG_URL: '?????????'
+  MONGO_CONFIG_URL: '?????????',
+
+  NODE_ENV: 'development'
 }, process.env);

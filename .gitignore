@@ -3,7 +3,7 @@ penguin-cronjob/node_modules
 dummy-data
 build
 *.sublime-workspace
-*.env
+*.env*
 
 .DS_Store
 npm-debug.log
