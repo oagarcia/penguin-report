@@ -34,4 +34,4 @@ Such project is installed as a **now** application.
 
 Check it running here!! [https://penguin-cronjob-oiwbxrzujh.now.sh](https://penguin-cronjob-oiwbxrzujh.now.sh)
 
-enjoy!
+Enjoy!
