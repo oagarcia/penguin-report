@@ -1,11 +1,11 @@
 # Penguin Basecamp Report
 
+![Build Status](http://jenkins.zemoga.com/jenkins/buildStatus/icon?job=zemoga-training/penguin/penguin-report-ci)
 [![Known Vulnerabilities](https://snyk.io/test/github/oagarcia/penguin-report/bcdb4c41b33da70b23081828b52a2ab77ec4db44/badge.svg)](https://snyk.io/test/github/oagarcia/penguin-report/bcdb4c41b33da70b23081828b52a2ab77ec4db44)
 [![dependencies Status](https://david-dm.org/oagarcia/penguin-report/status.svg)](https://david-dm.org/oagarcia/penguin-report)
 [![devDependencies Status](https://david-dm.org/oagarcia/penguin-report/dev-status.svg)](https://david-dm.org/oagarcia/penguin-report?type=dev)
 [![Code Climate](https://codeclimate.com/github/oagarcia/penguin-report/badges/gpa.svg)](https://codeclimate.com/github/oagarcia/penguin-report)
 [![Issue Count](https://codeclimate.com/github/oagarcia/penguin-report/badges/issue_count.svg)](https://codeclimate.com/github/oagarcia/penguin-report)
-![Build Status](http://jenkins.zemoga.com/jenkins/buildStatus/icon?job=zemoga-training/penguin/penguin-report-ci)
 
 ## Installation
 
