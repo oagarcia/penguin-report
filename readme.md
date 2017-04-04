@@ -26,14 +26,3 @@
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
-
-
-## Cron Job task.
-The cron job to notify users at specific times is located as an independent project under **penguin-cronjob** folder.
-
-Such project is installed as a **now** application.
-[https://zeit.co/](https://zeit.co/)
-
-Check it running here!! [https://penguin-cronjob-oiwbxrzujh.now.sh](https://penguin-cronjob-oiwbxrzujh.now.sh)
-
-Enjoy!!!
