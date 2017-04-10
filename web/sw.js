@@ -18,75 +18,75 @@ console.log('Started', self);
 
 //Install the push
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
-  console.log('Installed', event);
+    self.skipWaiting();
+    console.log('Installed', event);
 });
 
 //Activates the push
 self.addEventListener('activate', (event) => {
-  console.log('Activated', event);
+    console.log('Activated', event);
 });
 
 //Sends the push
 self.addEventListener('push', (event) => {
-  let apiPath = ROOT_URI + '/getpushcontent/';
+    let apiPath = ROOT_URI + '/getpushcontent/';
 
-  event.waitUntil(
-    registration.pushManager.getSubscription()
-    .then((subscription) => {
+    event.waitUntil(
+        registration.pushManager.getSubscription()
+        .then((subscription) => {
 
-      //Adds the suscription token in case it is needed for custom notification messages per user
-      if (subscription && subscription.endpoint) {
-        apiPath = apiPath + '?regId=' + subscription.endpoint.split('/').slice(-1);
-      }
+            //Adds the suscription token in case it is needed for custom notification messages per user
+            if (subscription && subscription.endpoint) {
+                apiPath += '?regId=' + subscription.endpoint.split('/').slice(-1);
+            }
 
-      return fetch(apiPath);
-    })
-    .then((response) => {
-      if (response.status !== 200) {
-        console.log('Problem Occurred: ' + response.status);
-        throw new Error();
-      }
+            return fetch(apiPath);
+        })
+        .then((response) => {
+            if (response.status !== 200) {
+                console.log('Problem Occurred: ' + response.status);
+                throw new Error();
+            }
 
-      return response.json();
-    })
-    .then((data) => {
+            return response.json();
+        })
+        .then((data) => {
 
-      //Reassign URL as needed
-      url = data.data.url;
+        //Reassign URL as needed
+            url = data.data.url;
 
-      return self.registration.showNotification(data.title, {
-        body: data.body,
-        icon: data.icon,
-        tag: data.tag,
-        data: data.data
-      });
-    })
-    .catch((err) => {
-      console.log('Error retrieving data: ' + err);
-    })
+            return self.registration.showNotification(data.title, {
+                body: data.body,
+                icon: data.icon,
+                tag: data.tag,
+                data: data.data
+            });
+        })
+        .catch((err) => {
+            console.log('Error retrieving data: ' + err);
+        })
   );
 });
 
 //Opens basecamphq if needed
 self.addEventListener('notificationclick', (event) => {
-  console.log('Notification click: tag ', event.notification.tag);
-  event.notification.close();
-  event.waitUntil(
+    console.log('Notification click: tag ', event.notification.tag);
+    event.notification.close();
+    event.waitUntil(
     clients.matchAll({
-      type: 'window'
+        type: 'window'
     })
     .then((windowClients) => {
-      for (let i = 0; i < windowClients.length; i++) {
-        const client = windowClients[i];
+        for (let i = 0; i < windowClients.length; i++) {
+            const client = windowClients[i];
 
-        if (client.url.indexOf(url) !== -1 && 'focus' in client) {
-          return client.focus();
+            if (client.url.indexOf(url) !== -1 && 'focus' in client) {
+                return client.focus();
+            }
         }
-      }
-      if (clients.openWindow) {
-        return clients.openWindow(url);
-      }
+        if (clients.openWindow) {
+            return clients.openWindow(url);
+        }
     })
   );
 });
