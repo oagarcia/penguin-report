@@ -176,7 +176,7 @@ app.get('/notify', (req, res) => {
 
          //There are some penguined people to notify...
         if (pinguinedIds.length) {
-            //  TODO: Move DB connection to zpeep manager
+            //  TODO: Move DB connection to zpeep manager and switch to Promises style (see getZPeepByRegistrationId)
             //  Connect to MongoDB and get current registries for oush notification
             MongoClient.connect(CONFIG.MONGO_CONFIG_URL, (err, db) => {
                 // Handle error
@@ -257,7 +257,7 @@ app.get('/sync-user', (req, res) => {
         debug('we have a user!!!!!!!', userData);
 
         // Get current zpeeps from database
-        // TODO: Move DB connection to zpeepManager or proper model
+        // TODO: Move DB connection to zpeepManager and switch to Promises style (see getZPeepByRegistrationId)
         MongoClient.connect(CONFIG.MONGO_CONFIG_URL, (err, db) => {
             // Handle error
             if (err) {
