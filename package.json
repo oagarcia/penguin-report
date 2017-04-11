@@ -11,7 +11,7 @@
   "main": "build/index.js",
   "scripts": {
     "build": "babel source/ -d build/ -s",
-    "debug": "npm run build && node --inspect --debug-brk build",
+    "debug": "npm run build && DEBUG=index,zpeep-manager env $(cat .env-local | xargs) node --inspect --debug-brk build",
     "start": "per-env",
     "start:development": "babel -w source/ -d build/ -s & env $(cat .env-local | xargs) nodemon build",
     "package": "npm run package:prepare && npm run package:node && npm run package:web && npm run package:combine",
@@ -27,6 +27,9 @@
     "type": "git",
     "url": "https://github.com/oagarcia/penguin-report"
   },
+  "bugs": {
+    "url": "https://github.com/oagarcia/penguin-report/issues"
+  },
   "keywords": [
     "Basecamp,zemoga"
   ],
@@ -35,13 +38,14 @@
   "dependencies": {
     "bluebird": "^3.4.6",
     "cheerio": "^0.22.0",
+    "debug": "^2.6.3",
     "express": "~4.15.2",
-    "lodash": "^4.2.1",
-    "mongodb": "^2.1.6",
+    "lodash": "^4.17.4",
+    "mongodb": "^2.2.25",
     "per-env": "~1.0.2",
     "request": "^2.69.0",
     "request-promise": "^4.1.1",
-    "xml2js": "^0.4.16"
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
@@ -52,6 +56,6 @@
     "csslint": "^1.0.5",
     "eslint": "^3.17.1",
     "eslint-config-defaults": "^9.0.0",
-    "nodemon": "^1.8.1"
+    "nodemon": "^1.11.0"
   }
 }
