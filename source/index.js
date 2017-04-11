@@ -15,11 +15,15 @@ import { stringify } from 'querystring';
 import { Utils, getCurrentDate } from './utils';
 import { ZPeepManager } from './zpeep-manager';
 import CONFIG from './config';
+import debugModule from 'debug';
 
 process.env.TZ = CONFIG.TZ;
 
 //Creates the server
 const app = express();
+
+//Debug module
+const debug = debugModule('index');
 
 //Push notification content.
 //TODO: Should be retrieved from DB
@@ -158,7 +162,7 @@ app.get('/notify', (req, res) => {
     const { reportDate } = getCurrentDate(req.query.date);
     const pinguinedIds = [];
 
-    console.log('the report date:', reportDate);
+    debug('the report date:', reportDate);
 
     ZPeepManager.getZPeepsTimeReport(reportDate, (timeEntries) => {
 
@@ -180,9 +184,9 @@ app.get('/notify', (req, res) => {
                     return res.status(500).send({ done: false, results: null });
                 }
 
-                console.log('will be', pinguinedIds);
+                debug('will be ', pinguinedIds);
                 ZPeepManager.getZPeepsRegistry(db, pinguinedIds, (peepsBody) => {
-                    console.log('I got pinguined zpeeps!!', peepsBody);
+                    debug('I got pinguined zpeeps!! ', peepsBody);
                     //Send the push via Google cloud message protocol
                     if (lodash.get(peepsBody, 'registration_ids') && peepsBody.registration_ids.length) {
 
@@ -195,7 +199,7 @@ app.get('/notify', (req, res) => {
                                 'Authorization': 'key=' + CONFIG.GCM_AUTH
                             }
                         }, (requestErr, httpResponse, body) => {
-                            console.log('push sent!!!', body);
+                            debug('push sent!!!', body);
 
                             res.status(200).send(body);
                         });
@@ -244,13 +248,13 @@ app.get('/getpushcontent', (req, res) => {
 });
 
 app.get('/sync-user', (req, res) => {
-    // sync-user path allows to update the current service work (GCM) identifier by
-    // updating and adding a new one if new user
+    // sync-user path allows to update the current service work (GCM) identifier by either
+    // updating an existing one or adding a new one if it is a new user
     const { user, registry } = req.query,
         userData = user && user.split('|');
 
     if (userData && userData[1] && registry) {
-        console.log('we have an user!!!!!!!', userData);
+        debug('we have a user!!!!!!!', userData);
 
         // Get current zpeeps from database
         // TODO: Move DB connection to zpeepManager or proper model
@@ -295,7 +299,7 @@ if (CONFIG.NODE_ENV === 'development') {
     app.use(CONFIG.ROOT_URI, express.static(path.resolve(__dirname, './../web')));
 
     app.all('/penguin-report/*', (req, res) => {
-        console.log('Attempt to redirect call', req.path);
+        debug('Attempt to redirect call', req.path);
         res.redirect(`/${req.params[0]}?${stringify(req.query)}`);
     });
 }
@@ -304,4 +308,4 @@ if (CONFIG.NODE_ENV === 'development') {
 app.use('*', (req, res) => res.status(404).send('<h1>404 Not Found</h1>'));
 
 app.listen(CONFIG.PORT || 3000, () =>
-    console.log('Server started in port', CONFIG.PORT || 3000, 'Node env:', CONFIG.NODE_ENV));
+    debug('Server started in port', CONFIG.PORT || 3000, 'Node env:', CONFIG.NODE_ENV));

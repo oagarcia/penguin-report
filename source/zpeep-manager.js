@@ -15,7 +15,11 @@ import flatten from 'lodash/fp/flatten';
 import cheerio from 'cheerio';
 import Promise from 'bluebird';
 import CONFIG from './config';
+import debugModule from 'debug';
 
+
+//Debug module
+const debug = debugModule('zpeep-manager');
 const { PERSON_NAME, PERSON_ID, PERSON_NICK } = CONFIG;
 const ADMIN_USER_ID = '870268';
 const HIDDEN_PROJECT_NAME = 'Zemoga-Directors Team';
@@ -79,7 +83,7 @@ const ZPeepManager = {
             'person-name': personname,
             'registration-id': registrationid
         }, (err, results) => {
-            console.log('Inserted a zpeep!!', personid, personname, registrationid);
+            debug('Inserted a zpeep!!', personid, personname, registrationid);
             db.close();
             callback(results);
         });
@@ -124,7 +128,7 @@ const ZPeepManager = {
             return zPeep;
         })
         .catch((err) => {
-            console.error(err);
+            debug(err);
         });
     },
 
@@ -154,7 +158,7 @@ const ZPeepManager = {
      * @return {void}
      */
     getZPeepsRegistry (db, pinguinedIds, callback) {
-        console.log('pinguinedIds', pinguinedIds);
+        debug('pinguinedIds', pinguinedIds);
         const requestBody = { 'registration_ids': [] };
         const cursor = db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).find({ $or: pinguinedIds });
 
@@ -177,12 +181,12 @@ const ZPeepManager = {
      * @return {void}
      */
     syncZPeep (db, { personid, registrationid }, callback) {
-        console.log('time to sync');
+        debug('time to sync');
         db.collection(ZPeepManager.Z_PEEPS_COLLECTION_NAME).updateOne(
             { 'person-id': personid },
             { $set: { 'registration-id': registrationid } },
             (err, results) => {
-                console.log('Updated a zpeep!!', personid, registrationid);
+                debug('Updated a zpeep!!', personid, registrationid);
                 db.close();
                 callback(results);
             });
@@ -200,8 +204,6 @@ const ZPeepManager = {
         let timeEntries = null;
         const REQUEST_USER_AGENT_HEADER = 'Andres Garcia Reports (andres@zemoga.com)';
 
-        console.log('env vars: ', CONFIG.BASECAMP_PROTOCOL);
-
         //Call to Basecamp reports
         const requestTimeReport = {
             uri: `${CONFIG.BASECAMP_PROTOCOL}${CONFIG.BASECAMP_TOKEN}@${CONFIG.BASECAMP_DOMAIN}${CONFIG.BASECAMP_PATH}`,
@@ -209,7 +211,7 @@ const ZPeepManager = {
             headers: { 'User-Agent': REQUEST_USER_AGENT_HEADER }
         };
 
-        console.log('report URL: ' + requestTimeReport.uri + '?from=' + reportDate + '&to=' + reportDate);
+        debug('report URL: ' + requestTimeReport.uri + '?from=' + reportDate + '&to=' + reportDate);
 
         requestURL(requestTimeReport)
         .then((body) => {
@@ -235,8 +237,8 @@ const ZPeepManager = {
 
                 //Normalize some ugly data
                 lodash.forEach(timeEntries, (entry) => {
-                //console.log(util.inspect(entry, false, null));
-                //console.log('todo: ' + entry['todo-item-id'][0]._);
+                    //debug(util.inspect(entry, false, null));
+                    //debug('todo: ' + entry['todo-item-id'][0]._);
                     entry[PERSON_ID] = entry[PERSON_ID][0]._;
                     entry.hours = +entry.hours[0]._;
                     entry.projectName = '';
@@ -308,7 +310,7 @@ const ZPeepManager = {
                                 url: `${CONFIG.BASECAMP_PROTOCOL}${CONFIG.BASECAMP_TOKEN}@${CONFIG.BASECAMP_DOMAIN}/projects/${projectId[0]._}.xml`,
                                 headers: { 'User-Agent': REQUEST_USER_AGENT_HEADER }
                             };
-                            //console.log(requestProjectInfo.url);
+                            //debug(requestProjectInfo.url);
 
                             requests.push(requestURL(requestProjectInfo));
                         }
@@ -320,7 +322,7 @@ const ZPeepManager = {
                                 headers: { 'User-Agent': REQUEST_USER_AGENT_HEADER }
                             };
 
-                            //console.log(requestTodoInfo.url);
+                            //debug(requestTodoInfo.url);
                             requests.push(requestURL(requestTodoInfo));
                         }
 
@@ -338,14 +340,14 @@ const ZPeepManager = {
                                     report.todoName = todoName + ': ';
                                 }
                             }).catch((err) => {
-                                console.log('Error occured when requesting additional entry information:' + err);
+                                debug('Error occured when requesting additional entry information:' + err);
                             }).finally(() => {
                                 currentTimeEntry++;
                                 //All requests made, so calling callback to continue the rendering process
                                 if (currentTimeEntry === timeEntriesCount) {
                                     //Returns array of formalized data
-                                    //console.log(currentTimeEntry);
-                                    //console.log(timeEntries[20].report[0]);
+                                    //debug(currentTimeEntry);
+                                    //debug(timeEntries[20].report[0]);
                                     callback(timeEntries);
                                 }
                             });
@@ -354,7 +356,7 @@ const ZPeepManager = {
                             //All requests made, so calling callback to continue the rendering process
                             if (currentTimeEntry === timeEntriesCount) {
                                 //Returns array of formalized data
-                                //console.log(timeEntries);
+                                //debug(timeEntries);
                                 callback(timeEntries);
                             }
                         }
@@ -362,7 +364,7 @@ const ZPeepManager = {
                 });
             });
         }).catch((err) => {
-            console.log('error >>>>> ' + err);
+            debug('error >>>>> ' + err);
         });
     }
 };

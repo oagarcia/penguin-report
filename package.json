@@ -11,7 +11,7 @@
   "main": "build/index.js",
   "scripts": {
     "build": "babel source/ -d build/ -s",
-    "debug": "npm run build && env $(cat .env-local | xargs) node --inspect --debug-brk build",
+    "debug": "npm run build && DEBUG=index,zpeep-manager env $(cat .env-local | xargs) node --inspect --debug-brk build",
     "start": "per-env",
     "start:development": "babel -w source/ -d build/ -s & env $(cat .env-local | xargs) nodemon build",
     "package": "npm run package:prepare && npm run package:node && npm run package:web && npm run package:combine",
@@ -38,6 +38,7 @@
   "dependencies": {
     "bluebird": "^3.4.6",
     "cheerio": "^0.22.0",
+    "debug": "^2.6.3",
     "express": "~4.15.2",
     "lodash": "^4.17.4",
     "mongodb": "^2.2.25",
