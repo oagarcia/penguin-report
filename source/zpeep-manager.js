@@ -55,7 +55,6 @@ const ZPeepManager = {
     { [PERSON_NAME]: 'Fredy Urrego', [PERSON_ID]: '11915855', hours: 0, [PERSON_NICK]: 'Fredy' },
     { [PERSON_NAME]: 'German Galvis', [PERSON_ID]: '1645970', hours: 0, [PERSON_NICK]: 'Fello' },
     { [PERSON_NAME]: 'Gustavo Morales', [PERSON_ID]: '11934744', hours: 0, [PERSON_NICK]: 'Gus' },
-    { [PERSON_NAME]: 'Jose Conde', [PERSON_ID]: '11925814', hours: 0, [PERSON_NICK]: 'Jose' },
     { [PERSON_NAME]: 'Juan Pablo Vallejo', [PERSON_ID]: '11943154', hours: 0, [PERSON_NICK]: 'Juan P' },
     { [PERSON_NAME]: 'Luis Carlos Chivata', [PERSON_ID]: '10581568', hours: 0, [PERSON_NICK]: 'Chivata' },
     { [PERSON_NAME]: 'Maria Antonia Serna', [PERSON_ID]: '12108160', hours: 0, [PERSON_NICK]: 'ANTONIA' },
@@ -63,6 +62,7 @@ const ZPeepManager = {
     { [PERSON_NAME]: 'Mauricio Florez', [PERSON_ID]: '12131303', hours: 0, [PERSON_NICK]: 'Max' },
     { [PERSON_NAME]: 'Nicolas Lopez', [PERSON_ID]: '12213547', hours: 0, [PERSON_NICK]: 'Nico' },
     { [PERSON_NAME]: 'Orlando Donado', [PERSON_ID]: '11926495', hours: 0, [PERSON_NICK]: 'Orly' }
+    //{ [PERSON_NAME]: 'Jose Conde', [PERSON_ID]: '11925814', hours: 0, [PERSON_NICK]: 'Jose' },
     // {[PERSON_NAME]: 'Javier Jaimes', [PERSON_ID]: '11926506', hours: 0},
     // {[PERSON_NAME]: 'Andres Acevedo', [PERSON_ID]: '11890705', hours: 0},
     // {[PERSON_NAME]: 'Carlos Acero', [PERSON_ID] : '12109484', hours: 0},
