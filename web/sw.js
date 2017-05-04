@@ -32,7 +32,7 @@ self.addEventListener('push', (event) => {
     let apiPath = ROOT_URI + '/getpushcontent/';
 
     event.waitUntil(
-        registration.pushManager.getSubscription()
+        self.registration.pushManager.getSubscription()
         .then((subscription) => {
 
             //Adds the suscription token in case it is needed for custom notification messages per user
