@@ -61,8 +61,8 @@ const ZPeepManager = {
     { [PERSON_NAME]: 'Mauricio Cubillos', [PERSON_ID]: '11360590', hours: 0, [PERSON_NICK]: 'Mao' },
     { [PERSON_NAME]: 'Mauricio Florez', [PERSON_ID]: '12131303', hours: 0, [PERSON_NICK]: 'Max' },
     { [PERSON_NAME]: 'Nicolas Lopez', [PERSON_ID]: '12213547', hours: 0, [PERSON_NICK]: 'Nico' },
-    { [PERSON_NAME]: 'Orlando Donado', [PERSON_ID]: '11926495', hours: 0, [PERSON_NICK]: 'Orly' },
-    { [PERSON_NAME]: 'Ruben Avila', [PERSON_ID]: '12362784', hours: 0, [PERSON_NICK]: 'Rubencho' }
+    { [PERSON_NAME]: 'Orlando Donado', [PERSON_ID]: '11926495', hours: 0, [PERSON_NICK]: 'Orly' }
+    //{ [PERSON_NAME]: 'Ruben Avila', [PERSON_ID]: '12362784', hours: 0, [PERSON_NICK]: 'Rubencho' }
     //{ [PERSON_NAME]: 'Jose Conde', [PERSON_ID]: '11925814', hours: 0, [PERSON_NICK]: 'Jose' },
     // {[PERSON_NAME]: 'Javier Jaimes', [PERSON_ID]: '11926506', hours: 0},
     // {[PERSON_NAME]: 'Andres Acevedo', [PERSON_ID]: '11890705', hours: 0},
