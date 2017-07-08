@@ -1,63 +1,35 @@
 {
-  "extends": ["eslint:recommended"],
-  "parserOptions": {
-    "ecmaVersion": 2017,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "modules": true,
-      "impliedStrict": true,
-      "experimentalObjectRestSpread": true
-    }
+  "ecmaFeatures": {
+    "modules": true,
+    "jsx": true
   },
   "env": {
-    // I write for browser
-    "browser": true,
-    // in CommonJS
-    "node": true
+   // I write for browser
+   "browser": true,
+   // in CommonJS
+   "node": true
   },
+  "parser": "babel-eslint",
+  "plugins": [
+    "class-property"
+    ],
+  "extends": ["standard", "standard-react"],
   "rules": {
-    "valid-jsdoc": ["error", { "requireReturn": true }],
-    "block-scoped-var": "error",
-    "complexity": [1, 10],
-    "consistent-return": "off",
-    "default-case": "error",
-    "dot-notation": "warn",
-    "guard-for-in": "error",
-    "newline-after-var": ["error", "always"],
-    "no-alert": "error",
-    "no-div-regex": "error",
-    "no-else-return": "error",
-    "no-invalid-this": "error",
-    "no-loop-func": "error",
-    "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
-    "no-param-reassign": "warn",
-    "no-process-env": "off",
-    "no-script-url": "error",
-    "no-unused-expressions": "error",
-    "no-useless-concat": "error",
-    "no-void": "error",
-    "no-warning-comments": "off",
-    "vars-on-top": "error",
-    "no-shadow": "error",
-    "no-undef": "error",
-    "no-use-before-define": "error",
-    "arrow-parens": "error",
-    "no-var": "error",
-    "object-shorthand": "warn",
-    "object-curly-spacing": ["error", "always"],
-    "prefer-arrow-callback": "error",
-    "prefer-const": "error",
+    "semi": [2, "always"],
+    "no-extra-semi": 2,
+    "semi-spacing": [2, { "before": false, "after": true }],
+    "indent": ["error", 4],
     "prefer-spread": "error",
-    "prefer-template": "off",
-    "require-yield": "error",
-    "no-console": "off",
-    "no-debugger": "off",
-    "no-unused-vars": "error",
-    "max-len": [1, {"code": 120, "ignoreStrings": true, "ignoreTemplateLiterals": true}],
-    "quotes": ["error", "single"],
-    "space-before-function-paren": "error",
-    "dot-location": ["error", "property"],
-    "semi": ["error", "always"],
-    "indent": ["error", 4]
+    "prefer-const": "error",
+    "prefer-arrow-callback": "error",
+    "object-shorthand": "warn",
+    "no-var": "error",
+    "vars-on-top": "error",
+    "no-param-reassign": "warn",
+    "no-else-return": "error",
+    "no-alert": "error",
+    "newline-after-var": ["error", "always"],
+    "valid-jsdoc": ["error", { "requireReturn": true }],
+    "react/jsx-indent": ["error", 4]
   }
 }

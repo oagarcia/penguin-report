@@ -10,7 +10,7 @@
  */
 const PenguinReport = {
 
-    //TODO: Client side code should be switched to ES2015 by Adding a build with babel
+    // TODO: Client side code should be switched to ES2015 by Adding a build with babel
     // in the same way it was implemented for server side code
 
     /**
@@ -27,7 +27,7 @@ const PenguinReport = {
         }
 
         // Register the service worker
-        navigator.serviceWorker.register(PenguinReport.ROOT_URI + '/sw.js', {
+        navigator.serviceWorker.register(PenguinReport.ROOT_URI + 'sw.js', {
             scope: PenguinReport.ROOT_URI
         })
         .then((registration) => {
@@ -45,15 +45,15 @@ const PenguinReport = {
             });
         })
         .then((sub) => {
-            //const endpointParts = sub.endpoint.split('/');
-            //const pushRegistry = endpointParts[endpointParts.length - 1];
+            // const endpointParts = sub.endpoint.split('/');
+            // const pushRegistry = endpointParts[endpointParts.length - 1];
             const pushRegistryID = sub.endpoint.split('/').splice(-1).toString();
 
             console.log('User authorized the notifications: ', sub.endpoint);
 
-            //We have a user ID
+            // We have a user ID
             if (localStorage.getItem(PenguinReport.STORAGE_IDENTIFIER)) {
-                fetch(PenguinReport.ROOT_URI + '/sync-user/?user=' + localStorage.getItem(PenguinReport.STORAGE_IDENTIFIER) + '&registry=' + pushRegistryID)
+                fetch(PenguinReport.ROOT_URI + 'sync-user/?user=' + localStorage.getItem(PenguinReport.STORAGE_IDENTIFIER) + '&registry=' + pushRegistryID)
                 .then((response) => {
                     if (response.status !== 200) {
                     // Either show a message to the user explaining the error
@@ -103,12 +103,12 @@ const PenguinReport = {
         // Adding server variables to namespace
         Object.assign(PenguinReport, ENV);
 
-        //Send push notification to pinguined users
+        // Send push notification to pinguined users
         pushNotifier.addEventListener('click', () => {
             pushNotifier.disabled = true;
             pushNotifier.textContent = 'Notifying...';
 
-            fetch(PenguinReport.ROOT_URI + '/notify/' + location.search)
+            fetch(PenguinReport.ROOT_URI + 'notify/' + location.search)
             .then((response) => {
                 if (response.status !== 200) {
                     pushNotifier.textContent = 'Error notifyng';
@@ -135,9 +135,8 @@ const PenguinReport = {
             });
         }, false);
 
-        //Register the z-user once the corresponding user in the dropdown is selected
+        // Register the z-user once the corresponding user in the dropdown is selected
         zPeepsIdentityButton.addEventListener('click', () => {
-
             const selectedPeep = zPeepsList.options[zPeepsList.selectedIndex];
 
             if (selectedPeep.value) {
@@ -155,5 +154,5 @@ const PenguinReport = {
     }
 };
 
-//Initialize
+// Initialize
 PenguinReport.init();

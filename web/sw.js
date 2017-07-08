@@ -6,7 +6,6 @@
 'use strict';
 /* global self */
 /* global clients */
-/* global registration */
 /* global console */
 /* global fetch */
 
@@ -50,17 +49,24 @@ self.addEventListener('push', (event) => {
 
             return response.json();
         })
-        .then((data) => {
+        .then((notificationData) => {
+            console.log('preparing message to be sent');
+            //Reassign URL as needed
+            url = notificationData.data.url;
+            const { title, body, icon, tag, data, renotify, vibrate, requireInteraction } = notificationData;
 
-        //Reassign URL as needed
-            url = data.data.url;
-
-            return self.registration.showNotification(data.title, {
-                body: data.body,
-                icon: data.icon,
-                tag: data.tag,
-                data: data.data
+            return self.registration.showNotification(title, {
+                body,
+                icon,
+                tag,
+                data,
+                renotify,
+                requireInteraction,
+                vibrate
             });
+        })
+        .then(() => {
+            console.log('client notification sent!!!!');
         })
         .catch((err) => {
             console.log('Error retrieving data: ' + err);
@@ -68,7 +74,7 @@ self.addEventListener('push', (event) => {
   );
 });
 
-//Opens basecamphq if needed
+//Opens the penguin report if needed
 self.addEventListener('notificationclick', (event) => {
     console.log('Notification click: tag ', event.notification.tag);
     event.notification.close();
