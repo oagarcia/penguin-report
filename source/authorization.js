@@ -2,6 +2,7 @@ import passportGoogleOauth from 'passport-google-oauth2';
 import debugModule from 'debug';
 import CONFIG from './config';
 import ZProfile from './zprofile';
+import { default as _ } from 'lodash';
 
 // Debug module
 const debug = debugModule('authorization');
@@ -30,6 +31,12 @@ export const Authorization = {
                 if (!response.zemogian) {
                     return done(null, false, {
                         message: 'It seems that you are logged in with an invalid Zemoga account. Go to Gmail, logout and try again'
+                    });
+                }
+
+                if (!_.get(response, 'zemogian.externalIds[0].value')) {
+                    return done(null, false, {
+                        message: 'Please request a Basecamp account in order to proceed!'
                     });
                 }
 
