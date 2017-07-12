@@ -4,10 +4,6 @@
  * @copyright Zemoga Inc
  */
 
-import CONFIG from './config';
-
-const FULL_URL = CONFIG.PROTOCOL + CONFIG.DOMAIN + CONFIG.ROOT_URI;
-
 /**
  * Global utility functions
  * @namespace Utils
@@ -24,7 +20,7 @@ const Utils = {
         let dateOutput;
 
         localDate.setMinutes(localDate.getMinutes() - localDate.getTimezoneOffset());
-        dateOutput = localDate.toJSON().slice(0,10);
+        dateOutput = localDate.toJSON().slice(0, 10);
 
         if (removeDash) {
             dateOutput = dateOutput.replace(/\-/g, '');
@@ -54,48 +50,6 @@ const Utils = {
     notFoundRenderer (response) {
         response.writeHead(404, { 'content-type': Utils.CONTENT_TYPE['.html'] });
         response.end('<h1>404 Not Found</h1>');
-    },
-
-    /**
-     * Renders identify selector dropdown
-     * @param  {Object} people Collection of people
-     * @return {string} The template related to user identify selector dropdown
-     */
-    zPeepsSelectorRenderer (people) {
-
-        let output = `
-        <div class="z-peeps-container">
-        <div class="z-peeps-body">
-        In order to get notifications about your reports, please identify yourself:
-        <br>
-        <br>
-        <form>
-        <select name="z-peeps" id="z-peeps">
-            <option required value="">Please select your name</option>`;
-
-        people.forEach((person) => {
-            output += `<option value="${person['person-id']}">${person['person-name']}</option>`;
-        });
-        return output + `
-        <select>
-        <button id="z-peeps-identify" name="z-peeps-identify" class="btn z-peeps-identify" type="button">Identify</button>
-        </form>
-        </div>
-        </div>`;
-    },
-
-    /**
-     * Renders OG Tags
-     * @return {string} OG Tags meta tags
-     */
-    ogRenderer () {
-        return `
-        <meta property="og:image" content="${FULL_URL}/images/penguin-icon.png">
-        <meta property="og:title" content="Zemoga | Z-Penguin reports">
-        <meta property="og:url" content="${FULL_URL}">
-        <meta property="og:description" content="Easily check your z-peeps reports">
-        <meta property="og:site_name" content="Z-Penguin reports">
-        `;
     }
 };
 
@@ -103,7 +57,7 @@ export { Utils };
 
 export function getCurrentDate (currentDate) {
     let reportDate;
-    // If date is provided in querystring date report is that date
+    // If date is provided in querystring date the report is that date
     // else will be today date
 
     if (currentDate) {

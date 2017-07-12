@@ -10,7 +10,7 @@
  */
 const PenguinReport = {
 
-    //TODO: Client side code should be switched to ES2015 by Adding a build with babel
+    // TODO: Client side code should be switched to ES2015 by Adding a build with babel
     // in the same way it was implemented for server side code
 
     /**
@@ -27,7 +27,7 @@ const PenguinReport = {
         }
 
         // Register the service worker
-        navigator.serviceWorker.register(PenguinReport.ROOT_URI + '/sw.js', {
+        navigator.serviceWorker.register(PenguinReport.ROOT_URI + 'sw.js', {
             scope: PenguinReport.ROOT_URI
         })
         .then((registration) => {
@@ -45,32 +45,36 @@ const PenguinReport = {
             });
         })
         .then((sub) => {
-            //const endpointParts = sub.endpoint.split('/');
-            //const pushRegistry = endpointParts[endpointParts.length - 1];
+            // const endpointParts = sub.endpoint.split('/');
+            // const pushRegistry = endpointParts[endpointParts.length - 1];
             const pushRegistryID = sub.endpoint.split('/').splice(-1).toString();
 
             console.log('User authorized the notifications: ', sub.endpoint);
 
-            //We have a user ID
-            if (localStorage.getItem(PenguinReport.STORAGE_IDENTIFIER)) {
-                fetch(PenguinReport.ROOT_URI + '/sync-user/?user=' + localStorage.getItem(PenguinReport.STORAGE_IDENTIFIER) + '&registry=' + pushRegistryID)
-                .then((response) => {
-                    if (response.status !== 200) {
-                    // Either show a message to the user explaining the error
-                    // or enter a generic message and handle the
-                    // onnotificationclick event to direct the user to a web page
-                        console.log('Looks like there was a problem. Status Code: ' + response.status);
-                        throw new Error();
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log('the data', data);
-                })
-                .catch((err) => {
-                    console.error('Unable to retrieve data', err);
-                });
-            }
+            // We have a user ID
+
+            fetch(
+                PenguinReport.ROOT_URI + 'sync-user/?pushRegistryId=' + pushRegistryID,
+                {
+                    credentials: 'include'
+                }
+            )
+            .then((response) => {
+                if (response.status !== 200) {
+                // Either show a message to the user explaining the error
+                // or enter a generic message and handle the
+                // onnotificationclick event to direct the user to a web page
+                    console.log('Looks like there was a problem. Status Code: ' + response.status);
+                    throw new Error();
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('the data', data);
+            })
+            .catch((err) => {
+                console.error('Unable to retrieve data', err);
+            });
 
             // Do we already have a push message subscription?
             return serviceWorkerRegistration.pushManager.getSubscription();
@@ -94,21 +98,19 @@ const PenguinReport = {
      * @return {void}
      */
     init () {
-        const documentElement = document.querySelector('html');
         const ENV = JSON.parse(document.querySelector('#data-env').textContent.trim());
-        const zPeepsList = document.getElementById('z-peeps');
-        const zPeepsIdentityButton = document.getElementById('z-peeps-identify');
         const pushNotifier = document.getElementById('push-notifier');
+        const dateField = document.querySelector('#dateField');
 
         // Adding server variables to namespace
         Object.assign(PenguinReport, ENV);
 
-        //Send push notification to pinguined users
+        // Send push notification to pinguined users
         pushNotifier.addEventListener('click', () => {
             pushNotifier.disabled = true;
             pushNotifier.textContent = 'Notifying...';
 
-            fetch(PenguinReport.ROOT_URI + '/notify/' + location.search)
+            fetch(PenguinReport.ROOT_URI + 'notify/' + location.search)
             .then((response) => {
                 if (response.status !== 200) {
                     pushNotifier.textContent = 'Error notifyng';
@@ -135,25 +137,15 @@ const PenguinReport = {
             });
         }, false);
 
-        //Register the z-user once the corresponding user in the dropdown is selected
-        zPeepsIdentityButton.addEventListener('click', () => {
+        // Sends the date form
+        dateField.addEventListener('change', (event) => {
+            event.target.form.submit();
+        });
 
-            const selectedPeep = zPeepsList.options[zPeepsList.selectedIndex];
-
-            if (selectedPeep.value) {
-                localStorage.setItem(PenguinReport.STORAGE_IDENTIFIER, zPeepsList.value + '|' + selectedPeep.text);
-                documentElement.classList.remove('z-peeps-visible');
-                PenguinReport.register();
-            }
-        }, false);
-
-        if (!localStorage.getItem(PenguinReport.STORAGE_IDENTIFIER)) {
-            documentElement.classList.add('z-peeps-visible');
-        } else {
-            PenguinReport.register();
-        }
+        // Register for the push
+        PenguinReport.register();
     }
 };
 
-//Initialize
+// Initialize
 PenguinReport.init();

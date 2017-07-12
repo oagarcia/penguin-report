@@ -11,13 +11,13 @@
 
 ## Installation
 
-1. Ask for env vars you need to set (sensible data)
-2. `npm install`
-3. `npm run build` or `babel -w source/ -d build/ -s`
-4. `npm start`
+1. Install Redis http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/ and be sure it is running
+2. Ask for env vars you need to set (sensible data)
+3. `npm install`
+4. `npm start` or `npm run debug` (paused by default in the first line)
 5. Check app in defined port (defaults to port 3000)
-7. Be moderate with the notify button!!! - hidden in the UI to avoid improper use
-6. Happy penguins ;)
+6. Be moderate with the notify button!!! - hidden in the UI to avoid improper use
+7. Happy penguins ;)
 
 
 ## Contributing
