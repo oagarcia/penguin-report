@@ -18,21 +18,31 @@ app.get('/', (req, res) => {
 
     // Check for error messages comming form passport (authorization.js)
     const { error: [errorMessage = ''] = [] } = req.flash();
-    const departmentCode = _.get(req, 'session.passport.user.departmentCode', DEPARTMENT.UNASSIGNED);
+    const departmentCode = _.get(req, 'session.passport.user.departmentCode');
 
-    ZPeepManager.getZPeepsTimeReport(reportDate, departmentCode)
-    .then((timeEntries) => {
+    // If not authenticated, render the home without requesting Basecamp users
+    if (!req.isAuthenticated()) {
         res.render('Home',
             {
                 req,
-                timeEntries,
                 errorMessage
             }
         );
-    })
-    .catch((err) => {
-        res.status(500).send(err);
-    });
+    } else {
+        ZPeepManager.getZPeepsTimeReport(reportDate, departmentCode)
+        .then((timeEntries) => {
+            res.render('Home',
+                {
+                    req,
+                    timeEntries,
+                    errorMessage
+                }
+            );
+        })
+        .catch((err) => {
+            res.status(500).send(err);
+        });
+    }
 });
 
 export default app;

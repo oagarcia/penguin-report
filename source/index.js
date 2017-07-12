@@ -100,7 +100,7 @@ app.use(session({
     secret: 'frompenguinswithlove.00',
     name: 'penguinsession',
     store: new RedisStore({
-        host: '127.0.0.1',
+        host: CONFIG.REDIS_HOST,
         port: 6379
     }),
     proxy: true,
