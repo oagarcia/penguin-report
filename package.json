@@ -17,7 +17,7 @@
     "package": "npm run package:prepare && npm run package:node && npm run package:web && npm run package:combine",
     "package:prepare": "npm prune --production",
     "package:combine": "zip -qr ./penguin-report_`date +%y.%m.%d`.zip node.zip web.zip && rm -rf ./node.zip ./web.zip",
-    "package:node": "zip -r ./node.zip node_modules .env package.json build",
+    "package:node": "zip -r ./node.zip node_modules .env .babelrc package.json build",
     "package:web": "cd web; zip -qr ../web.zip .; cd ..",
     "postinstall": "per-env",
     "postinstall:development": "npm run build",
@@ -36,6 +36,13 @@
   "author": "Andres Garcia",
   "license": "ISC",
   "dependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-plugin-lodash": "^3.2.11",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "bluebird": "^3.4.6",
     "body-parser": "^1.17.2",
     "cheerio": "^1.0.0-rc.2",
@@ -60,7 +67,6 @@
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
-    "babel-cli": "^6.4.5",
     "babel-eslint": "^7.1.1",
     "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
