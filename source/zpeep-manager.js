@@ -138,16 +138,11 @@ const ZPeepManager = {
      * @param  {boolean}  enforceUI Temporary parameter while the bots are created.
      * @returns {void}
      */
-    getZPeepsTimeReport (reportDate, departmentCode = DEPARTMENT.ALL, enforceUI = false) {
+    getZPeepsTimeReport (reportDate, departmentCode = DEPARTMENT.ALL) {
         // Initialize Object with time report data
         let timeEntries = null;
         let zemogians = null;
         const REQUEST_USER_AGENT_HEADER = 'Andres Garcia Reports (andres@zemoga.com)';
-
-        // Temporary code needed while the bots are created
-        if (enforceUI) {
-            departmentCode = DEPARTMENT.UI;
-        }
 
         // Call to Basecamp reports
         const requestTimeReport = {

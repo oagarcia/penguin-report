@@ -85,10 +85,11 @@ export default function routes (app, passport) {
      * Retrieve users as JSON
      */
     app.get('/api', (req, res) => {
-        const { reportDate, department } = getCurrentDate(req.query.date);
+        const { reportDate } = getCurrentDate(req.query.date);
+        const { department = '' } = req.query;
 
         // The 3rd parameter is temporary just to  prevent the UI bot from not working
-        ZPeepManager.getZPeepsTimeReport(reportDate, department, true)
+        ZPeepManager.getZPeepsTimeReport(reportDate, department)
         .then((timeEntries) => {
             res.send(timeEntries);
         })
@@ -97,9 +98,10 @@ export default function routes (app, passport) {
 
     app.get('/notify', (req, res) => {
         const { reportDate } = getCurrentDate(req.query.date);
+        const { department = '' } = req.query;
         const pinguinedIds = [];
 
-        debug('the report date:', reportDate);
+        debug('the report date:', reportDate, department);
 
         ZPeepManager.getZPeepsTimeReport(reportDate)
         .then((timeEntries) => {
