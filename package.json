@@ -11,7 +11,7 @@
   "main": "build/index.js",
   "scripts": {
     "build": "babel source/ -x '.js' -d build/ -s --copy-files",
-    "debug": "npm run build && DEBUG=index,zpeep-manager,routes env $(cat .env-local | xargs) node --inspect --debug-brk build",
+    "debug": "npm run build && DEBUG=index,zpeep-manager,routes,authorization env $(cat .env-local | xargs) node --inspect --debug-brk build",
     "start": "per-env",
     "start:development": "npm run build && env $(cat .env-local | xargs) nodemon build",
     "package": "npm run package:prepare && npm run package:node && npm run package:web && npm run package:combine",
@@ -39,6 +39,7 @@
     "bluebird": "^3.4.6",
     "body-parser": "^1.17.2",
     "cheerio": "^1.0.0-rc.2",
+    "connect-flash": "^0.1.1",
     "connect-redis": "^3.3.0",
     "cookie-parser": "^1.4.3",
     "debug": "^2.6.3",

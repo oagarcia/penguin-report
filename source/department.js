@@ -1,4 +1,8 @@
+/**
+ * @enum {DEPARTMENT}
+ */
 const DEPARTMENT = {
+    ALL: '',
     UI: 'UI',
     APPDEV: 'APPDEV',
     QA: 'QA',

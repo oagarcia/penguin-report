@@ -1,11 +1,10 @@
 import querystring from 'querystring';
-import requestURL from 'request';
+import requestURL from 'request-promise';
 import CONFIG from './config';
 import { getCurrentDate } from './utils';
-import lodash from 'lodash';
+import { default as _ } from 'lodash';
 import debugModule from 'debug';
 import { ZPeepManager } from './zpeep-manager';
-import { getLoginTemplate } from './login';
 import home from './home';
 
 // Debug module
@@ -52,11 +51,6 @@ export default function routes (app, passport) {
     //     res.render('account', { user: req.user });
     // });
 
-    app.get('/login', (req, res) => {
-        // res.status(200).send(`${JSON.stringify(req.user)}<hr><a href="/auth/google">Login</a>`);
-        res.status(200).send(getLoginTemplate());
-    });
-
     app.get('/logout', (req, res) => {
         req.logout();
         res.redirect('/'); // Needs to be handled in prod to /penguin-report
@@ -76,13 +70,14 @@ export default function routes (app, passport) {
 
     // Redirects FROM Google authentication page
     app.get(CONFIG.GOOGLE_CALLBACK_URL, (req, res, next) => {
-        let originalQueryString = req.query.state;
+        let originalQueryString = req.query.state || '';
 
         originalQueryString = originalQueryString && '?' + originalQueryString;
 
         passport.authenticate('google', {
             successRedirect: `/${originalQueryString}`,
-            failureRedirect: '/login'
+            failureRedirect: '/',
+            failureFlash: true
         })(req, res, next);
     });
 
@@ -90,11 +85,14 @@ export default function routes (app, passport) {
      * Retrieve users as JSON
      */
     app.get('/api', (req, res) => {
-        const { reportDate } = getCurrentDate(req.query.date);
+        const { reportDate, department } = getCurrentDate(req.query.date);
 
-        ZPeepManager.getZPeepsTimeReport(reportDate, (timeEntries) => {
+        // The 3rd parameter is temporary just to  prevent the UI bot from not working
+        ZPeepManager.getZPeepsTimeReport(reportDate, department, true)
+        .then((timeEntries) => {
             res.send(timeEntries);
-        });
+        })
+        .catch(err => res.status(500).send(err));
     });
 
     app.get('/notify', (req, res) => {
@@ -103,7 +101,8 @@ export default function routes (app, passport) {
 
         debug('the report date:', reportDate);
 
-        ZPeepManager.getZPeepsTimeReport(reportDate, (timeEntries) => {
+        ZPeepManager.getZPeepsTimeReport(reportDate)
+        .then((timeEntries) => {
             for (const entryValue of timeEntries) {
                 // Penguined!!!!!!!!!!!!!!!!!!
                 if (entryValue.totalHours < CONFIG.MIN_HOURS) {
@@ -111,35 +110,34 @@ export default function routes (app, passport) {
                 }
             }
 
+            if (!pinguinedIds.length) {
+                res.send({ 'nopinguins': true });
+            }
+
             // There are some penguined people to notify...
-            if (pinguinedIds.length) {
-                //  TODO: Move DB connection to zpeep manager and switch to Promises style (see getZPeepByRegistrationId)
-                //  Connect to MongoDB and get current registries for oush notification
-
-                debug('will be ', pinguinedIds);
-                ZPeepManager.getZPeepsRegistry(req.db, pinguinedIds, (peepsBody) => {
-                    debug('I got pinguined zpeeps!! ', peepsBody);
-                    // Send the push via Google cloud message protocol
-                    if (lodash.get(peepsBody, 'registration_ids') && peepsBody.registration_ids.length) {
-                        // Send push to Google Cloud Manager (GCM) so it will handle push notifications
-                        requestURL.post({
-                            url: CONFIG.GCM_URL,
-                            json: peepsBody,
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'key=' + CONFIG.GCM_AUTH
-                            }
-                        }, (requestErr, httpResponse, body) => {
-                            debug('push sent!!!', body);
-
-                            res.status(200).send(body);
-                        });
+            debug('will be ', pinguinedIds);
+            return ZPeepManager.getZPeepsRegistry(req.db, pinguinedIds);
+        })
+        .then((peepsBody) => {
+            debug('I got pinguined zpeeps!! ', peepsBody);
+            // Send the push via Google cloud message protocol
+            if (_.get(peepsBody, 'registration_ids') && peepsBody.registration_ids.length) {
+                // Send push to Google Cloud Manager (GCM) so it will handle push notifications
+                return requestURL.post({
+                    url: CONFIG.GCM_URL,
+                    json: peepsBody,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'key=' + CONFIG.GCM_AUTH
                     }
                 });
-            } else {
-                res.status(200).send('{"nopinguins": true}');
             }
-        });
+            return {};
+        }).then((body) => {
+            debug('push sent!!!', body);
+            res.send(body);
+        })
+        .catch(err => res.status(500).send(err));
     });
 
     /**
@@ -165,8 +163,9 @@ export default function routes (app, passport) {
         };
 
         if (subscriptionID) {
-            ZPeepManager.getZPeepByRegistrationId(subscriptionID, req.db).then((zPeep) => {
-                const nick = lodash.get(zPeep, 'nick');
+            ZPeepManager.getZPeepByRegistrationId(subscriptionID, req.db)
+            .then((zPeep) => {
+                const nick = _.get(zPeep, 'nick');
 
                 if (nick) {
                     pushData.title = pushData.title.replace(DEFAULT_NICK, nick);
@@ -181,49 +180,42 @@ export default function routes (app, passport) {
     app.get('/sync-user', (req, res) => {
         // sync-user path allows to update the current service work (GCM) identifier by either
         // updating an existing one or adding a new one if it is a new user
-        const { user, registry } = req.query;
-        const userData = user && user.split('|');
+        const { pushRegistryId } = req.query;
+        const basecampId = _.get(req, 'session.passport.user.basecampId');
+        const personName = _.get(req, 'session.passport.user.fullName');
+        const nickName = _.get(req, 'session.passport.user.nickname');
 
-        if (userData && userData[1] && registry) {
-            debug('we have a user!!!!!!!', userData);
+        if (basecampId && personName && pushRegistryId) {
+            debug('we have a user!!!!!!!', personName, basecampId);
 
             // Get current zpeeps from database
-            // TODO: Move DB connection to zpeepManager and switch to Promises style (see getZPeepByRegistrationId)
-
-            ZPeepManager.getZPeepCount(userData[0], req.db, (count) => {
+            ZPeepManager.getZPeepCount(basecampId, req.db)
+            .then((count) => {
                 // Count > 0 means that user is aready registered so we need UPDATE the registration ID
                 if (count) {
                     ZPeepManager.syncZPeep(req.db, {
-                        personid: userData[0],
-                        registrationid: registry
-                    }, (results, resultsErr) => {
-                        let responseCode = 200;
-                        let done = true;
-
-                        if (resultsErr) {
-                            responseCode = 500;
-                            done = false;
-                        }
-                        res.status(responseCode).send({ done, results });
+                        basecampId,
+                        pushRegistryId,
+                        nickName
+                    }).then((results) => {
+                        res.send({ done: true, results });
+                    }).catch((err) => {
+                        res.status(500).send({ done: false, results: err });
                     });
                 } else {
                     // Count = 0 means that user is NOT registered so we need to ADD the registration ID
                     ZPeepManager.addZPeep(req.db, {
-                        personid: userData[0],
-                        registrationid: registry,
-                        personname: userData[1]
-                    }, (results, resultsErr) => {
-                        let responseCode = 200;
-                        let done = true;
-
-                        if (resultsErr) {
-                            responseCode = 500;
-                            done = resultsErr;
-                        }
-                        res.status(responseCode).send({ done, results });
+                        basecampId,
+                        pushRegistryId,
+                        personName,
+                        nickName
+                    }).then((results) => {
+                        res.send({ done: true, results });
+                    }).catch((err) => {
+                        res.status(500).send({ done: false, results: err });
                     });
                 }
-            });
+            }).catch((err) => res.status(500).send(err));
         } else {
             res.status(404).send({ done: false, results: null });
         }

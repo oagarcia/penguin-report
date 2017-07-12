@@ -52,7 +52,7 @@ const ZProfile = {
                 'clientSecret': ZPROFILE_CLIENT_SECRET,
                 'ownerKey': ZPROFILE_OWNER_KEY
             },
-            'scopes': [ZPROFILE_SCOPE] // @TODO: Update this to support multiple scopes
+            'scopes': ZPROFILE_SCOPE.split(',')
         };
 
         return zProfileAPIRequest({
@@ -68,18 +68,10 @@ const ZProfile = {
         });
     },
 
-    getZemogians (department = DEPARTMENT.UI) {
+    __requestGrapQL (query) {
         return this.__requestToken()
         .then((response) => {
-            const body = {
-                query: `{
-                    zemogians(department:${department}){
-                        fullName
-                        nickname
-                        externalIds{value}
-                    }
-                }`
-            };
+            const body = query;
 
             return zProfileGraphQLRequest({
                 auth: { bearer: response.token },
@@ -88,7 +80,58 @@ const ZProfile = {
         })
         .then((response) => response.data)
         .catch((error) => {
-            debug('>>>>>', error);
+            debug('Error retrieving zemogians: ', error);
+        });
+    },
+
+    /**
+     * Gets zemogians by deparment
+     * @param {DEPARTMENT} department - Enum department identifier
+     * @return {void}
+     */
+    getZemogians (department) {
+        // By default we will retieve all zemogians
+        let departmentParams = '';
+
+        // If department is passed, only retrieves zemogians of the department
+        if (department) {
+            departmentParams = `department:${department}, `;
+        }
+
+        return this.__requestGrapQL({
+            query: `{
+                zemogians(${departmentParams}includeExternal: true){
+                    fullName
+                    nickname
+                    givenName
+                    familyName
+                    email
+                    thumbnailPhotoUrl
+                    externalIds{value}
+                }
+            }`
+        });
+    },
+
+    /**
+     * Retrieves the zemogian information
+     * @param {string} email - Person email
+     * @return {void}
+     */
+    getZemogian (email) {
+        return this.__requestGrapQL({
+            query: `{
+                zemogian(email:"${email}"){
+                    department{code}
+                    fullName
+                    nickname
+                    givenName
+                    familyName
+                    email
+                    thumbnailPhotoUrl
+                    externalIds{value}
+                }
+            }`
         });
     }
 };

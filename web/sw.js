@@ -9,32 +9,31 @@
 /* global console */
 /* global fetch */
 
-//Will store clicked push URL (filled out when content data retrieved)
+// Will store clicked push URL (filled out when content data retrieved)
 let url = '';
 const ROOT_URI = '/penguin-report';
 
 console.log('Started', self);
 
-//Install the push
+// Install the push
 self.addEventListener('install', (event) => {
     self.skipWaiting();
     console.log('Installed', event);
 });
 
-//Activates the push
+// Activates the push
 self.addEventListener('activate', (event) => {
     console.log('Activated', event);
 });
 
-//Sends the push
+// Sends the push
 self.addEventListener('push', (event) => {
     let apiPath = ROOT_URI + '/getpushcontent/';
 
     event.waitUntil(
         self.registration.pushManager.getSubscription()
         .then((subscription) => {
-
-            //Adds the suscription token in case it is needed for custom notification messages per user
+            // Adds the suscription token in case it is needed for custom notification messages per user
             if (subscription && subscription.endpoint) {
                 apiPath += '?regId=' + subscription.endpoint.split('/').slice(-1);
             }
@@ -51,7 +50,7 @@ self.addEventListener('push', (event) => {
         })
         .then((notificationData) => {
             console.log('preparing message to be sent');
-            //Reassign URL as needed
+            // Reassign URL as needed
             url = notificationData.data.url;
             const { title, body, icon, tag, data, renotify, vibrate, requireInteraction } = notificationData;
 
@@ -74,7 +73,7 @@ self.addEventListener('push', (event) => {
   );
 });
 
-//Opens the penguin report if needed
+// Opens the penguin report if needed
 self.addEventListener('notificationclick', (event) => {
     console.log('Notification click: tag ', event.notification.tag);
     event.notification.close();

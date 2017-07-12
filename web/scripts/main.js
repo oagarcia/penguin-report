@@ -52,25 +52,29 @@ const PenguinReport = {
             console.log('User authorized the notifications: ', sub.endpoint);
 
             // We have a user ID
-            if (localStorage.getItem(PenguinReport.STORAGE_IDENTIFIER)) {
-                fetch(PenguinReport.ROOT_URI + 'sync-user/?user=' + localStorage.getItem(PenguinReport.STORAGE_IDENTIFIER) + '&registry=' + pushRegistryID)
-                .then((response) => {
-                    if (response.status !== 200) {
-                    // Either show a message to the user explaining the error
-                    // or enter a generic message and handle the
-                    // onnotificationclick event to direct the user to a web page
-                        console.log('Looks like there was a problem. Status Code: ' + response.status);
-                        throw new Error();
-                    }
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log('the data', data);
-                })
-                .catch((err) => {
-                    console.error('Unable to retrieve data', err);
-                });
-            }
+
+            fetch(
+                PenguinReport.ROOT_URI + 'sync-user/?pushRegistryId=' + pushRegistryID,
+                {
+                    credentials: 'include'
+                }
+            )
+            .then((response) => {
+                if (response.status !== 200) {
+                // Either show a message to the user explaining the error
+                // or enter a generic message and handle the
+                // onnotificationclick event to direct the user to a web page
+                    console.log('Looks like there was a problem. Status Code: ' + response.status);
+                    throw new Error();
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('the data', data);
+            })
+            .catch((err) => {
+                console.error('Unable to retrieve data', err);
+            });
 
             // Do we already have a push message subscription?
             return serviceWorkerRegistration.pushManager.getSubscription();
@@ -94,11 +98,9 @@ const PenguinReport = {
      * @return {void}
      */
     init () {
-        const documentElement = document.querySelector('html');
         const ENV = JSON.parse(document.querySelector('#data-env').textContent.trim());
-        const zPeepsList = document.getElementById('z-peeps');
-        const zPeepsIdentityButton = document.getElementById('z-peeps-identify');
         const pushNotifier = document.getElementById('push-notifier');
+        const dateField = document.querySelector('#dateField');
 
         // Adding server variables to namespace
         Object.assign(PenguinReport, ENV);
@@ -135,22 +137,13 @@ const PenguinReport = {
             });
         }, false);
 
-        // Register the z-user once the corresponding user in the dropdown is selected
-        zPeepsIdentityButton.addEventListener('click', () => {
-            const selectedPeep = zPeepsList.options[zPeepsList.selectedIndex];
+        // Sends the date form
+        dateField.addEventListener('change', (event) => {
+            event.target.form.submit();
+        });
 
-            if (selectedPeep.value) {
-                localStorage.setItem(PenguinReport.STORAGE_IDENTIFIER, zPeepsList.value + '|' + selectedPeep.text);
-                documentElement.classList.remove('z-peeps-visible');
-                PenguinReport.register();
-            }
-        }, false);
-
-        if (!localStorage.getItem(PenguinReport.STORAGE_IDENTIFIER)) {
-            documentElement.classList.add('z-peeps-visible');
-        } else {
-            PenguinReport.register();
-        }
+        // Register for the push
+        PenguinReport.register();
     }
 };
 

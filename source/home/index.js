@@ -1,6 +1,8 @@
 import express from 'express';
+import { default as _ } from 'lodash';
 import { getCurrentDate } from '../utils';
 import { ZPeepManager } from '../zpeep-manager';
+import DEPARTMENT from '../department';
 import path from 'path';
 
 const app = express();
@@ -14,13 +16,22 @@ app.set('view engine', 'jsx');
 app.get('/', (req, res) => {
     const { reportDate } = getCurrentDate(req.query.date);
 
-    ZPeepManager.getZPeepsTimeReport(reportDate, (timeEntries) => {
+    // Check for error messages comming form passport (authorization.js)
+    const { error: [errorMessage = ''] = [] } = req.flash();
+    const departmentCode = _.get(req, 'session.passport.user.departmentCode', DEPARTMENT.UNASSIGNED);
+
+    ZPeepManager.getZPeepsTimeReport(reportDate, departmentCode)
+    .then((timeEntries) => {
         res.render('Home',
             {
                 req,
-                timeEntries
+                timeEntries,
+                errorMessage
             }
         );
+    })
+    .catch((err) => {
+        res.status(500).send(err);
     });
 });
 

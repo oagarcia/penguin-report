@@ -33,14 +33,11 @@ export default class Layout extends React.Component {
                     <link rel='icon' type='image/png' href={`${ROOT_URI}images/favicon.png`} />
                 </head>
                 <body>
-                    <div dangerouslySetInnerHTML={{__html: `
-                        ${Utils.zPeepsSelectorRenderer(ZPeepManager.peopleIds)}
-                        `}} />
                     <div className='title-container'>
                         <h1>Penguin UI Report</h1>
                     </div>
                     <div>{this.props.children}</div>
-                    <div>
+                    <div style={{'textAlign': 'center', 'padding': '10px'}}>
                         <a href='/logout'>logout</a>
                     </div>
                     <script type='application/json' id='data-env' dangerouslySetInnerHTML={{__html: `

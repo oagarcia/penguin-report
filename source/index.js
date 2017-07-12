@@ -19,6 +19,7 @@ import connectRedis from 'connect-redis';
 import CONFIG from './config';
 import routes from './routes';
 import { Authorization } from './authorization';
+import flash from 'connect-flash';
 
 let mongodb;
 
@@ -104,9 +105,15 @@ app.use(session({
     }),
     proxy: true,
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        path: '/',
+        httpOnly: true,
+        secure: CONFIG.NODE_ENV !== 'development' // Must be set to true in production
+    }
 }));
 
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 

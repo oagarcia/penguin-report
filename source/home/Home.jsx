@@ -1,6 +1,6 @@
 import querystring from 'querystring';
 import React from 'react';
-import {object, func, arrayOf, shape} from 'prop-types';
+import {object, func, arrayOf, shape, string} from 'prop-types';
 import lodash from 'lodash';
 import { getCurrentDate } from '../utils';
 import { ZPeepManager } from '../zpeep-manager';
@@ -13,7 +13,8 @@ export default class Home extends React.Component {
             isAuthenticated: func,
             query: object
         }),
-        timeEntries: arrayOf(object)
+        timeEntries: arrayOf(object),
+        errorMessage: string
     };
 
     constructor (props) {
@@ -28,10 +29,17 @@ export default class Home extends React.Component {
 
     render () {
         const { query } = this.props.req;
+        const {errorMessage} = this.props;
 
         // for some reason destructuring the isAuthenticated recreates the return
         if (!this.props.req.isAuthenticated()) {
-            return <a href={`/auth/google?${querystring.stringify(query)}`}>Login</a>;
+            const errorLoginMessage = errorMessage ? <div>{ errorMessage }</div> : null;
+
+            return (
+                <div>
+                    { errorLoginMessage }
+                    <a href={`/auth/google?${querystring.stringify(query)}`}>Login</a>
+                </div>);
         }
 
         // Prints the layout of time
@@ -99,12 +107,14 @@ export default class Home extends React.Component {
             <Layout>
                 <div className='title-container'>
                     <form id='dateForm' action='' method='GET'>
-                        <input name='date' type='date' value={this.state.currentDate} />
+                        <input id='dateField' name='date' type='date' defaultValue={this.state.currentDate} />
                     </form>
                     <button id='push-notifier'>Notify users</button>
                 </div>
                 <table className='penguin-report'>
-                    { rows }
+                    <tbody>
+                        { rows }
+                    </tbody>
                 </table>
             </Layout>
         );

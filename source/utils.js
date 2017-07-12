@@ -50,33 +50,6 @@ const Utils = {
     notFoundRenderer (response) {
         response.writeHead(404, { 'content-type': Utils.CONTENT_TYPE['.html'] });
         response.end('<h1>404 Not Found</h1>');
-    },
-
-    /**
-     * Renders identify selector dropdown
-     * @param  {Object} people Collection of people
-     * @return {string} The template related to user identify selector dropdown
-     */
-    zPeepsSelectorRenderer (people) {
-        let output = `
-        <div class="z-peeps-container">
-        <div class="z-peeps-body">
-        In order to get notifications about your reports, please identify yourself:
-        <br>
-        <br>
-        <form>
-        <select name="z-peeps" id="z-peeps">
-            <option required value="">Please select your name</option>`;
-
-        people.forEach((person) => {
-            output += `<option value="${person['person-id']}">${person['person-name']}</option>`;
-        });
-        return output + `
-        <select>
-        <button id="z-peeps-identify" name="z-peeps-identify" class="btn z-peeps-identify" type="button">Identify</button>
-        </form>
-        </div>
-        </div>`;
     }
 };
 

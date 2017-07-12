@@ -1,5 +1,10 @@
 import passportGoogleOauth from 'passport-google-oauth2';
+import debugModule from 'debug';
 import CONFIG from './config';
+import ZProfile from './zprofile';
+
+// Debug module
+const debug = debugModule('authorization');
 
 export const Authorization = {
     // Google authentication via OAUTH2
@@ -20,19 +25,25 @@ export const Authorization = {
             callbackURL: `${CONFIG.ROOT_URI}${CONFIG.GOOGLE_CALLBACK_URL}`,
             passReqToCallback: true
         }, (request, accessToken, refreshToken, profile, done) => {
-            // asynchronous verification, for effect...
-            // User.findOrCreate({ googleId: profile.id }, (err, user) => {
-            //     return done(err, user);
-            // });
+            ZProfile.getZemogian(profile.email)
+            .then((response) => {
+                if (!response.zemogian) {
+                    return done(null, false, {
+                        message: 'It seems that you are logged in with an invalid Zemoga account. Go to Gmail, logout and try again'
+                    });
+                }
 
-            // @TODO: Just grab from zprofile the user associated with the email!!!!
-            // Or by ID if possible
-            process.nextTick(() => {
-                // To keep the example simple, the user's Google profile is returned to
-                // represent the logged-in user.  In a typical application, you would want
-                // to associate the Google account with a user record in your database,
-                // and return that user instead.
-                return done(null, profile);
+                const { zemogian: {externalIds: [{value: basecampId}]} } = response;
+                const { zemogian: {department: {code: departmentCode}} } = response;
+
+                response.zemogian.basecampId = basecampId;
+                response.zemogian.departmentCode = departmentCode;
+
+                return done(null, response.zemogian);
+            })
+            .catch((error) => {
+                debug('>>>>>', error);
+                return done(error);
             });
         }
         ));
