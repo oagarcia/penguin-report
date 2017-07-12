@@ -75,8 +75,8 @@ export default function routes (app, passport) {
         originalQueryString = originalQueryString && '?' + originalQueryString;
 
         passport.authenticate('google', {
-            successRedirect: `/${originalQueryString}`,
-            failureRedirect: '/',
+            successRedirect: `${CONFIG.PROTOCOL}${CONFIG.DOMAIN}${CONFIG.ROOT_URI}/${originalQueryString}`,
+            failureRedirect: `${CONFIG.PROTOCOL}${CONFIG.DOMAIN}${CONFIG.ROOT_URI}/`,
             failureFlash: true
         })(req, res, next);
     });
