@@ -33,8 +33,12 @@ export const Authorization = {
                     });
                 }
 
-                const { zemogian: {externalIds: [{value: basecampId}]} } = response;
-                const { zemogian: {department: {code: departmentCode}} } = response;
+                // Destructuring the ZProfile response
+                const {
+                    zemogian: {
+                        externalIds: [{value: basecampId}],
+                        department: {code: departmentCode}}
+                    } = response;
 
                 response.zemogian.basecampId = basecampId;
                 response.zemogian.departmentCode = departmentCode;
