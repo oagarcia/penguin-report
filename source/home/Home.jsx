@@ -39,7 +39,7 @@ export default class Home extends React.Component {
         const content = !authenticated ? (
             <div style={{'textAlign': 'center', 'padding': '10px'}}>
                 { errorLoginMessage }
-                <a href={`auth/google?${querystring.stringify(query)}`}>Login</a>
+                <a href={`${CONFIG.ROOT_URI}/auth/google?${querystring.stringify(query)}`}>Login</a>
             </div>)
             : <div>
                 <div className='title-container'>
