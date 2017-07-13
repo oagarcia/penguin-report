@@ -54,9 +54,8 @@ Authorization.init(passport);
 // Global middleware
 app.use((req, res, next) => {
     // for env environment, sets the correct path for service worker scope.
-    // Also sets root_uri to an empty string to avoid several requests to prod subfolder
     if (CONFIG.NODE_ENV === 'development') {
-        res.setHeader('Service-Worker-Allowed', CONFIG.ROOT_URI);
+        res.setHeader('Service-Worker-Allowed', CONFIG.WORKER_SCOPE);
     }
 
     // makes Mongo available to the entire application
@@ -82,6 +81,7 @@ app.use((req, res, next) => {
 if (CONFIG.NODE_ENV === 'development') {
     app.use('/', express.static(path.resolve(__dirname, './../web')));
 
+    // Redirects local notifications pointed to penguin-report subfolder to root path
     app.all('/penguin-report/*', (req, res) => {
         debug('Attempt to redirect call', req.path);
         res.redirect(`/${req.params[0]}?${stringify(req.query)}`);

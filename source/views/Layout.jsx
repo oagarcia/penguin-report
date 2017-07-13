@@ -9,7 +9,7 @@ export default class Layout extends React.Component {
     };
 
     render () {
-        const { STORAGE_IDENTIFIER, STORAGE_NAME, PROTOCOL, DOMAIN, ROOT_URI } = CONFIG;
+        const { STORAGE_IDENTIFIER, STORAGE_NAME, PROTOCOL, DOMAIN, ROOT_URI, WORKER_SCOPE } = CONFIG;
         const FULL_URL = PROTOCOL + DOMAIN + ROOT_URI;
         const { authenticated } = this.props;
         let logout = null;
@@ -18,14 +18,14 @@ export default class Layout extends React.Component {
         if (authenticated) {
             logout = (
                 <div style={{'textAlign': 'center', 'padding': '10px'}}>
-                    <a href='logout'>logout</a>
+                    <a href={`${FULL_URL}/logout`}>logout</a>
                 </div>);
 
             scripts = [
                 <script key='0' type='application/json' id='data-env' dangerouslySetInnerHTML={{__html: `
-                        ${JSON.stringify({ STORAGE_IDENTIFIER, STORAGE_NAME, ROOT_URI })}
+                        ${JSON.stringify({ STORAGE_IDENTIFIER, STORAGE_NAME, ROOT_URI, WORKER_SCOPE })}
                     `}} />,
-                <script key='1' src={`${ROOT_URI}scripts/main.js`} />
+                <script key='1' src={`${FULL_URL}/scripts/main.js`} />
             ];
         }
 
@@ -44,9 +44,9 @@ export default class Layout extends React.Component {
                     <link
                       rel='stylesheet'
                       href='https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700' />
-                    <link rel='stylesheet' href={`${ROOT_URI}styles/main.css`} />
-                    <link rel='manifest' href={`${ROOT_URI}manifest.json`} />
-                    <link rel='icon' type='image/png' href={`${ROOT_URI}images/favicon.png`} />
+                    <link rel='stylesheet' href={`${FULL_URL}/styles/main.css`} />
+                    <link rel='manifest' href={`${FULL_URL}/manifest.json`} />
+                    <link rel='icon' type='image/png' href={`${FULL_URL}/images/favicon.png`} />
                 </head>
                 <body>
                     <div className='title-container'>

@@ -1,7 +1,8 @@
 export default {
-    PROTOCOL: 'https://',
-    DOMAIN: 'uitraining.zemoga.com',
-    ROOT_URI: '/penguin-report',
+    PROTOCOL: 'http://',
+    DOMAIN: 'localhost:3000',
+    ROOT_URI: '',
+    WORKER_SCOPE: '/',
 
     PERSON_ID: 'person-id',
     PERSON_NAME: 'person-name',
@@ -24,7 +25,7 @@ export default {
     GCM_AUTH: '?????????',
     GCM_URL: '?????????',
     MONGO_CONFIG_URL: '?????????',
-    REDIS_HOST: '?????????',
+    REDIS_HOST: '127.0.0.1',
 
     ZPROFILE_CLIENT_ID: '?????????',
     ZPROFILE_CLIENT_SECRET: '?????????',

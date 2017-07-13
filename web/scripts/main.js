@@ -27,8 +27,8 @@ const PenguinReport = {
         }
 
         // Register the service worker
-        navigator.serviceWorker.register(PenguinReport.ROOT_URI + 'sw.js', {
-            scope: PenguinReport.ROOT_URI
+        navigator.serviceWorker.register(PenguinReport.ROOT_URI + '/sw.js', {
+            scope: PenguinReport.WORKER_SCOPE
         })
         .then((registration) => {
             console.log('Service worker registered', registration);
@@ -54,7 +54,7 @@ const PenguinReport = {
             // We have a user ID
 
             fetch(
-                PenguinReport.ROOT_URI + 'sync-user/?pushRegistryId=' + pushRegistryID,
+                PenguinReport.ROOT_URI + '/sync-user/?pushRegistryId=' + pushRegistryID,
                 {
                     credentials: 'include'
                 }
@@ -110,7 +110,7 @@ const PenguinReport = {
             pushNotifier.disabled = true;
             pushNotifier.textContent = 'Notifying...';
 
-            fetch(PenguinReport.ROOT_URI + 'notify/' + location.search)
+            fetch(PenguinReport.ROOT_URI + '/notify/' + location.search)
             .then((response) => {
                 if (response.status !== 200) {
                     pushNotifier.textContent = 'Error notifyng';
