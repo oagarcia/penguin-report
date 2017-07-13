@@ -1,23 +1,32 @@
 import React from 'react';
-import { arrayOf, object, bool } from 'prop-types';
+import { object, bool } from 'prop-types';
 import CONFIG from '../config';
 
 export default class Layout extends React.Component {
     static propTypes = {
-        children: arrayOf(object),
+        children: object,
         authenticated: bool
     };
 
     render () {
         const { STORAGE_IDENTIFIER, STORAGE_NAME, PROTOCOL, DOMAIN, ROOT_URI } = CONFIG;
         const FULL_URL = PROTOCOL + DOMAIN + ROOT_URI;
+        const { authenticated } = this.props;
         let logout = null;
+        let scripts = null;
 
-        if (this.props.authenticated) {
+        if (authenticated) {
             logout = (
                 <div style={{'textAlign': 'center', 'padding': '10px'}}>
                     <a href='logout'>logout</a>
                 </div>);
+
+            scripts = [
+                <script key='0' type='application/json' id='data-env' dangerouslySetInnerHTML={{__html: `
+                        ${JSON.stringify({ STORAGE_IDENTIFIER, STORAGE_NAME, ROOT_URI })}
+                    `}} />,
+                <script key='1' src={`${ROOT_URI}scripts/main.js`} />
+            ];
         }
 
         return (
@@ -45,10 +54,7 @@ export default class Layout extends React.Component {
                     </div>
                     <div>{this.props.children}</div>
                     { logout }
-                    <script type='application/json' id='data-env' dangerouslySetInnerHTML={{__html: `
-                        ${JSON.stringify({ STORAGE_IDENTIFIER, STORAGE_NAME, ROOT_URI })}
-                    `}} />
-                    <script src={`${ROOT_URI}scripts/main.js`} />
+                    { scripts }
                 </body>
             </html>);
     }
