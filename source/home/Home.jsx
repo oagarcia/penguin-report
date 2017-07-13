@@ -29,82 +29,19 @@ export default class Home extends React.Component {
 
     render () {
         const { query } = this.props.req;
-        const {errorMessage} = this.props;
+        const { errorMessage } = this.props;
 
-        // for some reason destructuring the isAuthenticated recreates the return
-        if (!this.props.req.isAuthenticated()) {
-            const errorLoginMessage = errorMessage ? <div>{ errorMessage }</div> : null;
+        const errorLoginMessage = errorMessage ? <div>{ errorMessage }</div> : null;
 
-            return (
-                <div>
-                    { errorLoginMessage }
-                    <a href={`/auth/google?${querystring.stringify(query)}`}>Login</a>
-                </div>);
-        }
+        // for some reason destructuring the isAuthenticated recreates the return :(
+        const authenticated = this.props.req.isAuthenticated();
 
-        // Prints the layout of time
-        const rows = lodash.map(this.props.timeEntries, (entryValue) => {
-            let flag = '';
-            const row = [];
-
-            entryValue.report.forEach((entry) => {
-                const entryDescription = entry.description;
-                let description = <span className='penguin-icon'>🐧🐧🐧</span>;
-
-                if (typeof entryDescription !== 'undefined') {
-                    description = <strong className='text-penguined'>????????????</strong>;
-
-                    if (entryDescription !== '') {
-                        if (entry['person-id'] === ZPeepManager.getAdminId() && entry.projectName === ZPeepManager.getAdminHiddenProject()) {
-                            description = <span className='description-hidden'>*hidden</span>;
-                        } else {
-                            description =
-                                <span className='text-description' dangerouslySetInnerHTML={{__html: `
-                                ${entryDescription.replace(
-                                    CONFIG.JIRA_PATTERN,
-                                    `<a target="_blank" href="${CONFIG.JIRA_DOMAIN}$1">$1</a>`
-                                )}
-                                `}} />;
-                        }
-                    }
-                }
-
-                row.push(
-                    <tr>
-                        <td>
-                            {
-                                entry.projectName !== ''
-                                ? <span><strong>{entry.projectName}</strong><br /></span>
-                                : null
-                            }
-                            { entry.todoName }
-                            { description }
-                        </td>
-                        <td className='tright'>{entry.hours}</td>
-                    </tr>
-                );
-            });
-
-            if (entryValue.totalHours < CONFIG.MIN_HOURS) {
-                flag = 'penguined';
-            }
-
-            return ([
-                <tr>
-                    <td className={`user-name ${flag}`} colSpan='2'>
-                        <b>{entryValue[CONFIG.PERSON_NAME]}</b>
-                    </td>
-                </tr>,
-                row,
-                <tr className={`tright text-${flag}`}>
-                    <td colSpan='2'>
-                        <b>Total Hours: </b> {entryValue.totalHours}
-                    </td>
-                </tr>]);
-        });
-
-        return (
-            <Layout>
+        const content = !authenticated ? (
+            <div style={{'textAlign': 'center', 'padding': '10px'}}>
+                { errorLoginMessage }
+                <a href={`auth/google?${querystring.stringify(query)}`}>Login</a>
+            </div>)
+            : <div>
                 <div className='title-container'>
                     <form id='dateForm' action='' method='GET'>
                         <input id='dateField' name='date' type='date' defaultValue={this.state.currentDate} />
@@ -113,9 +50,73 @@ export default class Home extends React.Component {
                 </div>
                 <table className='penguin-report'>
                     <tbody>
-                        { rows }
+                        {lodash.map(this.props.timeEntries,
+                        (entryValue) => {
+                            let flag = '';
+                            const row = [];
+
+                            entryValue.report.forEach((entry) => {
+                                const entryDescription = entry.description;
+                                let description = <span className='penguin-icon'>🐧🐧🐧</span>;
+
+                                if (typeof entryDescription !== 'undefined') {
+                                    description = <strong className='text-penguined'>????????????</strong>;
+
+                                    if (entryDescription !== '') {
+                                        if (entry['person-id'] === ZPeepManager.getAdminId() && entry.projectName === ZPeepManager.getAdminHiddenProject()) {
+                                            description = <span className='description-hidden'>*hidden</span>;
+                                        } else {
+                                            description =
+                                                <span className='text-description' dangerouslySetInnerHTML={{__html: `
+                                                ${entryDescription.replace(
+                                                    CONFIG.JIRA_PATTERN,
+                                                    `<a target="_blank" href="${CONFIG.JIRA_DOMAIN}$1">$1</a>`
+                                                )}
+                                                `}} />;
+                                        }
+                                    }
+                                }
+
+                                row.push(
+                                    <tr>
+                                        <td>
+                                            {
+                                                entry.projectName !== ''
+                                                ? <span><strong>{entry.projectName}</strong><br /></span>
+                                                : null
+                                            }
+                                            { entry.todoName }
+                                            { description }
+                                        </td>
+                                        <td className='tright'>{entry.hours}</td>
+                                    </tr>
+                                );
+                            });
+
+                            if (entryValue.totalHours < CONFIG.MIN_HOURS) {
+                                flag = 'penguined';
+                            }
+
+                            return ([
+                                <tr>
+                                    <td className={`user-name ${flag}`} colSpan='2'>
+                                        <b>{entryValue[CONFIG.PERSON_NAME]}</b>
+                                    </td>
+                                </tr>,
+                                row,
+                                <tr className={`tright text-${flag}`}>
+                                    <td colSpan='2'>
+                                        <b>Total Hours: </b> {entryValue.totalHours}
+                                    </td>
+                                </tr>]);
+                        })}
                     </tbody>
                 </table>
+            </div>;
+
+        return (
+            <Layout authenticated={authenticated}>
+                { content }
             </Layout>
         );
     }

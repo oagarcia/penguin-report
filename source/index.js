@@ -56,7 +56,6 @@ app.use((req, res, next) => {
     // for env environment, sets the correct path for service worker scope.
     // Also sets root_uri to an empty string to avoid several requests to prod subfolder
     if (CONFIG.NODE_ENV === 'development') {
-        CONFIG.ROOT_URI = '/';
         res.setHeader('Service-Worker-Allowed', CONFIG.ROOT_URI);
     }
 
@@ -70,7 +69,7 @@ app.use((req, res, next) => {
 
     const afterResponse = () => {
         // once response is sent, disconnects from DB
-        mongodb.close();
+        mongodb && mongodb.close();
     };
 
     // if Node App is closed, restarts

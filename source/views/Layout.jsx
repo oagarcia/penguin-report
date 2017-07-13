@@ -1,17 +1,24 @@
 import React from 'react';
-import { arrayOf, object } from 'prop-types';
+import { arrayOf, object, bool } from 'prop-types';
 import CONFIG from '../config';
-import { Utils } from '../utils';
-import { ZPeepManager } from '../zpeep-manager';
 
 export default class Layout extends React.Component {
     static propTypes = {
-        children: arrayOf(object)
+        children: arrayOf(object),
+        authenticated: bool
     };
 
     render () {
         const { STORAGE_IDENTIFIER, STORAGE_NAME, PROTOCOL, DOMAIN, ROOT_URI } = CONFIG;
         const FULL_URL = PROTOCOL + DOMAIN + ROOT_URI;
+        let logout = null;
+
+        if (this.props.authenticated) {
+            logout = (
+                <div style={{'textAlign': 'center', 'padding': '10px'}}>
+                    <a href='logout'>logout</a>
+                </div>);
+        }
 
         return (
             <html lang='en' className='hide-notifier-button'>
@@ -37,9 +44,7 @@ export default class Layout extends React.Component {
                         <h1>Penguin UI Report</h1>
                     </div>
                     <div>{this.props.children}</div>
-                    <div style={{'textAlign': 'center', 'padding': '10px'}}>
-                        <a href='/logout'>logout</a>
-                    </div>
+                    { logout }
                     <script type='application/json' id='data-env' dangerouslySetInnerHTML={{__html: `
                         ${JSON.stringify({ STORAGE_IDENTIFIER, STORAGE_NAME, ROOT_URI })}
                     `}} />

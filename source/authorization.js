@@ -23,7 +23,7 @@ export const Authorization = {
         passport.use(new GoogleStrategy({
             clientID: CONFIG.GOOGLE_CLIENT_ID,
             clientSecret: CONFIG.GOOGLE_CLIENT_SECRET,
-            callbackURL: `${CONFIG.ROOT_URI}${CONFIG.GOOGLE_CALLBACK_URL}`,
+            callbackURL: `${CONFIG.PROTOCOL}${CONFIG.DOMAIN}${CONFIG.ROOT_URI}${CONFIG.GOOGLE_CALLBACK_URL}`,
             passReqToCallback: true
         }, (request, accessToken, refreshToken, profile, done) => {
             ZProfile.getZemogian(profile.email)
