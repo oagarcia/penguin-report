@@ -11,6 +11,7 @@ export const Authorization = {
     // Google authentication via OAUTH2
     init (passport) {
         const GoogleStrategy = passportGoogleOauth.Strategy;
+        let rootURI = CONFIG.ROOT_URI;
 
         passport.serializeUser((user, done) => {
             done(null, user);
@@ -20,10 +21,15 @@ export const Authorization = {
             done(null, obj);
         });
 
+        // Avoids wrong path // on local
+        if (rootURI === '/') {
+            rootURI = '';
+        }
+
         passport.use(new GoogleStrategy({
             clientID: CONFIG.GOOGLE_CLIENT_ID,
             clientSecret: CONFIG.GOOGLE_CLIENT_SECRET,
-            callbackURL: `${CONFIG.PROTOCOL}${CONFIG.DOMAIN}${CONFIG.ROOT_URI}${CONFIG.GOOGLE_CALLBACK_URL}`,
+            callbackURL: `${CONFIG.PROTOCOL}${CONFIG.DOMAIN}${rootURI}${CONFIG.GOOGLE_CALLBACK_URL}`,
             passReqToCallback: true
         }, (request, accessToken, refreshToken, profile, done) => {
             ZProfile.getZemogian(profile.email)

@@ -57,7 +57,7 @@ export default function routes (app, passport) {
     });
 
     // Redirects TO Google authentication page
-    app.get('/' + CONFIG.GOOGLE_AUTH_URL, (req, res, next) => {
+    app.get(CONFIG.GOOGLE_AUTH_URL, (req, res, next) => {
         passport.authenticate('google',
             {
                 'scope': [
@@ -69,7 +69,7 @@ export default function routes (app, passport) {
     });
 
     // Redirects FROM Google authentication page
-    app.get('/' + CONFIG.GOOGLE_CALLBACK_URL, (req, res, next) => {
+    app.get(CONFIG.GOOGLE_CALLBACK_URL, (req, res, next) => {
         let originalQueryString = req.query.state || '';
 
         originalQueryString = originalQueryString && '?' + originalQueryString;
