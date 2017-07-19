@@ -42,6 +42,9 @@ process
 // Creates the server
 const app = express();
 
+// trust first proxy
+app.set('trust proxy', 1);
+
 // Redis initialization to store session
 const RedisStore = connectRedis(session);
 
@@ -96,7 +99,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(session({
-    secret: 'frompenguinswithlove.00',
+    secret: CONFIG.SESSION_COOKIE_SECRET,
     name: 'penguinsession',
     store: new RedisStore({
         host: CONFIG.REDIS_HOST,
