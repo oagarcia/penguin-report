@@ -16,6 +16,22 @@ const debug = debugModule('routes');
 //     res.redirect('/');
 // }
 
+// Middleware to check API tokens - work in progress
+// function ensureToken (req, res, next) {
+//     const db = req.db;
+//     const apiKey = req.query.api_key;
+
+//     db.collection('penguin-token').findOne({ token: apiKey })
+//     .then((tokenDocument) => {
+//         if (tokenDocument.token) {
+//             return next();
+//         }
+
+//         res.status(403).send([]);
+//     })
+//     .catch(() => res.status(403).send([]));
+// }
+
 // Push notification content.
 // TODO: Should be retrieved from DB
 const pushContent = {
@@ -47,7 +63,7 @@ export default function routes (app, passport) {
     app.use(home);
 
     // TODO: Set template rendering
-    // app.get('/account', ensureAuthenticated, (req, res) => {
+    // app.get('/', ensureAuthenticated, (req, res) => {
     //     res.render('account', { user: req.user });
     // });
 
@@ -84,6 +100,7 @@ export default function routes (app, passport) {
     /**
      * Retrieve users as JSON
      */
+    // app.get('/api', ensureToken, (req, res) => {
     app.get('/api', (req, res) => {
         const { reportDate } = getCurrentDate(req.query.date);
         const { department = '' } = req.query;

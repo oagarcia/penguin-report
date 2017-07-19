@@ -1,14 +1,14 @@
 import express from 'express';
+import path from 'path';
+import reactViews from 'express-react-views';
 import { default as _ } from 'lodash';
 import { getCurrentDate } from '../utils';
 import { ZPeepManager } from '../zpeep-manager';
-import DEPARTMENT from '../department';
-import path from 'path';
 
 const app = express();
 
 app.set('views', [__dirname, path.resolve(__dirname, './../views')]);
-app.engine('jsx', require('express-react-views').createEngine({
+app.engine('jsx', reactViews.createEngine({
     babel: {} // Setting this ensures babel transfomrs from babelrc
 }));
 app.set('view engine', 'jsx');
