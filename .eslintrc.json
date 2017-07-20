@@ -30,6 +30,7 @@
     "no-alert": "error",
     "newline-after-var": ["error", "always"],
     "valid-jsdoc": ["error", { "requireReturn": true }],
-    "react/jsx-indent": ["error", 4]
+    "react/jsx-indent": ["error", 4],
+    "react/jsx-indent-props": ["error", 4]
   }
 }

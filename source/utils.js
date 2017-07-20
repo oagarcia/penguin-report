@@ -1,4 +1,5 @@
-'use strict';
+import CONFIG from './config';
+
 /**
  * @file Utils library
  * @copyright Zemoga Inc
@@ -50,6 +51,17 @@ const Utils = {
     notFoundRenderer (response) {
         response.writeHead(404, { 'content-type': Utils.CONTENT_TYPE['.html'] });
         response.end('<h1>404 Not Found</h1>');
+    },
+
+    appURL () {
+        const { PROTOCOL, DOMAIN, ROOT_URI } = CONFIG;
+        const appURL = PROTOCOL + DOMAIN + ROOT_URI;
+
+        return appURL;
+    },
+
+    imgURL () {
+        return Utils.appURL() + '/images/';
     }
 };
 

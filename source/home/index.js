@@ -7,7 +7,7 @@ import { ZPeepManager } from '../zpeep-manager';
 
 const app = express();
 
-app.set('views', [__dirname, path.resolve(__dirname, './../views')]);
+app.set('views', [__dirname, path.resolve(__dirname, './../views'), path.resolve(__dirname, './../components')]);
 app.engine('jsx', reactViews.createEngine({
     babel: {} // Setting this ensures babel transfomrs from babelrc
 }));

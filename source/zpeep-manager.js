@@ -172,7 +172,6 @@ const ZPeepManager = {
             .then((parseResult) => {
                 return new Promise((resolve, reject) => {
                     timeEntries = parseResult['time-entries']['time-entry'];
-
                     // TODO: Refactor > I want a final dataset in the way of:
                     // [{'person-id': xxxxx,
                     // 'person-name': 'xxxxx',
@@ -197,6 +196,7 @@ const ZPeepManager = {
                         // debug('todo: ' + entry['todo-item-id'][0]._);
                         entry[PERSON_ID] = entry[PERSON_ID][0]._;
                         entry.hours = +entry.hours[0]._;
+                        entry.reportId = +entry.id[0]._;
                         entry.projectName = '';
                         entry.todoName = '';
 
@@ -234,6 +234,7 @@ const ZPeepManager = {
                                 [PERSON_NICK]: zemogian.nickname,
                                 [PERSON_ID]: _.get(zemogian, 'externalIds[0].value', '0'),
                                 hours: 0,
+                                reportId: 0,
                                 projectName: '',
                                 todoName: ''
                             };
@@ -243,15 +244,30 @@ const ZPeepManager = {
                     });
 
                     // Just to sort by total hours :( Thinking on refactoring
+                    // key is the property identifier containing the basecamp ID
                     _.forOwn(timeEntries, (value, key) => {
                         let totalHours = 0;
                         let personName = '';
+
+                        // Get additional data from Google Directory profile
+                        const googleProfile = zemogians.find((zemogian) => {
+                            const basecampID = _.get(zemogian, 'externalIds[0].value');
+
+                            return basecampID === key;
+                        });
 
                         _.forEach(value, (timeEntryValue) => {
                             personName = timeEntryValue[PERSON_NAME];
                             totalHours += timeEntryValue.hours;
                         });
-                        timeEntries[key] = { [PERSON_ID]: key, [PERSON_NAME]: personName, totalHours, report: value };
+
+                        timeEntries[key] = {
+                            [PERSON_ID]: key,
+                            [PERSON_NAME]: personName,
+                            totalHours,
+                            googleProfile,
+                            report: value
+                        };
                     });
 
                     // Sort by user with less reported hours

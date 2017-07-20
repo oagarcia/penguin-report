@@ -1,6 +1,9 @@
 import React from 'react';
 import { object, bool } from 'prop-types';
 import CONFIG from '../config';
+import Header from '../components/Header';
+import { default as _ } from 'lodash';
+import { Utils } from '../utils';
 
 export default class Layout extends React.Component {
     static propTypes = {
@@ -9,18 +12,13 @@ export default class Layout extends React.Component {
     };
 
     render () {
-        const { STORAGE_IDENTIFIER, STORAGE_NAME, PROTOCOL, DOMAIN, ROOT_URI, WORKER_SCOPE } = CONFIG;
-        const FULL_URL = PROTOCOL + DOMAIN + ROOT_URI;
+        const { STORAGE_IDENTIFIER, STORAGE_NAME, ROOT_URI, WORKER_SCOPE } = CONFIG;
+        const FULL_URL = Utils.appURL();
         const { authenticated } = this.props;
-        let logout = null;
+        const user = _.get(this.props, 'req.user');
         let scripts = null;
 
         if (authenticated) {
-            logout = (
-                <div style={{'textAlign': 'center', 'padding': '10px'}}>
-                    <a href={`${FULL_URL}/logout`}>logout</a>
-                </div>);
-
             scripts = [
                 <script key='0' type='application/json' id='data-env' dangerouslySetInnerHTML={{__html: `
                         ${JSON.stringify({ STORAGE_IDENTIFIER, STORAGE_NAME, ROOT_URI, WORKER_SCOPE })}
@@ -42,18 +40,17 @@ export default class Layout extends React.Component {
                     <meta property='og:description' content='Easily check your z-peeps reports' />
                     <meta property='og:site_name' content='Z-Penguin reports' />
                     <link
-                      rel='stylesheet'
-                      href='https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700' />
+                        rel='stylesheet'
+                        href='https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700' />
                     <link rel='stylesheet' href={`${FULL_URL}/styles/main.css`} />
                     <link rel='manifest' href={`${FULL_URL}/manifest.json`} />
                     <link rel='icon' type='image/png' href={`${FULL_URL}/images/favicon.png`} />
                 </head>
                 <body>
-                    <div className='title-container'>
-                        <h1>Penguin UI Report</h1>
-                    </div>
-                    <div>{this.props.children}</div>
-                    { logout }
+                    <Header authenticated={authenticated} user={user} />
+                    <main role='content'>
+                        <div>{this.props.children}</div>
+                    </main>
                     { scripts }
                 </body>
             </html>);
