@@ -29,14 +29,16 @@ class Header extends React.Component {
                 role='banner'
                 className={classNames('header', {'header--simple': !authenticated})} >
                 <h1>Zemoga Inc</h1>
-                <img
-                    witdh='32'
-                    height='32'
-                    className='header__thumbnail'
-                    src={thumbnailPhotoUrl || Utils.imgURL() + 'default-thumbnail.png'}
-                    alt={fullName} />
-                <span>{fullName}{nickName ? <span> ({nickName})</span> : null}  | </span>
-                {authenticated ? <a href={`${Utils.appURL()}/logout`}>Log out</a> : null}
+                { authenticated ? <div>
+                    <img
+                        witdh='32'
+                        height='32'
+                        className='header__thumbnail'
+                        src={thumbnailPhotoUrl || Utils.imgURL() + 'default-thumbnail.png'}
+                        alt={fullName} />
+                    <span>{fullName}{nickName ? <span> ({nickName})</span> : null}  | </span>
+                    <a href={`${Utils.appURL()}/logout`}>Log out</a>
+                </div> : null }
             </header>
         );
     }

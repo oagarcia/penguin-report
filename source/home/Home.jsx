@@ -43,10 +43,15 @@ export default class Home extends React.Component {
             </div>)
             : <div>
                 <div className='title-container'>
+                    <h2>
+                        <span className='title-container__icon' />
+                        Penguin Report
+                    </h2>
                     <form id='dateForm' action='' method='GET'>
                         <input id='dateField' name='date' type='date' defaultValue={this.state.currentDate} />
+                        <button type='button' id='push-notifier'>Notify users</button>
                     </form>
-                    <button id='push-notifier'>Notify users</button>
+                    <a href='https://zemogatime.updatelog.com' target='_blank'>Report on Basecamp &gt;</a>
                 </div>
                 <div className='zemogians'>
                     {
