@@ -30,7 +30,7 @@ export const Authorization = {
             .then((response) => {
                 if (!response.zemogian) {
                     return done(null, false, {
-                        message: 'It seems that you are logged in with an invalid Zemoga account. Go to Gmail, logout and try again'
+                        message: 'It seems that you are trying to log in with an invalid Zemoga account.'
                     });
                 }
 

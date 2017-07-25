@@ -31,15 +31,20 @@ export default class Home extends React.Component {
         const { query } = this.props.req;
         const { errorMessage, timeEntries } = this.props;
 
-        const errorLoginMessage = errorMessage ? <div>{ errorMessage }</div> : null;
-
+        const errorLoginMessage = errorMessage ? <div className='login'>{ errorMessage }</div> : null;
+        
         // for some reason destructuring the isAuthenticated recreates the return :(
         const authenticated = this.props.req.isAuthenticated();
-
+        
         const content = !authenticated ? (
-            <div style={{'textAlign': 'center', 'padding': '10px'}}>
+            <div className='content zemogian header_wrapper login'>
+                <div className='title'>    
+                    <span className='title-container__icon' />
+                    <h3>Penguin Report</h3><br />
+                </div>
                 { errorLoginMessage }
-                <a href={`${CONFIG.ROOT_URI}/auth/google?${querystring.stringify(query)}`}>Login</a>
+                <br />
+                <a href={`${CONFIG.ROOT_URI}/auth/google?${querystring.stringify(query)}`}><strong>Login with your Zemoga Gmail account</strong></a>
             </div>)
             : <div className='content'>
                 <div className='title-container'>

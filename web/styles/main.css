@@ -241,3 +241,9 @@ form{
 .hide-notifier-button #push-notifier {
   display: none;
 }
+
+.login{
+  text-align: center;
+  line-height: 20px;
+}
+
