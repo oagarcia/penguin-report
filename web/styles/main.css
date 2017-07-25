@@ -3,56 +3,92 @@
  */
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Proxima Nova", sans-serif;
   font-size: 0.8em;
   color: #222;
   background-color: #f2f2f2;
   margin: 0;
+  padding: 0;
 }
 
 a, a:visited, a:link {
-  color: #8c81c3;
+  color: #10C64E;
   text-decoration: none;
 }
 
 a:hover {
-  color: #6a56ce;
+  color: #10C64E;
   text-decoration: underline;
 }
 
 input[type='date'] {
-  border: 10px solid #e89a25;
-  border-radius: 6px;
-  font-size: 16px;
-  font-family: Arial;
-  padding: 5px;
-  box-sizing: border-box;
+  border: 1px solid #E4E4E4;
+  font-size: 14px;
+  font-family: "Proxima Nova", sans-serif;
+  padding: 10px;
+  width: 120px;
 }
 
 input::-webkit-calendar-picker-indicator {
-  color: #b60040;
+  color: #10C64E;
   background-color: #fff;
 }
 input::-webkit-clear-button {
-  color: #b60040;
+  color: #222;
 }
+
+input::-webkit-inner-spin-button { display: none; }
+input::-webkit-inner-close-button { display: none; }
 
 select {
   height: 28px;
   font-size: 12px;
-  border: 1px solid #d1ca47;
+  border: 1px solid #10C64E;
 }
 
 
 h1 {
-  font-size: 2.8em;
-  margin: 0 0 20px 0;
-  color: rgba(182, 0, 64, 0.66);
-  line-height: 0.8;
+  background-image: url('../images/zlogo.svg');
+  background-repeat: no-repeat;
+  float: left;
+  height: 0px !important;
+  margin: 0 !important;
+  overflow: hidden;
+  padding: 60px 0 0 0;
+  width: 65px;
+}
+
+h2{
+  font-size: 14px;
+}
+
+h3{
+  font-size: 12px;
+}
+
+.header{
+    background: #ffffff;
+    box-shadow: 1px 2px 2px 1px rgba(50, 50, 50, 0.05);
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+.header_wrapper{
+  margin: 0 auto;
+  max-width: 507px;
 }
 
 .header .header__thumbnail {
   border-radius: 16px;
+  display: inline-block;
+  margin-right: 10px; 
+  vertical-align: middle;
+}
+
+.user-session{
+  float: right;
+  margin: 12px;
 }
 
 .btn {
@@ -68,10 +104,47 @@ h1 {
   letter-spacing: 1px;
 }
 
-.title-container {
-  text-align: center;
+.content{
+  margin-top: 100px;
 }
 
+.title-container {
+  max-width: 507px;
+  margin: 40px auto;
+  padding: 10px;
+}
+
+.title{
+  display: inline-block;
+  text-transform: uppercase;
+}
+
+.title h3{
+  display: inline-block;
+}
+
+.date{
+  display: inline-block;
+  float: right;
+}
+
+.date a{
+  float: right;
+}
+
+form{
+  margin-bottom: 12px;
+}
+
+.title-container__icon{
+  background-image: url(../images/ico_penguin.svg);
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 40px;
+  margin-right: 6px;
+  vertical-align: middle;
+  width: 30px;
+}
 
 .zemogians {
     max-width: 508px;
@@ -82,7 +155,7 @@ h1 {
   background-color: #fff;
   color: #333;
   margin-bottom: 30px;
-  box-shadow: 1px 2px 2px 1px rgba(50, 50, 50, 0.15);
+  box-shadow: 1px 2px 2px 1px rgba(50, 50, 50, 0.03);
   padding: 20px;
 }
 
@@ -104,23 +177,32 @@ h1 {
   background-color: #10c64f;
 }
 
+.zemogian__header{
+  border-bottom: 1px solid #DEDEDE;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+}
+
 .penguined {
-  background-color: #fd3d48;
+  background-color: #FD3D47;
 }
 .penguin-icon {
-  font-size: 17px;
+  font-size: 30px;
 }
 
 .tright {
-  text-align: right;
+    height: 15px;
+    font-weight: bold;
+    text-align: right;
+    padding: 12px;
 }
 
 .text-penguined {
-  color: #f00;
+  color: #FD3D47;
 }
 
 .text-description {
-  color: #ca3786;
+  color: #777;
 }
 
 .description-hidden {

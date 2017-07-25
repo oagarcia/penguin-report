@@ -51,10 +51,10 @@ export default class Zemogian extends React.Component {
                 hours
             } = entry;
 
-            let description = <span className='penguin-icon'>🐧🐧🐧</span>;
+            let description = <span className='penguin-icon'>🐧</span>;
 
             if (typeof entryDescription !== 'undefined') {
-                description = <strong className='text-penguined'>????????????</strong>;
+                description = <strong className='text-penguined'>Missing Description</strong>;
 
                 if (entryDescription !== '') {
                     if (personId === ZPeepManager.getAdminId() && projectName === ZPeepManager.getAdminHiddenProject()) {

@@ -41,17 +41,19 @@ export default class Home extends React.Component {
                 { errorLoginMessage }
                 <a href={`${CONFIG.ROOT_URI}/auth/google?${querystring.stringify(query)}`}>Login</a>
             </div>)
-            : <div>
+            : <div className='content'>
                 <div className='title-container'>
-                    <h2>
+                    <div className='title'>    
                         <span className='title-container__icon' />
-                        Penguin Report
-                    </h2>
-                    <form id='dateForm' action='' method='GET'>
-                        <input id='dateField' name='date' type='date' defaultValue={this.state.currentDate} />
-                        <button type='button' id='push-notifier'>Notify users</button>
-                    </form>
-                    <a href='https://zemogatime.updatelog.com' target='_blank'>Report on Basecamp &gt;</a>
+                        <h3>Penguin Report</h3>
+                    </div>
+                    <div className='date'>
+                        <form id='dateForm' action='' method='GET'>
+                            <input id='dateField' name='date' type='date' defaultValue={this.state.currentDate} />
+                            <button type='button' id='push-notifier'>Notify users</button>
+                        </form>
+                        <a href='https://zemogatime.updatelog.com' target='_blank'>Report on Basecamp &gt;</a>
+                    </div>
                 </div>
                 <div className='zemogians'>
                     {
