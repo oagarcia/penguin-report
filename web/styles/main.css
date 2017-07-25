@@ -146,6 +146,17 @@ form{
   width: 30px;
 }
 
+.title-container__icon_red{
+  background-image: url(../images/ico_penguin_red.svg);
+  background-repeat: no-repeat;
+  color: #FD3D47;
+  display: inline-block;
+  font-weight: bold;
+  height: 27px;
+  padding: 5px 30px;
+  vertical-align: middle;
+}
+
 .zemogians {
     max-width: 508px;
     margin: 0 auto;
@@ -179,8 +190,20 @@ form{
 
 .zemogian__header{
   border-bottom: 1px solid #DEDEDE;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   padding-bottom: 14px;
+}
+
+.zemogian__report{
+  border-bottom: 1px dashed #DEDEDE;
+  line-height: 18px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.taskHour{
+  float: right;
+  margin-right: 10px;
 }
 
 .penguined {
@@ -190,9 +213,15 @@ form{
   font-size: 30px;
 }
 
+.to_do{
+  display: inline-block;
+  max-width: 400px;
+}
+
 .tright {
     height: 15px;
     font-weight: bold;
+    margin-top: 14px;
     text-align: right;
     padding: 12px;
 }

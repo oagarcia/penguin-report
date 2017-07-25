@@ -51,7 +51,7 @@ export default class Zemogian extends React.Component {
                 hours
             } = entry;
 
-            let description = <span className='penguin-icon'>🐧</span>;
+            let description = <span className='title-container__icon_red'>Missing Report!</span>;
 
             if (typeof entryDescription !== 'undefined') {
                 description = <strong className='text-penguined'>Missing Description</strong>;
@@ -77,14 +77,15 @@ export default class Zemogian extends React.Component {
                         projectName !== ''
                         ? <span>
                             <strong>{ projectName }</strong>
+                            <span className='taskHour'><strong>{ hours }</strong></span>
                             <br />
                         </span>
                         : null
                     }
-                    { todoName }
-                    { description }
-                    <div className='tright'>{ hours }</div>
-                </div>
+                    <span className='to_do'>{ todoName }</span>
+                    <br />
+                    <span className='desc'>{ description }</span>
+                </div> 
             );
         });
 
