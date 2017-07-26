@@ -18,7 +18,7 @@
 	"important": false,
 	"known-properties": false,
 	"non-link-hover": false,
-	"order-alphabetical": true,
+	"order-alphabetical": false,
 	"outline-none": false,
 	"overqualified-elements": false,
 	"qualified-headings": false,

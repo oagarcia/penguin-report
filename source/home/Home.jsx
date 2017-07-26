@@ -1,11 +1,11 @@
 import querystring from 'querystring';
 import React from 'react';
 import {object, func, arrayOf, shape, string} from 'prop-types';
-import lodash from 'lodash';
-import { getCurrentDate } from '../utils';
-import { ZPeepManager } from '../zpeep-manager';
+import { default as _ } from 'lodash';
+import { getCurrentDate, Utils } from '../utils';
 import CONFIG from '../config';
 import Layout from '../views/Layout';
+import Zemogian from '../components/Zemogian';
 
 export default class Home extends React.Component {
     static propTypes = {
@@ -29,93 +29,56 @@ export default class Home extends React.Component {
 
     render () {
         const { query } = this.props.req;
-        const { errorMessage } = this.props;
+        const { errorMessage, timeEntries } = this.props;
 
-        const errorLoginMessage = errorMessage ? <div>{ errorMessage }</div> : null;
-
+        const errorLoginMessage = errorMessage ? <div className='login'>{ errorMessage }</div> : null;
+        
         // for some reason destructuring the isAuthenticated recreates the return :(
         const authenticated = this.props.req.isAuthenticated();
-
+        
         const content = !authenticated ? (
-            <div style={{'textAlign': 'center', 'padding': '10px'}}>
-                { errorLoginMessage }
-                <a href={`${CONFIG.ROOT_URI}/auth/google?${querystring.stringify(query)}`}>Login</a>
-            </div>)
-            : <div>
-                <div className='title-container'>
-                    <form id='dateForm' action='' method='GET'>
-                        <input id='dateField' name='date' type='date' defaultValue={this.state.currentDate} />
-                    </form>
-                    <button id='push-notifier'>Notify users</button>
+            <div className='content zemogian header_wrapper login'>
+                <div className='title'>    
+                    <span className='title-container__icon' />
+                    <h3>Penguin Report</h3><br />
                 </div>
-                <table className='penguin-report'>
-                    <tbody>
-                        {lodash.map(this.props.timeEntries,
-                        (entryValue) => {
-                            let flag = '';
-                            const row = [];
+                { errorLoginMessage }
+                <br />
+                <a href={`${CONFIG.ROOT_URI}/auth/google?${querystring.stringify(query)}`}><strong>Login with your Zemoga Gmail account</strong></a>
+            </div>)
+            : <div className='content'>
+                <div className='title-container'>
+                    <div className='title'>    
+                        <span className='title-container__icon' />
+                        <h3>Penguin Report</h3>
+                    </div>
+                    <div className='date'>
+                        <form id='dateForm' action='' method='GET'>
+                            <input id='dateField' name='date' type='date' defaultValue={this.state.currentDate} />
+                            <button type='button' id='push-notifier'>Notify users</button>
+                        </form>
+                        <a href='https://zemogatime.updatelog.com' target='_blank'>Report on Basecamp &gt;</a>
+                    </div>
+                </div>
+                <div className='zemogians'>
+                    {
+                    _.map(timeEntries,
+                    (entryValue) => {
+                        const { 'person-id': personId } = entryValue;
 
-                            entryValue.report.forEach((entry) => {
-                                const entryDescription = entry.description;
-                                let description = <span className='penguin-icon'>🐧🐧🐧</span>;
-
-                                if (typeof entryDescription !== 'undefined') {
-                                    description = <strong className='text-penguined'>????????????</strong>;
-
-                                    if (entryDescription !== '') {
-                                        if (entry['person-id'] === ZPeepManager.getAdminId() && entry.projectName === ZPeepManager.getAdminHiddenProject()) {
-                                            description = <span className='description-hidden'>*hidden</span>;
-                                        } else {
-                                            description =
-                                                <span className='text-description' dangerouslySetInnerHTML={{__html: `
-                                                ${entryDescription.replace(
-                                                    CONFIG.JIRA_PATTERN,
-                                                    `<a target="_blank" href="${CONFIG.JIRA_DOMAIN}$1">$1</a>`
-                                                )}
-                                                `}} />;
-                                        }
-                                    }
-                                }
-
-                                row.push(
-                                    <tr>
-                                        <td>
-                                            {
-                                                entry.projectName !== ''
-                                                ? <span><strong>{entry.projectName}</strong><br /></span>
-                                                : null
-                                            }
-                                            { entry.todoName }
-                                            { description }
-                                        </td>
-                                        <td className='tright'>{entry.hours}</td>
-                                    </tr>
-                                );
-                            });
-
-                            if (entryValue.totalHours < CONFIG.MIN_HOURS) {
-                                flag = 'penguined';
-                            }
-
-                            return ([
-                                <tr>
-                                    <td className={`user-name ${flag}`} colSpan='2'>
-                                        <b>{entryValue[CONFIG.PERSON_NAME]}</b>
-                                    </td>
-                                </tr>,
-                                row,
-                                <tr className={`tright text-${flag}`}>
-                                    <td colSpan='2'>
-                                        <b>Total Hours: </b> {entryValue.totalHours}
-                                    </td>
-                                </tr>]);
-                        })}
-                    </tbody>
-                </table>
+                        return (
+                            <Zemogian
+                                key={personId}
+                                entryValue={entryValue}
+                                defaultThumbnailPhotoUrl={Utils.imgURL() + 'default-thumbnail.png'}
+                                minimumReportedHours={7} />
+                        );
+                    }) }
+                </div>
             </div>;
 
         return (
-            <Layout authenticated={authenticated}>
+            <Layout authenticated={authenticated} {...this.props}>
                 { content }
             </Layout>
         );
