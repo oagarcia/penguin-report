@@ -11,6 +11,8 @@ import CONFIG from './config';
  */
 const Utils = {
 
+    __cacheBuster: new Date().toString().toLowerCase().replace(/( |:|\(|\))/g, '-'),
+
     /**
      * Converts Date to YYYYMMDD format string
      * @param  {Date} localDate A given Date
@@ -62,6 +64,10 @@ const Utils = {
 
     imgURL () {
         return Utils.appURL() + '/images/';
+    },
+
+    get cacheBuster () {
+        return this.__cacheBuster;
     }
 };
 
