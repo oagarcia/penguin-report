@@ -23,7 +23,7 @@ export default class Layout extends React.Component {
                 <script key='0' type='application/json' id='data-env' dangerouslySetInnerHTML={{__html: `
                         ${JSON.stringify({ STORAGE_IDENTIFIER, STORAGE_NAME, ROOT_URI, WORKER_SCOPE })}
                     `}} />,
-                <script key='1' src={`${FULL_URL}/scripts/main.js`} />
+                <script key='1' src={`${FULL_URL}/scripts/main.js?cacheBuster=${Utils.cacheBuster}`} />
             ];
         }
 
@@ -42,7 +42,7 @@ export default class Layout extends React.Component {
                     <link
                         rel='stylesheet'
                         href='https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700' />
-                    <link rel='stylesheet' href={`${FULL_URL}/styles/main.css`} />
+                    <link rel='stylesheet' href={`${FULL_URL}/styles/main.css?cacheBuster=${Utils.cacheBuster}`} />
                     <link rel='manifest' href={`${FULL_URL}/manifest.json`} />
                     <link rel='icon' type='image/png' href={`${FULL_URL}/images/favicon.png`} />
                 </head>

@@ -82,7 +82,7 @@ h3{
 .header .header__thumbnail {
   border-radius: 16px;
   display: inline-block;
-  margin-right: 10px; 
+  margin-right: 10px;
   vertical-align: middle;
 }
 
@@ -219,11 +219,10 @@ form{
 }
 
 .tright {
-    height: 15px;
     font-weight: bold;
     margin-top: 14px;
     text-align: right;
-    padding: 12px;
+    padding: 12px 12px 9px 12px;
 }
 
 .text-penguined {
