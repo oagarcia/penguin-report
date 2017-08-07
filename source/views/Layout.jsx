@@ -30,21 +30,25 @@ export default class Layout extends React.Component {
         return (
             <html lang='en' className='hide-notifier-button'>
                 <head>
+                    <title>Penguin Report</title>
                     <meta charSet='UTF-8' />
                     <meta name='viewport' content='width=device-width, initial-scale=1' />
                     <meta name='apple-mobile-web-app-capable' content='yes' />
-                    <title>Penguin Report</title>
-                    <meta property='og:image' content={`${FULL_URL}/images/penguin-icon.png`} />
-                    <meta property='og:title' content='Zemoga | Z-Penguin reports' />
+                    <meta property='og:image' content={`${FULL_URL}/images/icons/penguin-icon.png`} />
+                    <meta property='og:title' content='Zemoga | Z-Penguin report' />
                     <meta property='og:url' content={FULL_URL} />
                     <meta property='og:description' content='Easily check your z-peeps reports' />
-                    <meta property='og:site_name' content='Z-Penguin reports' />
+                    <meta property='og:site_name' content='Z-Penguin report' />
+                    <meta name='theme-color' content='#ffffff' />
+                    <link rel='apple-touch-icon' sizes='180x180' href={`${FULL_URL}/images/icons/apple-touch-icon.png`} />
+                    <link rel='icon' type='image/png' sizes='32x32' href={`${FULL_URL}/images/icons/favicon-32x32.png`} />
+                    <link rel='icon' type='image/png' sizes='16x16' href={`${FULL_URL}/images/icons/favicon-16x16.png`} />
+                    <link rel='mask-icon' href={`${FULL_URL}/images/icons/safari-pinned-tab.svg`} color='#5bbad5' />
                     <link
                         rel='stylesheet'
                         href='https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700' />
                     <link rel='stylesheet' href={`${FULL_URL}/styles/main.css?cacheBuster=${Utils.cacheBuster}`} />
                     <link rel='manifest' href={`${FULL_URL}/manifest.json`} />
-                    <link rel='icon' type='image/png' href={`${FULL_URL}/images/favicon.png`} />
                 </head>
                 <body>
                     <Header authenticated={authenticated} user={user} />

@@ -37,7 +37,7 @@ const debug = debugModule('routes');
 const pushContent = {
     title: 'Hey Dude no has reportado!!!!',
     body: 'Evita el pingüino',
-    icon: `${CONFIG.PROTOCOL}${CONFIG.DOMAIN}${CONFIG.ROOT_URI}/images/penguin-icon.png`,
+    icon: `${CONFIG.PROTOCOL}${CONFIG.DOMAIN}${CONFIG.ROOT_URI}/images/icons/penguin-icon.png`,
     tag: 'penguin-tag',
     renotify: true,
     requireInteraction: true,
