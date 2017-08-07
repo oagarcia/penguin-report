@@ -2,6 +2,8 @@
     "name": "Z-Penguin",
     "short_name": "Z-Penguin",
     "orientation": "portrait",
+    "start_url": "./?utm_source=web_app_manifest",
+    "lang": "en-US",
     "icons": [
         {
             "src": "images/icons/android-chrome-192x192.png",
