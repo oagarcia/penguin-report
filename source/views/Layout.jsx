@@ -49,7 +49,7 @@ export default class Layout extends React.Component {
                         rel='stylesheet'
                         href='https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700' />
                     <link rel='stylesheet' href={`${FULL_URL}/styles/main.css?cacheBuster=${Utils.cacheBuster}`} />
-                    <link rel='manifest' href={`${FULL_URL}/manifest.json`} />
+                    <link rel='manifest' href={`${FULL_URL}/manifest.json?cacheBuster=${Utils.cacheBuster}`} />
                     <StandaloneLinks />
                 </head>
                 <body>
