@@ -28,13 +28,13 @@ export default class Layout extends React.Component {
             ];
         }
 
+        // <meta name='apple-mobile-web-app-capable' content='yes' />
         return (
             <html lang='en' className='hide-notifier-button'>
                 <head>
                     <title>Penguin Report</title>
                     <meta charSet='UTF-8' />
                     <meta name='viewport' content='width=device-width, initial-scale=1' />
-                    <meta name='apple-mobile-web-app-capable' content='yes' />
                     <meta property='og:image' content={`${FULL_URL}/images/icons/penguin-icon.png`} />
                     <meta property='og:title' content='Zemoga | Z-Penguin report' />
                     <meta property='og:url' content={FULL_URL} />
