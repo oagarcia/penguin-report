@@ -4,6 +4,7 @@ import CONFIG from '../config';
 import Header from '../components/Header';
 import { default as _ } from 'lodash';
 import { Utils } from '../utils';
+import StandaloneLinks from '../components/StandaloneLinks';
 
 export default class Layout extends React.Component {
     static propTypes = {
@@ -49,6 +50,7 @@ export default class Layout extends React.Component {
                         href='https://fonts.googleapis.com/css?family=Montserrat+Alternates:400,700' />
                     <link rel='stylesheet' href={`${FULL_URL}/styles/main.css?cacheBuster=${Utils.cacheBuster}`} />
                     <link rel='manifest' href={`${FULL_URL}/manifest.json`} />
+                    <StandaloneLinks />
                 </head>
                 <body>
                     <Header authenticated={authenticated} user={user} />
