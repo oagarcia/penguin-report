@@ -32,13 +32,13 @@ export default class Home extends React.Component {
         const { errorMessage, timeEntries } = this.props;
 
         const errorLoginMessage = errorMessage ? <div className='login'>{ errorMessage }</div> : null;
-        
+
         // for some reason destructuring the isAuthenticated recreates the return :(
         const authenticated = this.props.req.isAuthenticated();
-        
+
         const content = !authenticated ? (
             <div className='content zemogian header_wrapper login'>
-                <div className='title'>    
+                <div className='title'>
                     <span className='title-container__icon' />
                     <h3>Penguin Report</h3><br />
                 </div>
@@ -48,7 +48,7 @@ export default class Home extends React.Component {
             </div>)
             : <div className='content'>
                 <div className='title-container'>
-                    <div className='title'>    
+                    <div className='title'>
                         <span className='title-container__icon' />
                         <h3>Penguin Report</h3>
                     </div>
