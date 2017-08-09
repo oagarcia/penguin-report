@@ -186,7 +186,7 @@ const ZPeepManager = {
                     if (departmentCode) {
                         timeEntries =
                         timeEntries.filter((entry) =>
-                            zemogians.map((el) => el.externalIds[0].value
+                            zemogians.map((el) => _.get(el, 'externalIds[0].value', 0)
                             ).indexOf(entry[PERSON_ID][0]._) !== -1
                         );
                     }
@@ -219,6 +219,11 @@ const ZPeepManager = {
                     zemogians.forEach((zemogian) => {
                         const thisPersonId = _.get(zemogian, 'externalIds[0].value');
                         let isAvailable = false;
+
+                        // If no external ID available (Basecamp ID), omit and continue to the next zemogian
+                        if (!thisPersonId) {
+                            return;
+                        }
 
                         _.forOwn(timeEntries, (entryValue, entryKey) => {
                             if (thisPersonId === entryKey) {
