@@ -54,7 +54,8 @@ export default class Home extends React.Component {
                     </div>
                     <div className='date'>
                         <form id='dateForm' action='' method='GET'>
-                            <input id='dateField' name='date' type='date' defaultValue={this.state.currentDate} />
+                            <label className='visuallyhidden' htmlFor='dateField'>Select date</label>
+                            <input id='dateField' name='date' type='date' defaultValue={this.state.currentDate} aria-label='Select date' />
                             <button type='button' id='push-notifier'>Notify users</button>
                         </form>
                         <a href='https://zemogatime.updatelog.com' rel='noopener' target='_blank'>Report on Basecamp &gt;</a>
