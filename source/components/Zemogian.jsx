@@ -64,7 +64,7 @@ export default class Zemogian extends React.Component {
                             <span className='text-description' dangerouslySetInnerHTML={{__html: `
                             ${entryDescription.replace(
                                 CONFIG.JIRA_PATTERN,
-                                `<a target="_blank" href="${CONFIG.JIRA_DOMAIN}$1">$1</a>`
+                                `<a rel="noopener" target="_blank" href="${CONFIG.JIRA_DOMAIN}$1">$1</a>`
                             )}
                             `}} />;
                     }
@@ -85,7 +85,7 @@ export default class Zemogian extends React.Component {
                     <span className='to_do'>{ todoName }</span>
                     <br />
                     <span className='desc'>{ description }</span>
-                </div> 
+                </div>
             );
         });
 
