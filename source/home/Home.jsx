@@ -57,7 +57,7 @@ export default class Home extends React.Component {
                             <input id='dateField' name='date' type='date' defaultValue={this.state.currentDate} />
                             <button type='button' id='push-notifier'>Notify users</button>
                         </form>
-                        <a href='https://zemogatime.updatelog.com' target='_blank'>Report on Basecamp &gt;</a>
+                        <a href='https://zemogatime.updatelog.com' rel='noopener' target='_blank'>Report on Basecamp &gt;</a>
                     </div>
                 </div>
                 <div className='zemogians'>
