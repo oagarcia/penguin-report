@@ -54,7 +54,7 @@ export default class Layout extends React.Component {
                 </head>
                 <body>
                     <Header authenticated={authenticated} user={user} />
-                    <main role='content'>
+                    <main role='main'>
                         <div>{this.props.children}</div>
                     </main>
                     { scripts }
