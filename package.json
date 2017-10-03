@@ -51,7 +51,7 @@
     "connect-redis": "^3.3.0",
     "cookie-parser": "^1.4.3",
     "debug": "^2.6.3",
-    "express": "~4.15.2",
+    "express": "~4.16.0",
     "express-react-views": "^0.10.2",
     "express-session": "^1.15.3",
     "lodash": "^4.17.4",
