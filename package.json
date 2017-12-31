@@ -19,7 +19,7 @@
     "package": "npm run package:prepare && npm run package:node && npm run package:web && npm run package:combine",
     "package:prepare": "npm prune --production",
     "package:combine": "zip -qr ./${ARTIFACT_LABEL}.zip node.zip web.zip && rm -rf ./node.zip ./web.zip",
-    "package:node": "zip -r ./node.zip node_modules .env .babelrc package.json build",
+    "package:node": "zip -qr ./node.zip node_modules .env .babelrc package.json build",
     "package:web": "cd web; zip -qr ../web.zip .; cd ..",
     "postinstall": "per-env",
     "postinstall:development": "npm run build",
