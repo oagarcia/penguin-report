@@ -28,6 +28,8 @@ pipelines:
                 caches:
                     - node
                 script:
+                    # Build assets
+                    - npm run build
                     # Create .env file
                     - echo $ENV_FILE | base64 -d > .env
                     # Create artifact
