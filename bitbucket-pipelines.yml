@@ -6,6 +6,7 @@ pipelines:
                 caches:
                     - node
                 script:
+                    - npm config get production
                     # Install dependencies
                     - npm install
                     # Run linter
@@ -17,6 +18,7 @@ pipelines:
                 caches:
                     - node
                 script:
+                    - npm config get production
                     # Install dependencies
                     - npm install
                     # Run linter
