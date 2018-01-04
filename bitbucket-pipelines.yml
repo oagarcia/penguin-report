@@ -1,0 +1,41 @@
+image: zemoga/node:8-alpine
+
+pipelines:
+    default:
+        lint:
+            - step:
+                name: Lint
+                caches:
+                    - node
+                script:
+                    # Install dependencies
+                    - npm install
+                    # Run linter
+                    - npm run lint
+    branches:
+        master:
+            - step:
+                name: Lint
+                caches:
+                    - node
+                script:
+                    # Install dependencies
+                    - npm install
+                    # Run linter
+                    - npm run lint
+            - step:
+                name: Deploy
+                caches:
+                    - node
+                script:
+                    # Build assets
+                    - npm run build
+                    # Create .env file
+                    - echo $ENV_FILE | base64 -d > .env
+                    # Create artifact
+                    - export ARTIFACT_LABEL="penguin-report_`date +%y.%m.%d`"
+                    - npm run package
+                    # Copy artifact to AWS Box
+                    - scp ${ARTIFACT_LABEL}.zip ${DEPLOY_USER}@${DEPLOY_SERVER}:~
+                    # Run deploy script
+                    - ssh ${DEPLOY_USER}@${DEPLOY_SERVER} "bash -s -" < $(npm bin)/deploy-script -b $BITBUCKET_BUILD_NUMBER -c $ARTIFACT_LABEL -n node -w web -x /build penguin-report

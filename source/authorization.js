@@ -24,6 +24,7 @@ export const Authorization = {
             clientID: CONFIG.GOOGLE_CLIENT_ID,
             clientSecret: CONFIG.GOOGLE_CLIENT_SECRET,
             callbackURL: `${CONFIG.PROTOCOL}${CONFIG.DOMAIN}${CONFIG.ROOT_URI}${CONFIG.GOOGLE_CALLBACK_URL}`,
+            // callbackURL: 'http://localhost:3001/auth/google/callback',
             passReqToCallback: true
         }, (request, accessToken, refreshToken, profile, done) => {
             ZProfile.getZemogian(profile.email)
@@ -34,7 +35,9 @@ export const Authorization = {
                     });
                 }
 
-                if (!_.get(response, 'zemogian.externalIds[0].value')) {
+                const basecampId = _.get(_.find(response.zemogian.externalIds, {'type': 'basecamp'}), 'value', null);
+
+                if (!basecampId) {
                     return done(null, false, {
                         message: 'Please request a Basecamp account in order to proceed!'
                     });
@@ -43,7 +46,6 @@ export const Authorization = {
                 // Destructuring the ZProfile response
                 const {
                     zemogian: {
-                        externalIds: [{value: basecampId}],
                         department: {code: departmentCode}}
                     } = response;
 

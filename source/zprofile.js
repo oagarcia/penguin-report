@@ -3,7 +3,7 @@ import debugModule from 'debug';
 import moment from 'moment';
 import Promise from 'bluebird';
 import config from './config';
-import DEPARTMENT from './department';
+// import DEPARTMENT from './department';
 
 const debug = debugModule('zprofile');
 
@@ -107,7 +107,7 @@ const ZProfile = {
                     familyName
                     email
                     thumbnailPhotoUrl
-                    externalIds{value}
+                    externalIds{type value}
                 }
             }`
         });
@@ -129,7 +129,7 @@ const ZProfile = {
                     familyName
                     email
                     thumbnailPhotoUrl
-                    externalIds{value}
+                    externalIds{type value}
                 }
             }`
         });

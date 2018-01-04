@@ -11,7 +11,7 @@
 
 ## Installation
 
-1. Install Redis http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/ and be sure it is running
+1. Install Redis http://jasdeep.ca/2012/05/installing-redis-on-mac-os-x/ and be sure it is running. Alternatively (and if you have docker installed), you can run `npm run docker:redis` to create a redis container.
 2. Ask for env vars you need to set (sensible data)
 3. `npm install`
 4. `npm start` or `npm run debug` (paused by default in the first line)
