@@ -107,7 +107,7 @@ const ZProfile = {
                     familyName
                     email
                     thumbnailPhotoUrl
-                    externalIds{value}
+                    externalIds{type value}
                 }
             }`
         });
@@ -129,7 +129,7 @@ const ZProfile = {
                     familyName
                     email
                     thumbnailPhotoUrl
-                    externalIds{value}
+                    externalIds{type value}
                 }
             }`
         });

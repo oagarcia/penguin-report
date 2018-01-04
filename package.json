@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "eslint .",
     "build": "babel source/ -x '.js' -d build/ -s --copy-files",
-    "debug": "npm run build && DEBUG=index,zpeep-manager,routes,authorization env $(cat .env-local | xargs) node --inspect-brk build",
+    "debug": "npm run build && DEBUG=index,zpeep-manager,routes,authorization env $(cat .env-local | xargs) node --inspect --debug-brk build",
     "start": "per-env",
     "start:development": "npm run build && env $(cat .env-local | xargs) nodemon build",
     "docker:redis": "docker run --rm -p 6379:6379 --name penguin redis --bind 0.0.0.0",
