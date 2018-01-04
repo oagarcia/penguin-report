@@ -186,7 +186,7 @@ const ZPeepManager = {
                     if (departmentCode) {
                         timeEntries =
                         timeEntries.filter((entry) =>
-                            zemogians.map((el) => _.get(el, 'externalIds[0].value', 0)
+                            zemogians.map((el) => _.get(_.find(el.externalIds, {'type': 'basecamp'}), 'value', 0)
                             ).indexOf(entry[PERSON_ID][0]._) !== -1
                         );
                     }
@@ -217,7 +217,7 @@ const ZPeepManager = {
                     // so as calling People.xml is pending, I'm completing the info
                     // from user in zProfile API
                     zemogians.forEach((zemogian) => {
-                        const thisPersonId = _.get(zemogian, 'externalIds[0].value');
+                        const thisPersonId = _.get(_.find(zemogian.externalIds, {'type': 'basecamp'}), 'value');
                         let isAvailable = false;
 
                         // If no external ID available (Basecamp ID), omit and continue to the next zemogian
@@ -237,7 +237,7 @@ const ZPeepManager = {
                             const emptyPersonEntry = {
                                 [PERSON_NAME]: zemogian.fullName,
                                 [PERSON_NICK]: zemogian.nickname,
-                                [PERSON_ID]: _.get(zemogian, 'externalIds[0].value', '0'),
+                                [PERSON_ID]: _.get(_.find(zemogian.externalIds, {'type': 'basecamp'}), 'value', '0'),
                                 hours: 0,
                                 reportId: 0,
                                 projectName: '',
@@ -256,7 +256,7 @@ const ZPeepManager = {
 
                         // Get additional data from Google Directory profile
                         const googleProfile = zemogians.find((zemogian) => {
-                            const basecampID = _.get(zemogian, 'externalIds[0].value');
+                            const basecampID = _.get(_.find(zemogian.externalIds, {'type': 'basecamp'}), 'value');
 
                             return basecampID === key;
                         });

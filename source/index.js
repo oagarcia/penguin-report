@@ -103,7 +103,8 @@ app.use(session({
     name: 'penguinsession',
     store: new RedisStore({
         host: CONFIG.REDIS_HOST,
-        port: 6379
+        port: 6379,
+        logErrors: CONFIG.NODE_ENV === 'development'
     }),
     proxy: true,
     resave: true,

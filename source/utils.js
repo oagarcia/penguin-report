@@ -26,7 +26,7 @@ const Utils = {
         dateOutput = localDate.toJSON().slice(0, 10);
 
         if (removeDash) {
-            dateOutput = dateOutput.replace(/\-/g, '');
+            dateOutput = dateOutput.replace(/-/g, '');
         }
         return dateOutput;
     },
@@ -79,7 +79,7 @@ export function getCurrentDate (currentDate) {
     // else will be today date
 
     if (currentDate) {
-        reportDate = currentDate.replace(/\-/g, '');
+        reportDate = currentDate.replace(/-/g, '');
     } else {
         currentDate = Utils.toDateInputValue(new Date());
         reportDate = Utils.toDateInputValue(new Date(), true);
