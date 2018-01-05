@@ -69,7 +69,7 @@ export default function routes (app, passport) {
 
     app.get('/logout', (req, res) => {
         req.logout();
-        res.redirect('/'); // Needs to be handled in prod to /penguin-report
+        res.redirect('/penguin-report'); // Needs to be handled in prod to /penguin-report
     });
 
     // Redirects TO Google authentication page
