@@ -2,7 +2,7 @@ import passportGoogleOauth from 'passport-google-oauth2';
 import debugModule from 'debug';
 import CONFIG from './config';
 import ZProfile from './zprofile';
-import { default as _ } from 'lodash';
+import { get, find } from 'lodash';
 
 // Debug module
 const debug = debugModule('authorization');
@@ -27,7 +27,7 @@ export const Authorization = {
             // callbackURL: 'http://localhost:3001/auth/google/callback',
             passReqToCallback: true
         }, (request, accessToken, refreshToken, profile, done) => {
-            ZProfile.getZemogian(profile.email)
+            ZProfile.getZemogian(get(profile, 'emails[0].value', profile.email))
             .then((response) => {
                 if (!response.zemogian) {
                     return done(null, false, {
@@ -35,7 +35,7 @@ export const Authorization = {
                     });
                 }
 
-                const basecampId = _.get(_.find(response.zemogian.externalIds, {'type': 'basecamp'}), 'value', null);
+                const basecampId = get(find(response.zemogian.externalIds, {'type': 'basecamp'}), 'value', null);
 
                 if (!basecampId) {
                     return done(null, false, {
