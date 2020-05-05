@@ -71,7 +71,7 @@
     "request": "~2.84.0",
     "request-promise": "~4.2.2",
     "xml2js": "~0.4.19",
-    "snyk": "^1.41.1"
+    "snyk": "^1.319.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
