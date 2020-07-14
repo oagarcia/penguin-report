@@ -59,7 +59,7 @@
     "express": "~4.16.0",
     "express-react-views": "~0.10.4",
     "express-session": "~1.15.6",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.16",
     "moment": "~2.20.1",
     "mongodb": "~2.2.33",
     "passport": "^0.3.2",
