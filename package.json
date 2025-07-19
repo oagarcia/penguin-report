@@ -58,7 +58,7 @@
     "deploy-script": "git+https://bitbucket.org/zemoga/deploy-script.git",
     "express": "~4.16.0",
     "express-react-views": "~0.10.4",
-    "express-session": "~1.15.6",
+    "express-session": "~1.18.2",
     "lodash": "^4.17.4",
     "moment": "~2.20.1",
     "mongodb": "~2.2.33",
